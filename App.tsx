@@ -6,6 +6,7 @@ import Loader from './components/Loader';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const MotivePage = lazy(() => import('./pages/MotivePage'));
 const DepartmentsPage = lazy(() => import('./pages/DepartmentsPage'));
 const DepartmentDetailPage = lazy(() => import('./pages/DepartmentDetailPage'));
 const AchievementsPage = lazy(() => import('./pages/AchievementsPage'));
@@ -21,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/motive" element={<MotivePage />} />
               <Route path="/departments" element={<DepartmentsPage />} />
               <Route path="/departments/:id" element={<DepartmentDetailPage />} />
               <Route path="/achievements" element={<AchievementsPage />} />

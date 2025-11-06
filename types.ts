@@ -13,6 +13,16 @@ export interface AboutData {
   visionTagline: string;
 }
 
+export interface MotivePoint {
+    iconUrl: string;
+    text: string;
+}
+
+export interface MotiveData {
+    title: string;
+    points: MotivePoint[];
+}
+
 export interface Department {
   id: string;
   name: string;
@@ -78,6 +88,7 @@ export interface FooterData {
 export interface AppData {
     hero: HeroData;
     about: AboutData;
+    motive: MotiveData;
     departments: Department[];
     achievements: Achievement[];
     leaders: LeadersData;
