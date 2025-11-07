@@ -1,4 +1,4 @@
-import type { AppData, Department, Achievement } from '../types';
+import type { AppData, Department, Achievement, Event } from '../types';
 
 const MOCK_DATA: AppData = {
   hero: {
@@ -43,15 +43,26 @@ const MOCK_DATA: AppData = {
     { id: "a3", title: "Regional Debate Tournament Winners", description: "Our debate team secured the top position in the regional championship.", date: "2023-02-10", imageUrl: "https://picsum.photos/600/400?random=22", category: "Debate" },
     { id: "a4", title: "Annual Music Fest 'Rhapsody'", description: "Successfully organized our flagship music festival, featuring renowned artists.", date: "2021-12-01", imageUrl: "https://picsum.photos/600/400?random=23", category: "Music" },
   ],
+   events: [
+    { id: "e1", title: "Annual Cultural Night 2024", shortDescription: "A grand celebration of music, dance, and drama showcasing the best talents of our club.", fullDescription: "Join us for an evening of spectacular performances as we celebrate a year of creativity and passion. The Annual Cultural Night is our flagship event, featuring stunning solo and group performances from all our departments, including Musica, Timbre, and Artstation. It's a night to remember, filled with art, culture, and community.", date: "2024-11-25", time: "6:00 PM", startTime24: "18:00", location: "Main Auditorium, Dhaka College", imageUrl: "https://picsum.photos/600/400?random=40", isUpcoming: true, category: "Festival", registrationLink: "#" },
+    { id: "e2", title: "Photography Workshop: The Art of Seeing", shortDescription: "Learn the fundamentals of composition and lighting from a professional.", fullDescription: "This intensive one-day workshop, led by award-winning photographer Anis Rahman, will cover the fundamentals of composition, lighting, and storytelling in photography. Participants will engage in hands-on sessions and a guided photo walk. Suitable for all skill levels, from beginners to advanced enthusiasts.", date: "2024-10-15", time: "10:00 AM - 4:00 PM", startTime24: "10:00", location: "Room 301, Arts Building", imageUrl: "https://picsum.photos/600/400?random=41", isUpcoming: true, category: "Workshop", registrationLink: "#" },
+    { id: "e3", title: "Poetry Slam Competition", shortDescription: "Unleash your inner poet and compete for the title of the best spoken word artist on campus.", fullDescription: "WordSpace presents its annual Poetry Slam! Come and perform your original work or simply enjoy the powerful performances from our talented poets. Compete for the title of the best spoken word artist on campus. Exciting prizes to be won!", date: "2024-09-30", time: "7:00 PM", startTime24: "19:00", location: "College Cafeteria", imageUrl: "https://picsum.photos/600/400?random=42", isUpcoming: true, category: "Competition", registrationLink: "#" },
+    { id: "e4", title: "Theatre Production: 'The Last Stand'", shortDescription: "Our drama wing's ambitious production exploring themes of courage and sacrifice.", fullDescription: "'The Last Stand' is a historical drama that received standing ovations for its powerful script and breathtaking performances. The play, written and directed by our own students, explores themes of courage, sacrifice, and hope during a pivotal moment in history.", date: "2024-05-10", time: "7:30 PM", startTime24: "19:30", location: "Main Auditorium, Dhaka College", imageUrl: "https://picsum.photos/600/400?random=43", isUpcoming: false, category: "Performance" },
+    { id: "e5", title: "Folk Music Festival 'Bauliana'", shortDescription: "A day-long festival celebrating the rich heritage of Bengali folk music.", fullDescription: "A day-long festival celebrating the rich heritage of Bengali folk music, featuring performances by students and guest artists. The event showcased a variety of folk traditions and was a massive success, drawing a large audience from across the city.", date: "2024-02-21", time: "11:00 AM onwards", startTime24: "11:00", location: "College Field", imageUrl: "https://picsum.photos/600/400?random=44", isUpcoming: false, category: "Festival", winners: [
+      { position: "Best Performance (Group)", name: "Dhaka College Baul Sangha", details: "For their soulful rendition of Lalon Geeti." },
+      { position: "Best Performance (Solo)", name: "Anila Chowdhury", details: "For her captivating performance of Bhatiali songs." },
+      { position: "Special Mention", name: "The Folk Fusion Project", details: "For their innovative blend of traditional and contemporary folk music." }
+    ]},
+  ],
   leaders: {
     moderators: [
-      { id: "m1", name: "Prof. Monira Begum", position: "Head of Sociology Department", imageUrl: "https://i.imgur.com/7D72t2v.png", bio: "Providing expert guidance to our club members." },
+      { id: "m1", name: "Prof. Monira Begum", position: "Head of Sociology Department", imageUrl: "https://i.imgur.com/7D72t2v.png", bio: "Providing expert guidance to our club members and fostering an environment of creative exploration and academic excellence.", socials: [{ name: "Facebook", url: "#", icon: "facebook" }, { name: "LinkedIn", url: "#", icon: "linkedin" }] },
       { id: "m2", name: "Adnan Hossain", position: "Assistant Professor, English", imageUrl: "https://i.imgur.com/tG3aI3E.png", bio: "Mentoring students in literary and cultural activities." },
       { id: "m3", name: "Khohinur Akhter", position: "Lecturer, English", imageUrl: "https://i.imgur.com/tG3aI3E.png", bio: "Fostering a love for language and performance." },
       { id: "m4", name: "Shrabani Dhar", position: "Assistant Professor, Management", imageUrl: "https://i.imgur.com/tG3aI3E.png", bio: "Guiding students in organizational and leadership skills." },
     ],
     currentExecutives: [
-      { id: "ce1", name: "Sadikul Islam", position: "President", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
+      { id: "ce1", name: "Sadikul Islam", position: "President", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "Leading the club with a vision to elevate its cultural impact and foster a collaborative environment for all members.", socials: [{ name: "Facebook", url: "#", icon: "facebook" }, { name: "LinkedIn", url: "#", icon: "linkedin" }] },
       { id: "ce2", name: "Md. Shahu Arafa Raiyan", position: "General Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
       { id: "ce3", name: "Millat Morsalin Tanim Ba...", position: "Vice President", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
       { id: "ce4", name: "Arafat Rahman", position: "Operating Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
@@ -74,7 +85,7 @@ const MOCK_DATA: AppData = {
       { id: "ce21", name: "Nur-E-Tadin", position: "Wordspace - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
     ],
     pastExecutives: [
-        { id: "pe24-1", name: "Aliya Bhatt", position: "President", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "Introduced the inter-departmental cultural competition, fostering healthy rivalry and collaboration among departments.", tenureYears: "2023-2024", dcccId: "24-001", bloodGroup: "O+", religion: "Hinduism" },
+        { id: "pe24-1", name: "Aliya Bhatt", position: "President", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "Introduced the inter-departmental cultural competition, fostering healthy rivalry and collaboration among departments.", tenureYears: "2023-2024", dcccId: "24-001", bloodGroup: "O+", religion: "Hinduism", socials: [{ name: "Facebook", url: "#", icon: "facebook" }, { name: "LinkedIn", url: "#", icon: "linkedin" }] },
         { id: "pe24-2", name: "Varun Dhawan", position: "General Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "Spearheaded the initiative to digitize the club's extensive archives and streamline the membership process online.", tenureYears: "2023-2024", dcccId: "24-002", bloodGroup: "B+", religion: "Hinduism" },
         { id: "pe24-3", name: "Kiara Advani", position: "Treasurer", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "Successfully secured record-breaking sponsorship for the annual cultural festival, enabling a larger and more impactful event.", tenureYears: "2023-2024", dcccId: "24-003", bloodGroup: "A+", religion: "Hinduism" },
         { id: "pe24-4", name: "Sidharth Malhotra", position: "Vice President (Drama)", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "Directed an award-winning original play that received critical acclaim at the National University Theatre Festival.", tenureYears: "2023-2024", dcccId: "24-004", bloodGroup: "AB+", religion: "Hinduism" },
@@ -92,23 +103,20 @@ const MOCK_DATA: AppData = {
     buttonLink: "#", // Link to external form
   },
   footer: {
-    text: "Dhaka College Cultural Club - Fostering Creativity since 1956.",
-    email: "contact@dccc.edu",
-    phone: "+880 123 456 789",
-    address: "Dhaka College, New Market, Dhaka-1205",
+    aboutText: "An official club of Dhaka College.",
+    logo1Url: "https://dhakacollegeculturalclub.com/logo.png",
+    logo2Url: "https://res.cloudinary.com/dabfeqgsj/image/upload/v1762394067/clg-club_x11cj5.png",
+    email: "pr@dhakacollegeculturalclub.com",
+    phone: "+880 1308 563408",
+    address: "Dhaka College, New Market, Dhaka-1205, Bangladesh",
     socialLinks: [
-        { name: "Facebook", url: "#", icon: "facebook" },
-        { name: "Instagram", url: "#", icon: "instagram" },
-        { name: "YouTube", url: "#", icon: "youtube" },
+      { name: "Facebook", url: "#", icon: "facebook" },
+      { name: "Instagram", url: "#", icon: "instagram" },
+      { name: "LinkedIn", url: "#", icon: "linkedin" },
+      { name: "Email", url: "mailto:pr@dhakacollegeculturalclub.com", icon: "email" },
     ],
-    quickLinks: [
-        { name: "Home", url: "#/" },
-        { name: "About", url: "#/about" },
-        { name: "Motive", url: "#/motive" },
-        { name: "Departments", url: "#/departments" },
-        { name: "Achievements", url: "#/achievements" },
-        { name: "Leaders", url: "#/leaders" },
-    ]
+    copyrightText: "Dhaka College Cultural Club. All Rights Reserved.",
+    adminPanelLink: { text: "Administrative Panel", url: "#" }
   }
 };
 
@@ -120,3 +128,5 @@ export const getAppData = (): Promise<AppData> => simulateDelay(MOCK_DATA);
 export const getDepartments = (): Promise<Department[]> => simulateDelay(MOCK_DATA.departments);
 export const getDepartmentById = (id: string): Promise<Department | undefined> => simulateDelay(MOCK_DATA.departments.find(d => d.id === id));
 export const getAchievements = (): Promise<Achievement[]> => simulateDelay(MOCK_DATA.achievements);
+export const getEvents = (): Promise<Event[]> => simulateDelay(MOCK_DATA.events);
+export const getEventById = (id: string): Promise<Event | undefined> => simulateDelay(MOCK_DATA.events.find(e => e.id === id));

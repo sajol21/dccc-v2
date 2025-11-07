@@ -15,16 +15,16 @@ const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col md:flex-row items-center gap-8 bg-gray-800/50 p-6 rounded-lg border border-gray-700"
+            className="flex flex-col md:flex-row items-center gap-8 bg-white p-6 rounded-lg border border-gray-200"
         >
-            <img src={achievement.imageUrl} alt={achievement.title} className="w-full md:w-1/3 h-auto object-cover rounded-md shadow-lg" />
+            <img src={achievement.imageUrl} alt={achievement.title} className="w-full md:w-1/3 h-auto object-cover rounded-md shadow-md" />
             <div className="flex-1">
                 <div className="flex justify-between items-baseline">
-                    <h3 className="text-2xl font-bold text-teal-400">{achievement.title}</h3>
-                    <p className="text-gray-400 font-mono">{date.getFullYear()}</p>
+                    <h3 className="text-2xl font-bold text-blue-600">{achievement.title}</h3>
+                    <p className="text-gray-500 font-mono">{date.getFullYear()}</p>
                 </div>
-                <p className="text-sm text-gray-500 mb-4">{achievement.category} - {date.toLocaleDateString()}</p>
-                <p className="text-gray-300">{achievement.description}</p>
+                <p className="text-sm text-gray-400 mb-4">{achievement.category} - {date.toLocaleDateString()}</p>
+                <p className="text-gray-600">{achievement.description}</p>
             </div>
         </motion.div>
     );
@@ -46,7 +46,7 @@ const AchievementsPage: React.FC = () => {
     }, [achievements, selectedCategory]);
 
     return (
-        <div className="pt-28 pb-20 min-h-screen bg-gray-900">
+        <div className="pt-28 pb-20 min-h-screen">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -54,10 +54,10 @@ const AchievementsPage: React.FC = () => {
                     transition={{ duration: 0.7 }}
                     className="text-center mb-12"
                 >
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-blue-500">
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
                         Our Achievements
                     </h1>
-                    <p className="mt-4 text-xl text-gray-300 max-w-3xl mx-auto">
+                    <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
                         A journey of excellence, dedication, and countless moments of pride.
                     </p>
                 </motion.div>
@@ -69,8 +69,8 @@ const AchievementsPage: React.FC = () => {
                             onClick={() => setSelectedCategory(category)}
                             className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-300 ${
                                 selectedCategory === category 
-                                ? 'bg-teal-500 text-white' 
-                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                ? 'bg-blue-600 text-white shadow' 
+                                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                             }`}
                         >
                             {category}

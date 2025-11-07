@@ -41,6 +41,22 @@ export interface Achievement {
   category: string;
 }
 
+export interface Event {
+  id: string;
+  title: string;
+  shortDescription: string;
+  fullDescription: string;
+  date: string; // ISO format string
+  time: string; // e.g., "6:00 PM"
+  startTime24?: string; // e.g., "18:00" for calendar links
+  location: string;
+  imageUrl: string;
+  isUpcoming: boolean;
+  category: string;
+  registrationLink?: string;
+  winners?: { position: string; name: string; details: string }[];
+}
+
 interface Person {
   id: string;
   name: string;
@@ -77,12 +93,15 @@ export interface JoinData {
 }
 
 export interface FooterData {
-  text: string;
+  aboutText: string;
+  logo1Url: string;
+  logo2Url: string;
   email: string;
   phone: string;
   address: string;
   socialLinks: { name: string; url: string; icon: string }[];
-  quickLinks: { name:string; url: string }[];
+  copyrightText: string;
+  adminPanelLink: { text: string; url: string };
 }
 
 export interface AppData {
@@ -91,6 +110,7 @@ export interface AppData {
     motive: MotiveData;
     departments: Department[];
     achievements: Achievement[];
+    events: Event[];
     leaders: LeadersData;
     join: JoinData;
     footer: FooterData;

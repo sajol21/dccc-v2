@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,6 +9,7 @@ const navLinks = [
   { name: 'Motive', path: '/motive' },
   { name: 'Departments', path: '/departments' },
   { name: 'Achievements', path: '/achievements' },
+  { name: 'Events', path: '/events' },
   { name: 'Leaders', path: '/leaders' },
 ];
 
@@ -15,7 +17,7 @@ const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const activeLinkStyle = {
-    color: '#2dd4bf', // teal-400
+    color: '#2563eb', // blue-600
   };
 
   const mobileMenuVariants = {
@@ -32,11 +34,11 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-gray-900/80 backdrop-blur-sm shadow-lg shadow-black/20">
+    <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <NavLink to="/" className="text-2xl font-bold text-white transition-colors hover:text-teal-400">
-            DCCC
+          <NavLink to="/" className="flex items-center">
+            <img src="https://dhakacollegeculturalclub.com/logo.png" alt="DCCC Logo" className="h-10 w-auto" />
           </NavLink>
           
           {/* Desktop Navigation */}
@@ -46,7 +48,7 @@ const Header: React.FC = () => {
                 key={link.name}
                 to={link.path}
                 style={({ isActive }) => (isActive ? activeLinkStyle : {})}
-                className="text-gray-300 hover:text-teal-400 transition-colors font-medium"
+                className="text-gray-600 hover:text-blue-600 transition-colors font-medium"
               >
                 {link.name}
               </NavLink>
@@ -55,7 +57,7 @@ const Header: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-300 focus:outline-none">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 focus:outline-none">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 {isOpen ? (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -76,7 +78,7 @@ const Header: React.FC = () => {
             animate="open"
             exit="closed"
             variants={mobileMenuVariants}
-            className="md:hidden absolute top-20 left-0 w-full bg-gray-900/95 backdrop-blur-sm"
+            className="md:hidden absolute top-20 left-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200"
         >
           <nav className="flex flex-col items-center space-y-4 py-8">
             {navLinks.map((link) => (
@@ -85,7 +87,7 @@ const Header: React.FC = () => {
                 to={link.path}
                 onClick={() => setIsOpen(false)}
                 style={({ isActive }) => (isActive ? activeLinkStyle : {})}
-                className="text-gray-300 hover:text-teal-400 transition-colors font-medium text-lg"
+                className="text-gray-600 hover:text-blue-600 transition-colors font-medium text-lg"
               >
                 {link.name}
               </NavLink>

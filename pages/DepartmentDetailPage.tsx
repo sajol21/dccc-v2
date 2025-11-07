@@ -34,11 +34,11 @@ const DepartmentDetailPage: React.FC = () => {
         fetchDepartment();
     }, [id]);
 
-    if (loading) return <div className="h-screen flex items-center justify-center pt-20"><Loader /></div>;
+    if (loading) return <div className="h-screen flex items-center justify-center pt-20 bg-white"><Loader /></div>;
     if (error || !department) return <div className="text-center py-40 text-red-500">{error || 'Department not found.'}</div>;
 
     return (
-        <div className="pt-28 pb-20 min-h-screen bg-gray-950">
+        <div className="pt-28 pb-20 min-h-screen bg-white">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -47,7 +47,7 @@ const DepartmentDetailPage: React.FC = () => {
                     className="text-center mb-12"
                 >
                     <div className="text-7xl mb-4">{department.iconUrl}</div>
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-blue-500">
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
                         {department.name} Department
                     </h1>
                 </motion.div>
@@ -56,7 +56,7 @@ const DepartmentDetailPage: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.2 }}
-                    className="max-w-3xl mx-auto text-lg text-gray-300 leading-relaxed mb-16"
+                    className="max-w-3xl mx-auto text-lg text-gray-700 leading-relaxed mb-16 prose lg:prose-xl"
                 >
                     <p>{department.fullDesc}</p>
                 </motion.div>
@@ -67,14 +67,14 @@ const DepartmentDetailPage: React.FC = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.7, delay: 0.4 }}
                     >
-                        <h2 className="text-3xl font-bold text-center mb-8">Gallery</h2>
+                        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">Gallery</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {department.gallery.map((item, index) => (
                                 <motion.div
                                     key={index}
                                     layoutId={`gallery-item-${index}`}
                                     onClick={() => setLightboxImage(item.url)}
-                                    className="cursor-pointer aspect-w-1 aspect-h-1 bg-gray-800 rounded-lg overflow-hidden group"
+                                    className="cursor-pointer aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden group"
                                 >
                                     <img src={item.thumbUrl} alt={`Gallery item ${index + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                                 </motion.div>
@@ -97,7 +97,7 @@ const DepartmentDetailPage: React.FC = () => {
                             layoutId={lightboxImage}
                             src={lightboxImage}
                             alt="Lightbox"
-                            className="max-w-full max-h-full rounded-lg"
+                            className="max-w-full max-h-full rounded-lg shadow-2xl"
                         />
                     </motion.div>
                 )}

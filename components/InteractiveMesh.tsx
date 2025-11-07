@@ -12,10 +12,10 @@ interface InteractiveMeshProps {
 }
 
 const InteractiveMesh: React.FC<InteractiveMeshProps> = ({
-    backgroundColor = '#0f172a', // slate-900
-    nodeColor = 'rgba(45, 212, 191, 0.8)', // teal-400
-    lineColor = 'rgba(45, 212, 191, 0.3)', // teal-400
-    nodeDensity = 10000,
+    backgroundColor = '#f9fafb', // gray-50
+    nodeColor = 'rgba(37, 99, 235, 0.7)', // blue-600
+    lineColor = 'rgba(37, 99, 235, 0.3)', // blue-600
+    nodeDensity = 12000,
     nodeSize = 2,
     toneVolume = 0.05
 }) => {
@@ -149,7 +149,7 @@ const InteractiveMesh: React.FC<InteractiveMeshProps> = ({
                                    + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
                     if (distance < (canvas.width / 7) * (canvas.height / 7)) {
                         opacityValue = 1 - (distance / 20000);
-                        ctx!.strokeStyle = lineColor.replace('0.3', opacityValue.toString());
+                        ctx!.strokeStyle = lineColor.replace(/[\d\.]+\)$/g, `${opacityValue})`);
                         ctx!.lineWidth = 1;
                         ctx!.beginPath();
                         ctx!.moveTo(particles[a].x, particles[a].y);
