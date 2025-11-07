@@ -160,16 +160,16 @@ const LeadersPage: React.FC = () => {
         sortedYears, 
         mainModerator, 
         otherModerators,
-        secretariatPanel,
-        executiveMembers
+        secretariatMembers,
+        executiveMembers,
     } = useMemo(() => {
         if (!leadersData) return { 
             pastExecutivesByYear: {}, 
             sortedYears: [], 
             mainModerator: null, 
             otherModerators: [],
-            secretariatPanel: [],
-            executiveMembers: []
+            secretariatMembers: [],
+            executiveMembers: [],
         };
         
         const grouped = leadersData.pastExecutives.reduce((acc, exec) => {
@@ -182,17 +182,16 @@ const LeadersPage: React.FC = () => {
         
         const sorted = Object.keys(grouped).sort((a, b) => parseInt(b) - parseInt(a));
 
-        const SECRETARIAT_POSITIONS = [
-            'President', 'General Secretary', 'Vice President', 'Operating Secretary', 
-            'Joint Secretary', 'IT Secretary', 'Financial Secretary', 'Treasurer'
+        const secretariatPositionKeywords = [
+            "President", "Secretary", "Financial", "IT"
         ];
 
-        const currentSecretariat = leadersData.currentExecutives.filter(p => 
-            SECRETARIAT_POSITIONS.some(pos => p.position.startsWith(pos))
+        const secretariatMembers = leadersData.currentExecutives.filter(member =>
+            secretariatPositionKeywords.some(pos => member.position.includes(pos))
         );
-        
-        const currentExecutives = leadersData.currentExecutives.filter(p => 
-            !SECRETARIAT_POSITIONS.some(pos => p.position.startsWith(pos))
+
+        const executiveMembers = leadersData.currentExecutives.filter(member =>
+            !secretariatPositionKeywords.some(pos => member.position.includes(pos))
         );
 
         return { 
@@ -200,8 +199,8 @@ const LeadersPage: React.FC = () => {
             sortedYears: sorted, 
             mainModerator: leadersData.moderators[0] || null, 
             otherModerators: leadersData.moderators.slice(1),
-            secretariatPanel: currentSecretariat,
-            executiveMembers: currentExecutives,
+            secretariatMembers,
+            executiveMembers,
         };
     }, [leadersData]);
 
@@ -234,21 +233,17 @@ const LeadersPage: React.FC = () => {
                 </section>
                 
                 <section className="mb-24 bg-gray-50 rounded-3xl py-16">
-                     <h2 className="text-3xl font-bold text-blue-600 text-center mb-12">Current Panel (2025)</h2>
-                     
-                     <div className="mb-16">
-                         <h3 className="text-2xl font-bold text-gray-800 text-center mb-8">Secretariat Panel</h3>
-                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto px-4">
-                           {secretariatPanel.map(p => <MemberCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />)}
-                        </div>
-                     </div>
+                     <h2 className="text-3xl font-bold text-blue-600 text-center mb-12">Secretariat Panel (2025)</h2>
+                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
+                       {secretariatMembers.map(p => <MemberCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />)}
+                    </div>
+                </section>
 
-                     <div>
-                         <h3 className="text-2xl font-bold text-gray-800 text-center mb-8">Executive Members</h3>
-                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
-                           {executiveMembers.map(p => <MemberCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />)}
-                        </div>
-                     </div>
+                <section className="mb-24">
+                     <h2 className="text-3xl font-bold text-blue-600 text-center mb-12">Executive Panel (2025)</h2>
+                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
+                       {executiveMembers.map(p => <MemberCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />)}
+                    </div>
                 </section>
 
                 <section>

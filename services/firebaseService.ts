@@ -90,22 +90,22 @@ const MOCK_DATA: AppData = {
       { id: "ce3", name: "Millat Morsalin Tanim Ba...", position: "Vice President", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
       { id: "ce4", name: "Arafat Rahman", position: "Operating Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
       { id: "ce5", name: "Hemayetul Islam Fardeen", position: "Joint Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce6", name: "Sadid Hasan Dhurbak", position: "IT Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce7", name: "Tahosin Ahamed Somo", position: "Financial Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce8", name: "Jubawer Roshid Jim", position: "Film School & Photography - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce9", name: "Zakareya Sani", position: "Human Resource Management - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce10", name: "Md. Shihab Ahammed", position: "Musica - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce11", name: "Md Saidul Islam", position: "Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce12", name: "Murshed Nasif", position: "Film School & Photography - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
+      { id: "ce6", name: "Sadid Hasan Dhurbak", position: "IT Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'it' },
+      { id: "ce7", name: "Tahosin Ahamed Somo", position: "Financial Secretary", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'finance-marketing' },
+      { id: "ce8", name: "Jubawer Roshid Jim", position: "Film School and Photography - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'film-photo' },
+      { id: "ce9", name: "Zakareya Sani", position: "Human Resource Management - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'hr' },
+      { id: "ce10", name: "Md. Shihab Ahammed", position: "Musica - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'musica' },
+      { id: "ce11", name: "Md Saidul Islam", position: "Timbre - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'timbre' },
+      { id: "ce12", name: "Murshed Nasif", position: "Film School & Photography - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'film-photo' },
       { id: "ce13", name: "MD. Ashfaq Zaman", position: "Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce14", name: "Utsa Barai", position: "Artstation - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce15", name: "Junayed Ahmed Fahim", position: "Artstation - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce16", name: "Simanta Chondhro Suthr...", position: "Wordspace - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce17", name: "Tahmid Abrar Bin Sadat", position: "Musica - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce18", name: "Musfiqur Rahman Khan ...", position: "Human Resource Management - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce19", name: "Shimul Ghosh Joy", position: "Musica - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce20", name: "Zakareya Sani", position: "Human Resource Management - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
-      { id: "ce21", name: "Nur-E-Tadin", position: "Wordspace - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "" },
+      { id: "ce14", name: "Utsa Barai", position: "Artstation - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'artstation' },
+      { id: "ce15", name: "Junayed Ahmed Fahim", position: "Artstation - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'artstation' },
+      { id: "ce16", name: "Simanta Chondhro Suthr...", position: "Wordspace - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'wordspace' },
+      { id: "ce17", name: "Tahmid Abrar Bin Sadat", position: "Musica - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'musica' },
+      { id: "ce18", name: "Musfiqur Rahman Khan ...", position: "Human Resource Management - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'hr' },
+      { id: "ce19", name: "Shimul Ghosh Joy", position: "Musica - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'musica' },
+      { id: "ce20", name: "Zakareya Sani", position: "Human Resource Management - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'hr' },
+      { id: "ce21", name: "Nur-E-Tadin", position: "Wordspace - Executive", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "", department: 'wordspace' },
     ],
     pastExecutives: [
         { id: "pe24-1", name: "Aliya Bhatt", position: "President", imageUrl: "https://i.imgur.com/s6n5F8v.png", bio: "Introduced the inter-departmental cultural competition, fostering healthy rivalry and collaboration among departments.", tenureYears: "2023-2024", dcccId: "24-001", bloodGroup: "O+", religion: "Hinduism", socials: [{ name: "Facebook", url: "#", icon: "facebook" }, { name: "LinkedIn", url: "#", icon: "linkedin" }] },
@@ -172,6 +172,7 @@ export const getAchievements = (): Promise<Achievement[]> => simulateDelay(MOCK_
 export const getEvents = (): Promise<Event[]> => simulateDelay(MOCK_DATA.events);
 export const getEventById = (id: string): Promise<Event | undefined> => simulateDelay(MOCK_DATA.events.find(e => e.id === id));
 export const getContactData = (): Promise<ContactData> => simulateDelay(MOCK_DATA.contact);
+export const getCurrentExecutives = (): Promise<Executive[]> => simulateDelay(MOCK_DATA.leaders.currentExecutives);
 // FIX: Add getGalleryData function.
 export const getGalleryData = (): Promise<GalleryItem[]> => simulateDelay(MOCK_GALLERY);
 export const getLeaderById = (id: string): Promise<Executive | Moderator | undefined> => {

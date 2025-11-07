@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getDepartmentById, getLeaderById } from '../services/firebaseService';
+import { getDepartmentById, getCurrentExecutives } from '../services/firebaseService';
 import Loader from '../components/Loader';
-import type { Department, Executive, Moderator } from '../types';
+import Section from '../components/Section';
+import type { Department, Executive } from '../types';
 
-type Person = Moderator | Executive;
-
-const ActivityIcon: React.FC = () => (
-    <div className="absolute -top-3 -left-3 w-10 h-10 bg-blue-100 rounded-full border-4 border-white flex items-center justify-center">
-        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+const LeaderCard: React.FC<{ person: Executive }> = ({ person }) => (
+    <div className="relative aspect-[0.85] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
+        <div className="absolute inset-0 flex items-center justify-center p-4">
+            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain" />
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black/80 to-transparent" />
+        <div className="absolute bottom-0 left-0 p-3 text-white w-full text-center">
+            <h3 className="font-bold text-sm leading-tight">{person.name}</h3>
+            <p className="text-xs opacity-90 uppercase">{person.position}</p>
+        </div>
     </div>
 );
 
 const DepartmentDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [department, setDepartment] = useState<Department | null>(null);
-    const [coordinator, setCoordinator] = useState<Person | null>(null);
+    const [executives, setExecutives] = useState<Executive[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -28,10 +34,9 @@ const DepartmentDetailPage: React.FC = () => {
                 const data = await getDepartmentById(id);
                 if (data) {
                     setDepartment(data);
-                    if(data.coordinatorId) {
-                        const leaderData = await getLeaderById(data.coordinatorId);
-                        if(leaderData) setCoordinator(leaderData);
-                    }
+                    const allExecutives = await getCurrentExecutives();
+                    const departmentExecutives = allExecutives.filter(exec => exec.department === id);
+                    setExecutives(departmentExecutives);
                 } else {
                     setError('Department not found.');
                 }
@@ -43,79 +48,89 @@ const DepartmentDetailPage: React.FC = () => {
         };
 
         fetchDepartment();
+        window.scrollTo(0, 0);
     }, [id]);
 
     if (loading) return <div className="h-screen flex items-center justify-center pt-20 bg-white"><Loader /></div>;
     if (error || !department) return <div className="text-center py-40 text-red-500">{error || 'Department not found.'}</div>;
 
+     const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+        },
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1 },
+    };
+
     return (
-        <div className="pt-20 bg-white min-h-screen">
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                className="relative h-[40vh] min-h-[250px] max-h-[400px] bg-gray-900"
-            >
-                <img src={department.coverImage} alt={department.name} className="w-full h-full object-cover opacity-40" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-8 text-white container mx-auto">
-                    <span className="text-7xl mb-4 inline-block">{department.iconUrl}</span>
-                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">{department.name}</h1>
+        <div className="pt-20 bg-white min-h-screen font-sans">
+            {/* Hero Section */}
+            <header className="relative h-[50vh] min-h-[350px] flex items-center justify-center text-white text-center overflow-hidden">
+                <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover z-0" />
+                <div className="absolute inset-0 bg-black/60 z-10"></div>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="relative z-20"
+                >
+                    <div className="text-6xl mb-4">{department.iconUrl}</div>
+                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">{department.name}</h1>
+                </motion.div>
+            </header>
+
+            <motion.div variants={containerVariants} initial="hidden" animate="visible" className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div className="grid lg:grid-cols-3 gap-12">
+                    <motion.div variants={itemVariants} className="lg:col-span-2">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-4">About {department.name}</h2>
+                        <div className="prose lg:prose-lg text-gray-700 leading-relaxed">
+                            <p>{department.fullDesc}</p>
+                        </div>
+                    </motion.div>
+                    <motion.aside variants={itemVariants} className="lg:col-span-1">
+                        <div className="bg-gray-50 rounded-lg p-6 sticky top-28 border border-gray-200/80">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">Key Activities</h3>
+                            <ul className="space-y-2">
+                                {department.keyActivities.map((activity, index) => (
+                                    <li key={index} className="flex items-start">
+                                        <span className="text-blue-500 mr-2 mt-1">&#10003;</span>
+                                        <span className="text-gray-700">{activity}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </motion.aside>
                 </div>
             </motion.div>
+            
+            {(executives && executives.length > 0) && (
+                <Section title="The Leaders" alternateBackground>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-5xl mx-auto">
+                        {executives.map(exec => {
+                             const displayExec = {
+                                ...exec,
+                                position: exec.position.replace(`${department.name} - `, '')
+                            };
+                           return <LeaderCard key={exec.id} person={displayExec} />;
+                        })}
+                    </div>
+                     <div className="text-center mt-12">
+                        <Link to="/leaders" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                            See All Leaders
+                        </Link>
+                    </div>
+                </Section>
+            )}
 
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-                 <div className="max-w-4xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7, delay: 0.2 }}
-                        className="prose lg:prose-xl max-w-none text-gray-700 leading-relaxed mb-16"
-                    >
-                        <h2 className="text-3xl font-bold text-gray-900 mb-4">About {department.name}</h2>
-                        <p>{department.fullDesc}</p>
-                    </motion.div>
-
-                    {department.keyActivities && department.keyActivities.length > 0 && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.3 }}
-                             className="mb-16"
-                        >
-                            <h3 className="text-3xl font-bold text-gray-900 mb-8">Key Activities</h3>
-                            <div className="grid sm:grid-cols-2 gap-6">
-                                {department.keyActivities.map((activity, index) => (
-                                    <div key={index} className="relative bg-gray-50 p-6 pl-10 rounded-lg border border-gray-200">
-                                        <ActivityIcon />
-                                        <p className="text-gray-800 font-semibold">{activity}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </motion.div>
-                     )}
-                    
-                    {coordinator && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.4 }}
-                        >
-                            <h3 className="text-3xl font-bold text-gray-900 mb-8">Meet the Coordinator</h3>
-                             <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-                                <img src={coordinator.imageUrl} alt={coordinator.name} className="w-28 h-28 rounded-full object-contain bg-white border-4 border-blue-200 flex-shrink-0" />
-                                <div>
-                                    <h4 className="font-bold text-2xl text-gray-800">{coordinator.name}</h4>
-                                    <p className="text-md text-blue-600 font-semibold mb-2">{coordinator.position}</p>
-                                    <p className="text-sm text-gray-600 mb-4">{coordinator.bio.substring(0,100)}...</p>
-                                    <Link to="/leaders" className="font-semibold text-sm text-gray-500 hover:text-blue-600 transition-colors group">
-                                        View full leadership panel <span className="inline-block transition-transform group-hover:translate-x-1">&rarr;</span>
-                                    </Link>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                 </div>
+            <div className="text-center py-16">
+                <Link to="/departments" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                    Explore Other Departments
+                </Link>
             </div>
         </div>
     );
