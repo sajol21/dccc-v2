@@ -142,7 +142,8 @@ export const initialData: AppData = {
     title: "Become a Part of Our Family",
     description: "Ready to explore your creative potential? Join DCCC and embark on a journey of self-discovery and artistic expression.",
     buttonText: "Register Now",
-    buttonLink: "#"
+    buttonLink: "#",
+    backgroundImageUrl: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=2070&auto=format&fit=crop"
   },
   footer: {
     aboutText: "Dhaka College Cultural Club is a student-run organization dedicated to promoting cultural activities and nurturing artistic talent at Dhaka College.",

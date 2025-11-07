@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -5,25 +6,25 @@ const storySections = [
     {
         title: 'The Origin and Vision',
         text: 'Dhaka College Cultural Club (DCCC) is the first and only cultural organization of Dhaka College run by students of classes XI-XII. With the motto "Know thyself; Express yourself," the club began its journey on 7 July 2021, initiated by the HSC 22 batch after college activities resumed post-pandemic. Recognizing the students\' passion for culture, the college authority approved its formation, and Professor Sharifa Sultana was appointed as the convenor. The club was established to nurture cultural practice and give students a platform to express their creativity.',
-        imageUrl: 'https://picsum.photos/800/600?random=11',
+        imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop',
         layout: 'text-image'
     },
     {
         title: 'Structure and Departments',
         text: 'After its founding, applications were opened for students interested in leadership. Qualified students became executive members, each assigned to specific departments — administration, management, IT, sponsorship, and marketing. Later, deputy executive members were added to support the operations. To involve students in diverse forms of art, DCCC introduced seven departments: Vocal, Dance, Drama, Comedy, Recitation, Literature, and Art.',
-        imageUrl: 'https://picsum.photos/800/600?random=12',
+        imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop',
         layout: 'image-text'
     },
     {
         title: 'Early Recognition',
         text: 'To showcase young talent, DCCC launched its first online event, "DCCC Weekly Contest 2021," where participants from top colleges like Notre Dame, Rajuk Uttara, and Adamjee Cantt Public College took part. This event established the club\'s name beyond Dhaka College. Soon, DCCC began collaborating as a club partner in various inter-college fests. In September 2021, the Academia Team was formed to help members balance their studies alongside cultural activities.',
-        imageUrl: 'https://picsum.photos/800/600?random=13',
+        imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop',
         layout: 'text-image'
     },
     {
         title: 'Growth and Progress',
         text: 'A new chapter began in March 2022 with the arrival of the HSC 23 batch, giving fresh momentum to the club\'s activities. DCCC started organizing offline sessions and workshops to train newcomers and regularly published members\' music, art, and literature on its digital platforms. The first offline event, "Summer Art Camp 2022," held in collaboration with six reputed college clubs, marked a turning point for DCCC\'s recognition in Dhaka\'s cultural scene. To strengthen its foundation, 23 associate executive members were appointed in September 2022, ensuring continuity and leadership for future activities.',
-        imageUrl: 'https://picsum.photos/800/600?random=14',
+        imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop',
         layout: 'image-text'
     }
 ];

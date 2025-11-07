@@ -23,18 +23,23 @@ const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ tit
     };
 
     const handleCreate = () => {
-        if (items.length === 0) {
-            setEditingItem({ id: `${title.toLowerCase()}_${Date.now()}` } as T);
-            return;
+        // Create a new item by deeply cloning the first item in the list,
+        // or create a default object if the list is empty.
+        let newItem: any;
+        if (items.length > 0) {
+            newItem = JSON.parse(JSON.stringify(items[0]));
+             Object.keys(newItem).forEach(key => {
+                if (typeof newItem[key] === 'string') newItem[key] = '';
+                if (typeof newItem[key] === 'boolean') newItem[key] = false;
+                if (Array.isArray(newItem[key])) newItem[key] = [];
+                if (typeof newItem[key] === 'number') newItem[key] = 0;
+                if (key.toLowerCase().includes('imageurl')) newItem[key] = '';
+            });
+        } else {
+            // A sensible default if the list is empty
+            newItem = { name: `New ${title}`, description: '' };
         }
-        const newItem = JSON.parse(JSON.stringify(items[0]));
-        Object.keys(newItem).forEach(key => {
-            if (typeof newItem[key] === 'string') newItem[key] = '';
-            if (typeof newItem[key] === 'boolean') newItem[key] = false;
-            if (Array.isArray(newItem[key])) newItem[key] = [];
-            if (typeof newItem[key] === 'number') newItem[key] = 0;
-            if (typeof newItem[key] === 'object' && newItem[key] !== null && !Array.isArray(newItem[key])) newItem[key] = {};
-        });
+       
         newItem.id = `${title.toLowerCase().replace(' ', '-')}_${Date.now()}`;
         if (newItem.name !== undefined) newItem.name = "New " + title;
         if (newItem.title !== undefined) newItem.title = "New " + title;

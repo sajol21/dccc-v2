@@ -1,6 +1,5 @@
 
 import React from 'react';
-// FIX: Corrected import path for User type.
 import type { User } from '../../services/firebaseService';
 
 interface AdminLayoutProps {
@@ -8,10 +7,6 @@ interface AdminLayoutProps {
     signOut: () => void;
     activeTab: string;
     setActiveTab: (tab: string) => void;
-    hasChanges: boolean;
-    isSaving: boolean;
-    onSave: () => void;
-    onReset: () => void;
     children: React.ReactNode;
 }
 
@@ -32,15 +27,19 @@ const NavIcon: React.FC<{ name: string }> = ({ name }) => {
     )
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, setActiveTab, hasChanges, isSaving, onSave, onReset, children }) => {
+const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, setActiveTab, children }) => {
     const tabs = ['Dashboard', 'Theme', 'Footer', 'Departments', 'Events', 'Achievements', 'Leaders'];
 
     return (
         <div className="bg-gray-100 min-h-screen">
             <div className="flex">
                 {/* Sidebar */}
-                <aside className="fixed top-0 left-0 h-full w-16 md:w-64 bg-gray-800 text-white flex flex-col z-40 pt-20">
-                    <nav className="flex-grow p-2 space-y-2">
+                <aside className="fixed top-0 left-0 h-full w-16 md:w-64 bg-gray-800 text-white flex flex-col z-40">
+                    <div className="flex items-center justify-center md:justify-start p-2 md:p-4 h-16 border-b border-gray-700 flex-shrink-0">
+                       <img src="https://dhakacollegeculturalclub.com/logo.png" alt="DCCC Logo" className="h-10 w-auto bg-white rounded-full p-1" />
+                        <span className="hidden md:inline text-lg font-bold ml-3">Admin Panel</span>
+                    </div>
+                    <nav className="flex-grow p-2 space-y-2 overflow-y-auto">
                         {tabs.map(tab => (
                             <button 
                                 key={tab} 
@@ -52,8 +51,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, set
                             </button>
                         ))}
                     </nav>
-                     <div className="p-2 border-t border-gray-700">
-                         <button onClick={signOut} className="flex items-center gap-3 w-full text-left p-3 rounded-md font-medium transition-colors hover:bg-gray-700">
+                     <div className="p-2 border-t border-gray-700 flex-shrink-0">
+                         <div className="p-3 text-xs text-gray-400 hidden md:block">
+                            <p className="font-semibold">{user?.email}</p>
+                            <p>Admin User</p>
+                        </div>
+                         <button onClick={signOut} className="flex items-center gap-3 w-full text-left p-3 rounded-md font-medium transition-colors hover:bg-red-500 hover:text-white">
                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
@@ -64,34 +67,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, set
 
                 {/* Main Content */}
                 <div className="flex-1 ml-16 md:ml-64">
-                    <header className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 z-30">
-                         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 container mx-auto px-4 sm:px-6 lg:px-8">
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900">{activeTab} Settings</h1>
-                                <p className="text-sm text-gray-500">Logged in as {user?.email}</p>
-                            </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                                <button
-                                    onClick={onReset}
-                                    disabled={!hasChanges || isSaving}
-                                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md font-semibold hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    Reset
-                                </button>
-                                <button
-                                    onClick={onSave}
-                                    disabled={!hasChanges || isSaving}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors w-32"
-                                >
-                                    {isSaving ? 'Saving...' : 'Save Changes'}
-                                </button>
-                            </div>
-                        </div>
-                    </header>
                     <main className="p-4 sm:p-6 lg:p-8">
-                        <div className="bg-white p-6 rounded-lg shadow-sm">
-                            {children}
-                        </div>
+                        {children}
                     </main>
                 </div>
             </div>

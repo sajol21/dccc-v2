@@ -1,23 +1,18 @@
 
-
 import React from 'react';
 import type { HeroData, AboutData, JoinData } from '../../types';
 import RichTextEditor from './RichTextEditor';
 import ImageUploadInput from './ImageUploadInput';
+import EditorWrapper from './EditorWrapper';
+import { getDashboardData, saveDashboardData } from '../../services/firebaseService';
 
-interface EditorProps {
+interface FormProps {
     data: {
         hero: HeroData;
         about: AboutData;
         join: JoinData;
     };
-    stats: {
-        departments: number;
-        events: number;
-        achievements: number;
-        leaders: number;
-    }
-    onChange: (section: 'hero' | 'about' | 'join', field: string, value: any) => void;
+    onChange: (newData: any) => void;
 }
 
 const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...props }) => (
@@ -54,52 +49,57 @@ const Section: React.FC<{ title: string; children: React.ReactNode; description?
 );
 
 
-const DashboardEditor: React.FC<EditorProps> = ({ data, stats, onChange }) => {
+const DashboardForm: React.FC<FormProps> = ({ data, onChange }) => {
+
+    const handleFieldChange = (section: 'hero' | 'about' | 'join', field: string, value: any) => {
+        onChange({
+            ...data,
+            [section]: {
+                ...data[section],
+                [field]: value
+            }
+        });
+    };
+
     return (
         <div>
-            <h2 className="text-2xl font-bold mb-6">Dashboard Overview</h2>
-            
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-blue-600">{stats.departments}</p>
-                    <p className="text-sm font-medium text-blue-800">Departments</p>
-                </div>
-                <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-green-600">{stats.events}</p>
-                    <p className="text-sm font-medium text-green-800">Events</p>
-                </div>
-                 <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-yellow-600">{stats.achievements}</p>
-                    <p className="text-sm font-medium text-yellow-800">Achievements</p>
-                </div>
-                <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-indigo-600">{stats.leaders}</p>
-                    <p className="text-sm font-medium text-indigo-800">Leaders</p>
-                </div>
-            </div>
-
             <Section title="Hero Section">
-                <FormInput label="Headline Line 1" value={data.hero.headlineLine1} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('hero', 'headlineLine1', e.target.value)} />
-                <FormInput label="Headline Line 2" value={data.hero.headlineLine2} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('hero', 'headlineLine2', e.target.value)} />
-                <FormInput label="Tagline" value={data.hero.tagline} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('hero', 'tagline', e.target.value)} />
+                <FormInput label="Headline Line 1" value={data.hero.headlineLine1} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('hero', 'headlineLine1', e.target.value)} />
+                <FormInput label="Headline Line 2" value={data.hero.headlineLine2} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('hero', 'headlineLine2', e.target.value)} />
+                <FormInput label="Tagline" value={data.hero.tagline} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('hero', 'tagline', e.target.value)} />
             </Section>
 
             <Section title="About Section">
-                <TextAreaInput label="Short Text" rows={3} value={data.about.shortText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('about', 'shortText', e.target.value)} />
-                <RichTextEditor label="Full Text" value={data.about.fullText} onChange={(val: string) => onChange('about', 'fullText', val)} />
-                <ImageUploadInput label="Image URL" value={data.about.imageUrl} onChange={(val: string) => onChange('about', 'imageUrl', val)} />
-                <FormInput label="Video URL" value={data.about.videoUrl || ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('about', 'videoUrl', e.target.value)} />
-                <FormInput label="Vision Tagline" value={data.about.visionTagline} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('about', 'visionTagline', e.target.value)} />
+                <TextAreaInput label="Short Text" rows={3} value={data.about.shortText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('about', 'shortText', e.target.value)} />
+                <RichTextEditor label="Full Text" value={data.about.fullText} onChange={(val: string) => handleFieldChange('about', 'fullText', val)} />
+                <ImageUploadInput label="Image URL" value={data.about.imageUrl} onChange={(val: string) => handleFieldChange('about', 'imageUrl', val)} />
+                <FormInput label="Video URL" value={data.about.videoUrl || ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('about', 'videoUrl', e.target.value)} />
+                <FormInput label="Vision Tagline" value={data.about.visionTagline} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('about', 'visionTagline', e.target.value)} />
             </Section>
 
              <Section title="Join Us Section">
-                <FormInput label="Title" value={data.join.title} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('join', 'title', e.target.value)} />
-                <TextAreaInput label="Description" rows={3} value={data.join.description} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('join', 'description', e.target.value)} />
-                <FormInput label="Button Text" value={data.join.buttonText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('join', 'buttonText', e.target.value)} />
-                <FormInput label="Button Link" value={data.join.buttonLink} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('join', 'buttonLink', e.target.value)} />
+                <FormInput label="Title" value={data.join.title} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('join', 'title', e.target.value)} />
+                <TextAreaInput label="Description" rows={3} value={data.join.description} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('join', 'description', e.target.value)} />
+                <FormInput label="Button Text" value={data.join.buttonText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('join', 'buttonText', e.target.value)} />
+                <FormInput label="Button Link" value={data.join.buttonLink} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('join', 'buttonLink', e.target.value)} />
+                <ImageUploadInput label="Background Image URL" value={data.join.backgroundImageUrl} onChange={(val: string) => handleFieldChange('join', 'backgroundImageUrl', val)} />
             </Section>
         </div>
     );
 };
+
+const DashboardEditor: React.FC = () => {
+    return (
+        <EditorWrapper
+            title="Dashboard"
+            description="Manage the main content of your homepage and about page."
+            fetcher={getDashboardData}
+            saver={saveDashboardData}
+// FIX: Pass children as an explicit prop to satisfy TypeScript
+            children={(data, setData) => <DashboardForm data={data} onChange={setData} />}
+        />
+    );
+};
+
 
 export default DashboardEditor;

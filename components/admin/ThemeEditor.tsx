@@ -1,9 +1,11 @@
 
 import React from 'react';
 import type { ThemeData } from '../../types';
+import EditorWrapper from './EditorWrapper';
+import { getTheme, saveTheme } from '../../services/firebaseService';
 
-interface EditorProps {
-    theme: ThemeData;
+interface FormProps {
+    data: ThemeData;
     onChange: (newTheme: ThemeData) => void;
 }
 
@@ -26,34 +28,41 @@ const ToggleSwitch: React.FC<{ checked: boolean; onChange: (checked: boolean) =>
     </button>
 );
 
-const ThemeEditor: React.FC<EditorProps> = ({ theme, onChange }) => {
+const ThemeForm: React.FC<FormProps> = ({ data, onChange }) => {
     
     const handleChange = (field: keyof ThemeData, value: any) => {
-        onChange({ ...theme, [field]: value });
+        onChange({ ...data, [field]: value });
     };
 
     return (
-        <div>
-            <div className="mb-6">
-                <h2 className="text-2xl font-bold">Theme & Animation</h2>
-                <p className="text-sm text-gray-500">Customize the interactive mesh on the homepage.</p>
-            </div>
-
-            <div className="space-y-4">
-                <FormInput label="Background Color" type="color" value={theme.backgroundColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('backgroundColor', e.target.value)} />
-                <FormInput label="Node Color" type="color" value={theme.nodeColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('nodeColor', e.target.value)} />
-                <FormInput label="Line Color" type="color" value={theme.lineColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('lineColor', e.target.value)} />
-                <FormInput label="Highlight Color" type="color" value={theme.highlightColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('highlightColor', e.target.value)} />
-                <FormInput label="Line Highlight Color" type="color" value={theme.lineHighlightColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('lineHighlightColor', e.target.value)} />
-                <FormInput label={`Node Density (${theme.nodeDensity})`} type="range" min="5000" max="20000" step="100" value={theme.nodeDensity} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('nodeDensity', parseInt(e.target.value))} />
-                <FormInput label={`Node Size (${theme.nodeSize})`} type="range" min="1" max="5" step="0.1" value={theme.nodeSize} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('nodeSize', parseFloat(e.target.value))} />
-                <FormInput label={`Mouse Repel Strength (${theme.mouseRepelStrength})`} type="range" min="0" max="10" step="0.5" value={theme.mouseRepelStrength} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('mouseRepelStrength', parseFloat(e.target.value))} />
-                <div className="flex items-center gap-4 pt-2">
-                    <label className="text-sm font-medium text-gray-700">Enable Click Effect</label>
-                    <ToggleSwitch checked={theme.clickEffectEnabled} onChange={val => handleChange('clickEffectEnabled', val)} />
-                </div>
+        <div className="space-y-4">
+            <FormInput label="Background Color" type="color" value={data.backgroundColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('backgroundColor', e.target.value)} />
+            <FormInput label="Node Color" type="color" value={data.nodeColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('nodeColor', e.target.value)} />
+            <FormInput label="Line Color" type="color" value={data.lineColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('lineColor', e.target.value)} />
+            <FormInput label="Highlight Color" type="color" value={data.highlightColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('highlightColor', e.target.value)} />
+            <FormInput label="Line Highlight Color" type="color" value={data.lineHighlightColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('lineHighlightColor', e.target.value)} />
+            <FormInput label={`Node Density (${data.nodeDensity})`} type="range" min="5000" max="20000" step="100" value={data.nodeDensity} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('nodeDensity', parseInt(e.target.value))} />
+            <FormInput label={`Node Size (${data.nodeSize})`} type="range" min="1" max="5" step="0.1" value={data.nodeSize} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('nodeSize', parseFloat(e.target.value))} />
+            <FormInput label={`Mouse Repel Strength (${data.mouseRepelStrength})`} type="range" min="0" max="10" step="0.5" value={data.mouseRepelStrength} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('mouseRepelStrength', parseFloat(e.target.value))} />
+            <div className="flex items-center gap-4 pt-2">
+                <label className="text-sm font-medium text-gray-700">Enable Click Effect</label>
+                <ToggleSwitch checked={data.clickEffectEnabled} onChange={val => handleChange('clickEffectEnabled', val)} />
             </div>
         </div>
+    );
+};
+
+
+const ThemeEditor: React.FC = () => {
+     return (
+        <EditorWrapper
+            title="Theme & Animation"
+            description="Customize the interactive mesh on the homepage."
+            fetcher={getTheme}
+            saver={saveTheme}
+// FIX: Pass children as an explicit prop to satisfy TypeScript
+            children={(data, setData) => <ThemeForm data={data} onChange={setData} />}
+        />
     );
 };
 

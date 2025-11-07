@@ -3,9 +3,11 @@ import React from 'react';
 import type { FooterData } from '../../types';
 import ArrayOfObjectsEditor from './ArrayOfObjectsEditor';
 import ImageUploadInput from './ImageUploadInput';
+import EditorWrapper from './EditorWrapper';
+import { getFooter, saveFooter } from '../../services/firebaseService';
 
-interface EditorProps {
-    footer: FooterData;
+interface FormProps {
+    data: FooterData;
     onChange: (newFooter: FooterData) => void;
 }
 
@@ -23,34 +25,42 @@ const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...pr
 );
 
 
-const FooterEditor: React.FC<EditorProps> = ({ footer, onChange }) => {
+const FooterForm: React.FC<FormProps> = ({ data, onChange }) => {
     
     const handleFieldChange = (field: keyof FooterData, value: any) => {
-        onChange({ ...footer, [field]: value });
+        onChange({ ...data, [field]: value });
     };
 
     return (
-        <div>
-            <h2 className="text-2xl font-bold mb-6">Footer Settings</h2>
+        <div className="space-y-4">
+             <ImageUploadInput label="Logo 1 URL" value={data.logo1Url} onChange={(val: string) => handleFieldChange('logo1Url', val)} />
+             <ImageUploadInput label="Logo 2 URL" value={data.logo2Url} onChange={(val: string) => handleFieldChange('logo2Url', val)} />
+             <FormInput label="About Text" value={data.aboutText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('aboutText', e.target.value)} />
+             <FormInput label="Email" value={data.email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('email', e.target.value)} />
+             <FormInput label="Phone" value={data.phone} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('phone', e.target.value)} />
+             <FormInput label="Address" value={data.address} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('address', e.target.value)} />
+             <FormInput label="Copyright Text" value={data.copyrightText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('copyrightText', e.target.value)} />
             
-            <div className="space-y-4">
-                 <ImageUploadInput label="Logo 1 URL" value={footer.logo1Url} onChange={(val: string) => handleFieldChange('logo1Url', val)} />
-                 <ImageUploadInput label="Logo 2 URL" value={footer.logo2Url} onChange={(val: string) => handleFieldChange('logo2Url', val)} />
-                 <FormInput label="About Text" value={footer.aboutText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('aboutText', e.target.value)} />
-                 <FormInput label="Email" value={footer.email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('email', e.target.value)} />
-                 <FormInput label="Phone" value={footer.phone} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('phone', e.target.value)} />
-                 <FormInput label="Address" value={footer.address} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('address', e.target.value)} />
-                 <FormInput label="Copyright Text" value={footer.copyrightText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('copyrightText', e.target.value)} />
-                
-                 <ArrayOfObjectsEditor 
-                    label="Social Links" 
-                    value={footer.socialLinks} 
-                    onChange={(val: any[]) => handleFieldChange('socialLinks', val)}
-                />
-            </div>
-
+             <ArrayOfObjectsEditor 
+                label="Social Links" 
+                value={data.socialLinks} 
+                onChange={(val: any[]) => handleFieldChange('socialLinks', val)}
+            />
         </div>
     );
 };
+
+const FooterEditor: React.FC = () => {
+    return (
+        <EditorWrapper
+            title="Footer Settings"
+            description="Manage the content displayed in the website footer."
+            fetcher={getFooter}
+            saver={saveFooter}
+// FIX: Pass children as an explicit prop to satisfy TypeScript
+            children={(data, setData) => <FooterForm data={data} onChange={setData} />}
+        />
+    );
+}
 
 export default FooterEditor;

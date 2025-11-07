@@ -100,6 +100,7 @@ export interface JoinData {
   description: string;
   buttonText: string;
   buttonLink: string;
+  backgroundImageUrl: string;
 }
 
 export interface FooterData {
