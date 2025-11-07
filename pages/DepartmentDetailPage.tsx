@@ -51,7 +51,7 @@ const DepartmentDetailPage: React.FC = () => {
         window.scrollTo(0, 0);
     }, [id]);
 
-    if (loading) return <div className="h-screen flex items-center justify-center pt-20 bg-white"><Loader /></div>;
+    if (loading) return <div className="h-screen flex items-center justify-center bg-white"><Loader /></div>;
     if (error || !department) return <div className="text-center py-40 text-red-500">{error || 'Department not found.'}</div>;
 
      const containerVariants = {
@@ -68,7 +68,7 @@ const DepartmentDetailPage: React.FC = () => {
     };
 
     return (
-        <div className="pt-20 bg-white min-h-screen font-sans">
+        <div className="bg-white min-h-screen font-sans">
             {/* Hero Section */}
             <header className="relative h-[50vh] min-h-[350px] flex items-center justify-center text-white text-center overflow-hidden">
                 <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover z-0" />

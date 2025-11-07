@@ -1,14 +1,11 @@
-
-
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Section from '../components/Section';
 import Loader from '../components/Loader';
-import InteractiveMesh from '../components/InteractiveMesh';
-import type { Department, Event, Executive } from '../types';
+import type { Department, Event } from '../types';
 
 const StatCard: React.FC<{ value: string; label: string; index: number }> = ({ value, label, index }) => (
     <motion.div
@@ -93,12 +90,15 @@ const HomePage: React.FC = () => {
     const { data: appData, loading, error } = useData(getAppData);
 
     const heroRef = useRef(null);
-    const { scrollYProgress: scrollYProgressHero } = useScroll({ 
-        target: heroRef, 
-        offset: ["start start", "end start"] 
+    const { scrollYProgress: scrollYProgressHero } = useScroll({
+        target: heroRef,
+        offset: ["start start", "end start"]
     });
-    const parallaxYMesh = useTransform(scrollYProgressHero, [0, 1], ["0%", "50%"]);
-    const parallaxYImage = useTransform(scrollYProgressHero, [0, 1], ["0%", "20%"]);
+
+    const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+    
+    const parallaxYImageTransform = useTransform(scrollYProgressHero, [0, 1], ["0%", "20%"]);
+    const parallaxYImage = useSpring(parallaxYImageTransform, springConfig);
     
     const joinRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: joinRef, offset: ["start end", "end start"] });
@@ -120,7 +120,7 @@ const HomePage: React.FC = () => {
     return (
         <div className="bg-gray-50">
             {/* Hero Section */}
-            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center text-center pt-24 pb-12 overflow-hidden">
+            <section ref={heroRef} className="relative flex items-center justify-center text-center py-12 overflow-hidden" style={{ minHeight: 'calc(100vh - 4rem)' }}>
                 {hero.backgroundImageUrl && (
                     <motion.div
                         className="absolute inset-0 z-0"
@@ -130,12 +130,6 @@ const HomePage: React.FC = () => {
                         <div className="absolute inset-0 bg-black/40" />
                     </motion.div>
                 )}
-                <motion.div
-                    className="absolute top-0 left-0 w-full h-full z-1"
-                    style={{ y: parallaxYMesh }}
-                >
-                    <InteractiveMesh />
-                </motion.div>
                 <div className="relative z-10 px-4 w-full max-w-4xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

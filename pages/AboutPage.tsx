@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -74,7 +73,7 @@ const AboutPage: React.FC = () => {
     return (
         <div className="bg-white text-gray-800">
             {/* Hero Section */}
-            <header className="pt-32 pb-16 md:pt-40 md:pb-24 bg-white">
+            <header className="pt-16 pb-16 md:pt-24 md:pb-24 bg-white">
                 <div className="container mx-auto px-4 text-center">
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}

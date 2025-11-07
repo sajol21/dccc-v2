@@ -1,151 +1,124 @@
-import React, { useEffect, useRef } from 'react';
-import { motion, useInView, useSpring } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { getAppData } from '../services/firebaseService';
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { getAchievements } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Loader from '../components/Loader';
-import Section from '../components/Section';
-import type { Person } from '../types';
+import type { Achievement } from '../types';
 
-const AnimatedStat: React.FC<{ value: string; label: string }> = ({ value, label }) => {
-    const ref = useRef<HTMLSpanElement>(null);
-    const isInView = useInView(ref, { once: true });
-    const numericValue = parseInt(value.replace('+', ''), 10);
-    const spring = useSpring(0, { stiffness: 50, damping: 20 });
-
-    useEffect(() => {
-        if (isInView) {
-            spring.set(numericValue);
-        }
-    }, [isInView, numericValue, spring]);
-
-    useEffect(() => {
-        spring.on("change", (latest) => {
-            if (ref.current) {
-                ref.current.textContent = Math.round(latest).toString();
-            }
-        });
-    }, [spring]);
+const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }) => {
+    const date = new Date(achievement.date);
+    const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
 
     return (
-        <div>
-            <p className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                <span ref={ref}>0</span>{value.includes('+') && '+'}
-            </p>
-            <p className="text-gray-500 mt-2 font-medium">{label}</p>
-        </div>
+        <motion.div
+            layout
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="bg-white rounded-xl border border-gray-200/80 overflow-hidden group flex flex-col shadow-sm hover:shadow-xl transition-all duration-300"
+        >
+            <div className="overflow-hidden aspect-[16/10]">
+                <img src={achievement.imageUrl} alt={achievement.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
+            </div>
+            <div className="p-6 flex flex-col flex-grow">
+                <span className="text-sm font-semibold text-blue-600 mb-2">{achievement.category}</span>
+                <h3 className="font-bold text-xl text-gray-900 leading-tight mb-3 flex-grow">{achievement.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{achievement.description}</p>
+                <div className="mt-auto border-t border-gray-100 pt-3">
+                    <p className="text-xs text-gray-500 font-medium">{formattedDate}</p>
+                </div>
+            </div>
+        </motion.div>
     );
 };
 
-const LeaderPreviewCard: React.FC<{ person: Person }> = ({ person }) => (
-    <Link to="/panel" className="block group">
-        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
-        </div>
-        <h4 className="font-bold mt-3 text-gray-800">{person.name}</h4>
-        <p className="text-sm text-blue-600">{person.position}</p>
-    </Link>
-);
-
-
 const AchievementsPage: React.FC = () => {
-    const { data: appData, loading, error } = useData(getAppData);
+    const { data: achievements, loading, error } = useData(getAchievements);
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
-    if (loading) return <div className="h-screen flex items-center justify-center pt-20 bg-white"><Loader /></div>;
-    if (error || !appData) return <div className="text-center py-40 text-red-500">Could not load page data.</div>;
+    const categories = useMemo(() => {
+        if (!achievements) return ['All'];
+        // Sort achievements by date descending before extracting categories to ensure a somewhat logical order
+        const sorted = [...achievements].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const uniqueCategories = [...new Set(sorted.map(a => a.category))];
+        return ['All', ...uniqueCategories];
+    }, [achievements]);
 
-    const { about, leaders } = appData;
-    
-    const timelineEvents = [
-        { year: "1956", title: "The Genesis", description: "Dhaka College Cultural Club was founded with a vision to create a vibrant platform for students to explore and showcase their artistic talents." },
-        { year: "1990s", title: "A Decade of Growth", description: "The club expanded its wings, introducing new departments and hosting its first inter-college cultural festival, setting a new benchmark for excellence." },
-        { year: "2010s", title: "Embracing Modernity", description: "DCCC stepped into the digital age, launching its first website and social media presence, connecting with a wider audience than ever before." },
-        { year: "Present", title: "A Legacy of Creativity", description: "Today, DCCC stands as a beacon of cultural excellence, nurturing thousands of students and continuing its mission to inspire and innovate." },
-    ];
+    const filteredAchievements = useMemo(() => {
+        if (!achievements) return [];
+        // Always sort by date so newest appear first
+        const sorted = [...achievements].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        if (selectedCategory === 'All') {
+            return sorted;
+        }
+        return sorted.filter(a => a.category === selectedCategory);
+    }, [achievements, selectedCategory]);
 
     return (
-        <div className="bg-white text-gray-800">
-            {/* Video Hero */}
-            <header className="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    src={about.videoUrl}
-                    className="absolute z-0 w-auto min-w-full min-h-full max-w-none"
-                />
-                <div className="absolute inset-0 bg-black/60 z-10"></div>
+        <div className="pt-16 pb-20 min-h-screen bg-gray-50">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                    className="relative z-20 p-4"
+                    transition={{ duration: 0.7 }}
+                    className="text-center mb-12"
                 >
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-4">Our Journey & Legacy</h1>
-                    <p className="text-lg md:text-2xl max-w-3xl mx-auto opacity-90">{about.visionTagline}</p>
+                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                           Celebrating Our Success
+                        </span>
+                    </h1>
+                    <p className="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                        A showcase of our club's milestones, awards, and noteworthy accomplishments through the years.
+                    </p>
                 </motion.div>
-            </header>
 
-            {/* Stats Section */}
-            <section className="py-20 bg-gray-50">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        {about.stats.map((stat) => (
-                           <AnimatedStat key={stat.label} value={stat.value} label={stat.label} />
-                        ))}
-                    </div>
-                </div>
-            </section>
-            
-            {/* Our Journey Timeline */}
-            <Section title="Our Journey" subtitle="Tracing the footsteps of a cultural legacy.">
-                <div className="relative max-w-3xl mx-auto">
-                    {/* The vertical line */}
-                    <div className="absolute left-4 md:left-1/2 top-0 h-full w-0.5 bg-gray-200 -translate-x-1/2"></div>
-                    
-                    {timelineEvents.map((event, index) => (
+                {loading && <div className="flex justify-center"><Loader /></div>}
+                {error && <p className="text-center text-red-500">Failed to load achievements.</p>}
+
+                {achievements && achievements.length > 0 && (
+                    <>
+                        <div className="flex justify-center flex-wrap gap-2 mb-12">
+                            {categories.map(category => (
+                                <button
+                                    key={category}
+                                    onClick={() => setSelectedCategory(category)}
+                                    className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 border ${
+                                        selectedCategory === category
+                                            ? 'bg-blue-600 text-white border-blue-600'
+                                            : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-300'
+                                    }`}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+
                         <motion.div 
-                            key={index}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.5 }}
-                            transition={{ duration: 0.8 }}
-                            className="relative mb-12"
+                            layout
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                         >
-                            <div className={`flex items-center ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                                <div className="hidden md:block w-1/2"></div>
-                                <div className="w-full md:w-1/2">
-                                    <div className={`ml-10 md:ml-0 ${index % 2 !== 0 ? 'md:pr-8 md:text-right' : 'md:pl-8'}`}>
-                                        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100">
-                                            <p className="text-blue-600 font-bold mb-1">{event.year}</p>
-                                            <h4 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h4>
-                                            <p className="text-gray-600">{event.description}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="absolute left-4 md:left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-blue-600 border-4 border-white"></div>
+                            <AnimatePresence>
+                                {filteredAchievements.map(achievement => (
+                                    <AchievementCard key={achievement.id} achievement={achievement} />
+                                ))}
+                            </AnimatePresence>
                         </motion.div>
-                    ))}
-                </div>
-            </Section>
+                    </>
+                )}
 
-            {/* Leaders Preview */}
-            <Section title="Meet the Leaders" subtitle="The passionate individuals guiding our creative journey." alternateBackground>
-                <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-                    <LeaderPreviewCard person={leaders.moderators[0]} />
-                    {leaders.currentExecutives.slice(0, 3).map(exec => (
-                        <LeaderPreviewCard key={exec.id} person={exec} />
-                    ))}
-                </div>
-                <div className="text-center mt-12">
-                    <Link to="/panel" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
-                        View Full Panel
-                    </Link>
-                </div>
-            </Section>
-
+                {!loading && achievements && achievements.length === 0 && (
+                     <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="text-center py-16 text-gray-500">
+                        <p className="text-xl">No achievements have been added yet.</p>
+                        <p>Check back later to see our accomplishments!</p>
+                     </motion.div>
+                 )}
+            </div>
         </div>
     );
 };

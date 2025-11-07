@@ -63,7 +63,7 @@ const EventsPage: React.FC = () => {
     }, [events, view]);
 
     return (
-        <div className="pt-28 pb-20 min-h-screen bg-white">
+        <div className="pt-16 pb-20 min-h-screen bg-white">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}

@@ -51,7 +51,7 @@ const InteractiveMesh: React.FC = () => {
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
             particles.length = 0;
-            const numberOfParticles = Math.floor((canvas.width * canvas.height) / 25000);
+            const numberOfParticles = Math.floor((canvas.width * canvas.height) / 35000);
 
             for (let i = 0; i < numberOfParticles; i++) {
                 const size = Math.random() * 12 + 12;

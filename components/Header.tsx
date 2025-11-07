@@ -64,7 +64,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] w-[95%] max-w-6xl bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-lg transition-all duration-300">
+      <header className="w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 border-b border-gray-200">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <NavLink to="/" className="flex items-center">

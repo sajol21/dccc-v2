@@ -92,7 +92,7 @@ const EventDetailPage: React.FC = () => {
         fetchEvent();
     }, [id]);
 
-    if (loading) return <div className="h-screen flex items-center justify-center pt-20 bg-white"><Loader /></div>;
+    if (loading) return <div className="h-screen flex items-center justify-center bg-white"><Loader /></div>;
     if (error || !event) return <div className="text-center py-40 text-red-500">{error || 'Event not found.'}</div>;
 
     const generateCalendarLink = () => {
@@ -115,7 +115,7 @@ const EventDetailPage: React.FC = () => {
     };
 
     return (
-        <div className="pt-20 bg-white min-h-screen">
+        <div className="bg-white min-h-screen">
             <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

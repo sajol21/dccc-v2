@@ -41,7 +41,7 @@ const DepartmentsPage: React.FC = () => {
 
     return (
         <div>
-            <header className="relative pt-40 pb-24 text-center bg-gray-900 text-white overflow-hidden">
+            <header className="relative pt-16 pb-24 text-center bg-gray-900 text-white overflow-hidden">
                 <img src="https://picsum.photos/1600/500?random=101" alt="Departments background" className="absolute inset-0 w-full h-full object-cover opacity-20" />
                 <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.h1

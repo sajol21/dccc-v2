@@ -214,11 +214,11 @@ const LeadersPage: React.FC = () => {
 
     const [expandedYear, setExpandedYear] = useState<string | null>(sortedYears[0] || null);
 
-    if (loading) return <div className="h-screen flex items-center justify-center pt-20 bg-white"><Loader /></div>;
+    if (loading) return <div className="h-screen flex items-center justify-center bg-white"><Loader /></div>;
     if (error || !leadersData) return <div className="text-center py-40 text-red-500 bg-white">Failed to load leaders data.</div>;
 
     return (
-        <div className="pt-28 pb-20 min-h-screen bg-white text-gray-900 font-sans">
+        <div className="pt-16 pb-20 min-h-screen bg-white text-gray-900 font-sans">
             <AnimatePresence>
                 {selectedPerson && <MemberDetailModal person={selectedPerson} onClose={() => setSelectedPerson(null)} />}
             </AnimatePresence>
