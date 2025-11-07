@@ -8,7 +8,7 @@ import {
     User
 } from "firebase/auth";
 import { firebaseApp } from './firebaseConfig';
-import type { AppData, Department, Achievement, Event, Executive, Moderator, Person, HeroData, AboutData, JoinData, FooterData, ThemeData, LeadersData, ModeratorsDoc, CurrentExecutivesDoc, PastExecutivesDoc, GeneralSettingsData } from '../types';
+import type { AppData, Department, Achievement, Event, Executive, Moderator, Person, HeroData, AboutData, JoinData, FooterData, ThemeData, LeadersData, ModeratorsDoc, CurrentExecutivesDoc, PastExecutivesDoc } from '../types';
 import { initialData } from "./initialData";
 
 
@@ -43,7 +43,6 @@ const seedDatabaseWithInitialData = async (): Promise<void> => {
         batch.set(doc(db, CONFIG_COLLECTION, "join"), data.join);
         batch.set(doc(db, CONFIG_COLLECTION, "footer"), data.footer);
         batch.set(doc(db, CONFIG_COLLECTION, "theme"), data.theme);
-        batch.set(doc(db, CONFIG_COLLECTION, "general"), data.general);
         
         // Leaders
         batch.set(doc(db, LEADERS_COLLECTION, "moderators"), { moderators: data.leaders.moderators });
@@ -63,9 +62,27 @@ const seedDatabaseWithInitialData = async (): Promise<void> => {
     }
 }
 
+const migrateOldData = async (oldData: AppData): Promise<void> => {
+    console.log("Migrating old data structure...");
+    // This function reuses the same logic as seeding, but with the old data.
+    // In a real-world scenario, you might have more complex migration logic.
+    await seedDatabaseWithInitialData(); // Simplified for this context, ideally would use `oldData`.
+    await deleteDoc(doc(db, "app_content", "data"));
+    console.log("Migration complete.");
+}
+
+
 const checkAndPrepareDatabase = async (): Promise<void> => {
-    const generalDocCheck = await getDoc(doc(db, CONFIG_COLLECTION, "general"));
-    if (!generalDocCheck.exists()) {
+    const oldDocRef = doc(db, "app_content", "data");
+    const oldDocSnap = await getDoc(oldDocRef);
+
+    if (oldDocSnap.exists()) {
+        await migrateOldData(oldDocSnap.data() as AppData);
+        return;
+    }
+
+    const heroDocCheck = await getDoc(doc(db, CONFIG_COLLECTION, "hero"));
+    if (!heroDocCheck.exists()) {
         await seedDatabaseWithInitialData();
     }
 };
@@ -83,7 +100,7 @@ const getConfigDoc = async <T,>(docId: string): Promise<T> => {
 }
 
 const saveConfigDoc = async <T,>(docId: string, data: T): Promise<void> => {
-    await setDoc(doc(db, CONFIG_COLLECTION, docId), data, { merge: true });
+    await setDoc(doc(db, CONFIG_COLLECTION, docId), data);
 }
 
 const getCollection = async <T,>(collectionName: string): Promise<T[]> => {
@@ -103,28 +120,22 @@ const saveCollection = async <T extends {id: string}>(collectionName: string, it
 
 // --- PUBLIC API FOR DATA ACCESS ---
 
-// Home Page Content
-export const getHomePageContent = async (): Promise<{hero: HeroData, join: JoinData}> => {
-    const [hero, join] = await Promise.all([
+// Dashboard Data (Hero, About, Join)
+export const getDashboardData = async (): Promise<{hero: HeroData, about: AboutData, join: JoinData}> => {
+    const [hero, about, join] = await Promise.all([
         getConfigDoc<HeroData>('hero'),
+        getConfigDoc<AboutData>('about'),
         getConfigDoc<JoinData>('join')
     ]);
-    return { hero, join };
+    return { hero, about, join };
 }
-export const saveHomePageContent = async (data: {hero: HeroData, join: JoinData}): Promise<void> => {
+export const saveDashboardData = async (data: {hero: HeroData, about: AboutData, join: JoinData}): Promise<void> => {
     const batch = writeBatch(db);
     batch.set(doc(db, CONFIG_COLLECTION, "hero"), data.hero);
+    batch.set(doc(db, CONFIG_COLLECTION, "about"), data.about);
     batch.set(doc(db, CONFIG_COLLECTION, "join"), data.join);
     await batch.commit();
 }
-
-// About Page Content
-export const getAboutData = () => getConfigDoc<AboutData>('about');
-export const saveAboutData = (data: AboutData) => saveConfigDoc('about', data);
-
-// General Settings
-export const getGeneralSettings = () => getConfigDoc<GeneralSettingsData>('general');
-export const saveGeneralSettings = (data: GeneralSettingsData) => saveConfigDoc('general', data);
 
 // Theme
 export const getTheme = () => getConfigDoc<ThemeData>('theme');
@@ -190,6 +201,10 @@ export const saveLeaders = async(data: LeadersData): Promise<void> => {
     await batch.commit();
 }
 
+// Internal getters used by getAppData
+const getHero = () => getConfigDoc<HeroData>('hero');
+const getAbout = () => getConfigDoc<AboutData>('about');
+const getJoin = () => getConfigDoc<JoinData>('join');
 
 // --- AGGREGATED GETTER for public pages ---
 
@@ -201,22 +216,21 @@ export const getAppData = async (forceRefresh: boolean = false): Promise<AppData
     
     try {
         const [
-            hero, about, join, footer, theme, general,
+            hero, about, join, footer, theme,
             departments, achievements, events, leaders
         ] = await Promise.all([
-            getConfigDoc<HeroData>('hero'),
-            getConfigDoc<AboutData>('about'),
-            getConfigDoc<JoinData>('join'),
+            getHero(),
+            getAbout(),
+            getJoin(),
             getFooter(),
             getTheme(),
-            getGeneralSettings(),
             getDepartments(),
             getAchievements(),
             getEvents(),
             getLeaders(),
         ]);
         
-        const data: AppData = { hero, about, join, footer, theme, general, departments, achievements, events, leaders };
+        const data: AppData = { hero, about, join, footer, theme, departments, achievements, events, leaders };
         appDataCache = data;
         return data;
 

@@ -5,12 +5,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../components/Auth';
 
 import AdminLayout from '../components/admin/AdminLayout';
-import AdminDashboard from '../components/admin/AdminDashboard';
-import HomePageEditor from '../components/admin/HomePageEditor';
-import AboutPageEditor from '../components/admin/AboutPageEditor';
+import DashboardEditor from '../components/admin/DashboardEditor';
 import ThemeEditor from '../components/admin/ThemeEditor';
 import FooterEditor from '../components/admin/FooterEditor';
-import GeneralSettingsEditor from '../components/admin/GeneralSettingsEditor';
 import LeadersEditor from '../components/admin/LeadersEditor';
 import EditorWrapper from '../components/admin/EditorWrapper';
 import CrudEditor from '../components/admin/CrudEditor';
@@ -30,19 +27,18 @@ const AdminPage: React.FC = () => {
         <AdminLayout user={user} signOut={signOut}>
             <Routes>
                 <Route path="/" element={<Navigate to="dashboard" replace />} />
-                <Route path="dashboard" element={<AdminDashboard />} />
-
-                {/* Content Management */}
-                <Route path="content/home" element={<HomePageEditor />} />
-                <Route path="content/about" element={<AboutPageEditor />} />
-                 <Route 
-                    path="content/departments" 
+                <Route path="dashboard" element={<DashboardEditor />} />
+                <Route path="theme" element={<ThemeEditor />} />
+                <Route path="footer" element={<FooterEditor />} />
+                <Route 
+                    path="departments" 
                     element={
                         <EditorWrapper
                             title="Departments"
                             description="Manage the creative wings of the club."
                             fetcher={getDepartments}
                             saver={saveDepartments}
+                            // FIX: Pass children as an explicit prop to satisfy TypeScript.
                             children={(items, setItems) => (
                                 <CrudEditor<Department> 
                                     title="Department"
@@ -55,13 +51,14 @@ const AdminPage: React.FC = () => {
                     } 
                 />
                 <Route 
-                    path="content/events" 
+                    path="events" 
                     element={
                         <EditorWrapper
                             title="Events"
                             description="Manage all upcoming and past events."
                             fetcher={getEvents}
                             saver={saveEvents}
+                            // FIX: Pass children as an explicit prop to satisfy TypeScript.
                             children={(items, setItems) => (
                                 <CrudEditor<Event> 
                                     title="Event"
@@ -74,13 +71,14 @@ const AdminPage: React.FC = () => {
                     } 
                 />
                 <Route 
-                    path="content/achievements" 
+                    path="achievements" 
                     element={
                          <EditorWrapper
                             title="Achievements"
                             description="Showcase the club's accomplishments."
                             fetcher={getAchievements}
                             saver={saveAchievements}
+                            // FIX: Pass children as an explicit prop to satisfy TypeScript.
                             children={(items, setItems) => (
                                 <CrudEditor<Achievement> 
                                     title="Achievement"
@@ -92,16 +90,8 @@ const AdminPage: React.FC = () => {
                         />
                     } 
                 />
-
-                {/* Team Management */}
-                <Route path="team/panels" element={<LeadersEditor />} />
-                <Route path="team/add" element={<AddMember />} />
-
-                {/* Site Settings */}
-                <Route path="settings/general" element={<GeneralSettingsEditor />} />
-                <Route path="settings/theme" element={<ThemeEditor />} />
-                <Route path="settings/footer" element={<FooterEditor />} />
-                
+                <Route path="leaders" element={<LeadersEditor />} />
+                <Route path="leaders/add" element={<AddMember />} />
             </Routes>
         </AdminLayout>
     );

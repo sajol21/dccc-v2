@@ -1,41 +1,85 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { getAppData } from '../services/firebaseService';
-import { useData } from '../hooks/useData';
-import Loader from '../components/Loader';
-import Section from '../components/Section';
 
-const Stat: React.FC<{ value: string; label: string; index: number }> = ({ value, label, index }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.6, delay: index * 0.15 }}
-        className="text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg"
-    >
-        <p className="text-4xl md:text-5xl font-extrabold text-indigo-600">{value}</p>
-        <p className="text-gray-600 dark:text-gray-400 mt-2 font-medium tracking-wide">{label}</p>
-    </motion.div>
-);
+const storySections = [
+    {
+        title: 'The Origin and Vision',
+        text: 'Dhaka College Cultural Club (DCCC) is the first and only cultural organization of Dhaka College run by students of classes XI-XII. With the motto "Know thyself; Express yourself," the club began its journey on 7 July 2021, initiated by the HSC 22 batch after college activities resumed post-pandemic. Recognizing the students\' passion for culture, the college authority approved its formation, and Professor Sharifa Sultana was appointed as the convenor. The club was established to nurture cultural practice and give students a platform to express their creativity.',
+        imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop',
+        layout: 'text-image'
+    },
+    {
+        title: 'Structure and Departments',
+        text: 'After its founding, applications were opened for students interested in leadership. Qualified students became executive members, each assigned to specific departments — administration, management, IT, sponsorship, and marketing. Later, deputy executive members were added to support the operations. To involve students in diverse forms of art, DCCC introduced seven departments: Vocal, Dance, Drama, Comedy, Recitation, Literature, and Art.',
+        imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop',
+        layout: 'image-text'
+    },
+    {
+        title: 'Early Recognition',
+        text: 'To showcase young talent, DCCC launched its first online event, "DCCC Weekly Contest 2021," where participants from top colleges like Notre Dame, Rajuk Uttara, and Adamjee Cantt Public College took part. This event established the club\'s name beyond Dhaka College. Soon, DCCC began collaborating as a club partner in various inter-college fests. In September 2021, the Academia Team was formed to help members balance their studies alongside cultural activities.',
+        imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop',
+        layout: 'text-image'
+    },
+    {
+        title: 'Growth and Progress',
+        text: 'A new chapter began in March 2022 with the arrival of the HSC 23 batch, giving fresh momentum to the club\'s activities. DCCC started organizing offline sessions and workshops to train newcomers and regularly published members\' music, art, and literature on its digital platforms. The first offline event, "Summer Art Camp 2022," held in collaboration with six reputed college clubs, marked a turning point for DCCC\'s recognition in Dhaka\'s cultural scene. To strengthen its foundation, 23 associate executive members were appointed in September 2022, ensuring continuity and leadership for future activities.',
+        imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop',
+        layout: 'image-text'
+    }
+];
+
+const StorySection: React.FC<{ section: typeof storySections[0] }> = ({ section }) => {
+    const TextView = () => (
+        <motion.div
+            initial={{ opacity: 0, x: section.layout === 'text-image' ? -50 : 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+        >
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{section.title}</h2>
+            <p className="text-gray-700 leading-relaxed">{section.text}</p>
+        </motion.div>
+    );
+
+    const ImageView = () => (
+         <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+         >
+            <img src={section.imageUrl} alt={section.title} className="rounded-lg shadow-lg w-full h-auto object-cover aspect-[4/3]" loading="lazy" decoding="async" />
+        </motion.div>
+    );
+
+    return (
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {section.layout === 'text-image' ? (
+                <>
+                    <TextView />
+                    <ImageView />
+                </>
+            ) : (
+                <>
+                    <ImageView />
+                    <TextView />
+                </>
+            )}
+        </div>
+    );
+}
 
 const AboutPage: React.FC = () => {
-    const { data: appData, loading, error } = useData(getAppData);
-
-    if (loading) return <div className="h-screen flex items-center justify-center"><Loader /></div>;
-    if (error || !appData?.about) return <div className="text-center py-20 text-red-500">Error loading page data.</div>;
-    
-    const { about } = appData;
-    
     return (
-        <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+        <div className="bg-white text-gray-800">
             {/* Hero Section */}
-            <header className="relative pt-16 pb-16 md:pt-24 md:pb-24 bg-gray-50 dark:bg-black overflow-hidden">
-                <div className="container mx-auto px-4 text-center relative z-10">
+            <header className="pt-16 pb-16 md:pt-24 md:pb-24 bg-white">
+                <div className="container mx-auto px-4 text-center">
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.7 }}
-                        className="text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white"
+                        className="text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900"
                     >
                         Our Story
                     </motion.h1>
@@ -43,49 +87,20 @@ const AboutPage: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.7, delay: 0.2 }}
-                        className="mt-4 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto"
+                        className="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
                     >
-                        {about.visionTagline}
+                        Inspiring Creativity and Expression
                     </motion.p>
                 </div>
             </header>
 
             <main className="py-16 md:py-24">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 items-start">
-                        <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, amount: 0.2 }}
-                            transition={{ duration: 0.8 }}
-                            className="lg:col-span-3"
-                        >
-                            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">The Origin and Vision</h2>
-                            <div 
-                                className="prose prose-lg dark:prose-invert text-gray-700 dark:text-gray-300 leading-relaxed max-w-none"
-                                dangerouslySetInnerHTML={{ __html: about.fullText }}
-                            />
-                        </motion.div>
-                        <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, amount: 0.2 }}
-                            transition={{ duration: 0.8 }}
-                            className="lg:col-span-2 sticky top-24"
-                        >
-                             <img src={about.imageUrl} alt="About DCCC" className="rounded-2xl shadow-xl w-full h-auto object-cover aspect-[4/3]" loading="lazy" decoding="async" />
-                        </motion.div>
-                    </div>
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-20 md:space-y-28">
+                    {storySections.map((section, index) => (
+                        <StorySection key={index} section={section} />
+                    ))}
                 </div>
             </main>
-
-            {about.stats && about.stats.length > 0 && (
-                <Section title="By The Numbers" alternateBackground>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                        {about.stats.map((stat, index) => <Stat key={index} {...stat} index={index} />)}
-                    </div>
-                </Section>
-            )}
         </div>
     );
 };

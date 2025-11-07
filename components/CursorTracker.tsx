@@ -6,7 +6,7 @@ const CursorTracker: React.FC = () => {
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
 
-    const springConfig = { damping: 28, stiffness: 400, mass: 0.1 };
+    const springConfig = { damping: 25, stiffness: 500 };
     const cursorXSpring = useSpring(cursorX, springConfig);
     const cursorYSpring = useSpring(cursorY, springConfig);
 
@@ -20,7 +20,7 @@ const CursorTracker: React.FC = () => {
             if (e.target instanceof Element) {
                 const target = e.target as HTMLElement;
                 const isInteractive = 
-                    target.closest('a, button, [role="button"]') ||
+                    target.closest('a, button') ||
                     window.getComputedStyle(target).cursor === 'pointer';
                 setIsPointer(!!isInteractive);
             }
@@ -36,8 +36,16 @@ const CursorTracker: React.FC = () => {
     }, [cursorX, cursorY]);
     
     const cursorVariants = {
-        default: { scale: 1, rotate: 0, opacity: 0.8 },
-        pointer: { scale: 1.5, rotate: 90, opacity: 1 }
+        default: {
+            scale: 1,
+            rotate: 0,
+            opacity: 0.8
+        },
+        pointer: {
+            scale: 1.5,
+            rotate: 90,
+            opacity: 1
+        }
     };
     
     const pathVariants = {

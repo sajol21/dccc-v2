@@ -258,10 +258,5 @@ export const initialData: AppData = {
     nodeSize: 1.5,
     mouseRepelStrength: 2,
     clickEffectEnabled: true,
-  },
-  general: {
-    siteName: "Dhaka College Cultural Club",
-    siteLogoUrl: "https://dhakacollegeculturalclub.com/logo.png",
-    faviconUrl: "https://dhakacollegeculturalclub.com/logo.png"
   }
 };
