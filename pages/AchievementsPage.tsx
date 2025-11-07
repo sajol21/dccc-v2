@@ -100,25 +100,32 @@ const AchievementsPage: React.FC = () => {
             
             {/* Our Journey Timeline */}
             <Section title="Our Journey" subtitle="Tracing the footsteps of a cultural legacy.">
-                <div className="relative max-w-2xl mx-auto">
-                    <div className="absolute left-1/2 top-0 h-full w-0.5 bg-gray-200 -translate-x-1/2"></div>
+                <div className="relative max-w-3xl mx-auto">
+                    {/* The vertical line */}
+                    <div className="absolute left-4 md:left-1/2 top-0 h-full w-0.5 bg-gray-200 -translate-x-1/2"></div>
+                    
                     {timelineEvents.map((event, index) => (
-                         <motion.div 
+                        <motion.div 
                             key={index}
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, amount: 0.5 }}
                             transition={{ duration: 0.8 }}
-                            className={`relative mb-12 flex items-center ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
-                         >
-                            <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8'}`}>
-                                <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100">
-                                    <p className="text-blue-600 font-bold mb-1">{event.year}</p>
-                                    <h4 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h4>
-                                    <p className="text-gray-600">{event.description}</p>
+                            className="relative mb-12"
+                        >
+                            <div className={`flex items-center ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                                <div className="hidden md:block w-1/2"></div>
+                                <div className="w-full md:w-1/2">
+                                    <div className={`ml-10 md:ml-0 ${index % 2 !== 0 ? 'md:pr-8 md:text-right' : 'md:pl-8'}`}>
+                                        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100">
+                                            <p className="text-blue-600 font-bold mb-1">{event.year}</p>
+                                            <h4 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h4>
+                                            <p className="text-gray-600">{event.description}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-blue-600 border-4 border-white"></div>
+                            <div className="absolute left-4 md:left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-blue-600 border-4 border-white"></div>
                         </motion.div>
                     ))}
                 </div>

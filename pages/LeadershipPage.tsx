@@ -70,7 +70,7 @@ const MemberDetailModal: React.FC<{ person: Person, onClose: () => void }> = ({ 
 }
 
 const ModeratorCard: React.FC<{ person: Moderator, isMain?: boolean, onClick: () => void }> = ({ person, isMain = false, onClick }) => {
-    const cardSize = isMain ? 'w-72' : 'w-full';
+    const cardSize = isMain ? 'md:w-72 w-full' : 'w-full';
 
     return (
         <div onClick={onClick} className={`relative ${cardSize} aspect-[0.85] bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl overflow-hidden shadow-lg mx-auto cursor-pointer group`}>
@@ -233,7 +233,7 @@ const LeadersPage: React.FC = () => {
                 <section className="mb-28">
                     <h2 className="text-3xl font-bold text-blue-600 text-center mb-10">Convenor & Moderator Panel</h2>
                     <div className="flex flex-col items-center gap-10">
-                        {mainModerator && <ModeratorCard person={mainModerator} isMain onClick={() => setSelectedPerson(mainModerator)} />}
+                        {mainModerator && <div className="max-w-xs"><ModeratorCard person={mainModerator} isMain onClick={() => setSelectedPerson(mainModerator)} /></div>}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl">
                            {otherModerators.map(p => <ModeratorCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />)}
                         </div>
@@ -246,21 +246,19 @@ const LeadersPage: React.FC = () => {
                     <div className="bg-gray-50 rounded-3xl py-16 mb-16">
                          <h3 className="text-3xl font-bold text-blue-600 text-center mb-12">Secretariat Panel</h3>
                          <div className="flex flex-wrap justify-center gap-6 md:gap-8 mb-8 px-4">
-                           {topSecretariat.map(p => <div key={p.id} className="w-52"><MemberCard person={p} onClick={() => setSelectedPerson(p)} /></div>)}
+                           {topSecretariat.map(p => <div key={p.id} className="w-44 sm:w-48 md:w-52"><MemberCard person={p} onClick={() => setSelectedPerson(p)} /></div>)}
                         </div>
                          <div className="flex flex-wrap justify-center gap-6 md:gap-8 px-4">
-                           {otherSecretariat.map(p => <div key={p.id} className="w-52"><MemberCard person={p} onClick={() => setSelectedPerson(p)} /></div>)}
+                           {otherSecretariat.map(p => <div key={p.id} className="w-44 sm:w-48 md:w-52"><MemberCard person={p} onClick={() => setSelectedPerson(p)} /></div>)}
                         </div>
                     </div>
 
                     <div>
                          <h3 className="text-3xl font-bold text-blue-600 text-center mb-12">Executive Panel</h3>
-                         <div className="max-w-5xl mx-auto">
-                            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+                         <div className="max-w-6xl mx-auto">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                                 {executiveMembers.map(p => (
-                                    <div key={p.id} className="w-52">
-                                        <MemberCard person={p} onClick={() => setSelectedPerson(p)} />
-                                    </div>
+                                    <MemberCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />
                                 ))}
                             </div>
                         </div>

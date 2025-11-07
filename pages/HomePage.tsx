@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import InteractiveMesh from '../components/InteractiveMesh';
@@ -8,10 +8,18 @@ import Section from '../components/Section';
 import Loader from '../components/Loader';
 import type { Department, Achievement, Event } from '../types';
 
+const SectionDivider: React.FC<{ flip?: boolean, className?: string }> = ({ flip = false, className = 'text-white' }) => (
+    <div className={`absolute bottom-0 left-0 w-full overflow-hidden leading-none ${flip ? '' : 'transform rotate-180'}`} aria-hidden="true">
+        <svg className={`relative block w-full h-[60px] md:h-[100px] ${className}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" className="fill-current"></path>
+        </svg>
+    </div>
+);
+
 const DepartmentCard: React.FC<{ department: Department }> = ({ department }) => (
     <Link to={`/departments/${department.id}`} className="block aspect-[4/5] relative rounded-xl overflow-hidden group shadow-lg">
-        <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/90 transition-colors"></div>
+        <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out" loading="lazy" decoding="async" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/90 transition-colors duration-300"></div>
         <div className="relative h-full flex flex-col justify-end p-6 text-white z-10">
             <div className="text-4xl mb-3">{department.iconUrl}</div>
             <h3 className="text-2xl font-bold mb-1">{department.name}</h3>
@@ -32,50 +40,49 @@ const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }
     </div>
 );
 
-const EventCard: React.FC<{ event: Event; index: number }> = ({ event, index }) => {
+const EventCard: React.FC<{ event: Event }> = ({ event }) => {
     const date = new Date(event.date);
     const day = date.toLocaleDateString('en-US', { day: '2-digit' });
-    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="bg-white rounded-lg overflow-hidden border border-gray-200 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
-        >
-            <Link to={`/events/${event.id}`} className="block">
-                <div className="relative">
-                    <img src={event.imageUrl} alt={event.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-blue-600 rounded-md p-2 text-center leading-none shadow-md">
-                        <span className="text-2xl font-bold">{day}</span>
-                        <span className="text-xs font-semibold block uppercase">{month}</span>
+        <div className="bg-white rounded-xl border border-gray-200/80 overflow-hidden group flex flex-col shadow-sm hover:shadow-xl transition-all duration-300">
+            <Link to={`/events/${event.id}`} className="block overflow-hidden aspect-[16/10]">
+                <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
+            </Link>
+            <div className="p-6 flex flex-col flex-grow">
+                <div className="flex items-start gap-5 mb-4">
+                    <div className="text-center flex-shrink-0 w-16">
+                        <p className="text-3xl font-bold text-blue-600">{day}</p>
+                        <p className="text-sm font-semibold text-gray-400">{month}</p>
+                    </div>
+                    <div className="pt-1">
+                         <h3 className="font-bold text-lg text-gray-900 leading-tight">
+                            <Link to={`/events/${event.id}`} className="hover:text-blue-600 transition-colors duration-200">{event.title}</Link>
+                        </h3>
                     </div>
                 </div>
-            </Link>
-            <div className="p-6 flex-grow flex flex-col">
-                 <h3 className="text-xl font-bold mb-2 text-gray-900">
-                    <Link to={`/events/${event.id}`} className="hover:text-blue-600 transition-colors">{event.title}</Link>
-                </h3>
-                <p className="text-gray-500 text-sm mb-4">
-                    <span className="font-semibold">{event.time}</span> @ {event.location}
-                </p>
-                <p className="text-gray-600 mb-6 text-sm flex-grow">{event.shortDescription}</p>
-                <Link 
-                    to={`/events/${event.id}`}
-                    className="mt-auto block w-full text-center px-4 py-2 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-opacity duration-300"
-                >
-                    View Details
-                </Link>
+                <p className="text-sm text-gray-600 flex-grow mb-6">{event.shortDescription}</p>
+                <div className="mt-auto border-t border-gray-100 pt-4">
+                     <Link to={`/events/${event.id}`} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors group-hover:text-blue-800 flex items-center gap-2">
+                        View Details
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    </Link>
+                </div>
             </div>
-        </motion.div>
+        </div>
     );
 };
 
 
 const HomePage: React.FC = () => {
     const { data: appData, loading, error } = useData(getAppData);
+    const joinRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: joinRef,
+        offset: ["start end", "end start"]
+    });
+    const parallaxY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
 
     if (loading) return <div className="h-screen flex items-center justify-center"><Loader /></div>;
     if (error) return <div className="text-center py-20 text-red-500">Error loading page data.</div>;
@@ -117,109 +124,145 @@ const HomePage: React.FC = () => {
                         ))}
                     </div>
                 </motion.div>
-                <div className="absolute bottom-10 z-10 animate-bounce">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-                </div>
-            </section>
-
-            {/* Stats Section */}
-            <section className="bg-white py-20">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        {about.stats.map((stat, i) => (
-                            <motion.div
-                                key={stat.label}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: i * 0.15 }}
-                            >
-                                <p className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">{stat.value}</p>
-                                <p className="text-gray-500 mt-2 font-medium">{stat.label}</p>
-                            </motion.div>
-                        ))}
+                <div className="absolute bottom-10 z-10">
+                    <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center items-start p-1">
+                        <motion.div
+                            className="w-1 h-2 bg-gray-400 rounded-full"
+                            animate={{ y: [0, 10, 0] }}
+                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        />
                     </div>
                 </div>
             </section>
-
+            
+            <div className="relative">
+                 <SectionDivider flip className="text-gray-50"/>
+                 {/* Stats Section */}
+                <section className="bg-white py-20">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                            {about.stats.map((stat, i) => (
+                                <motion.div
+                                    key={stat.label}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: i * 0.15 }}
+                                >
+                                    <p className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">{stat.value}</p>
+                                    <p className="text-gray-500 mt-2 font-medium">{stat.label}</p>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
             {/* About Section Preview */}
-            <Section title="About Us" subtitle={about.visionTagline} alternateBackground>
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                    <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-                        <img src={about.imageUrl} alt="About DCCC" className="rounded-lg shadow-xl" loading="lazy" decoding="async" />
-                    </motion.div>
-                    <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-                        <p className="text-lg text-gray-600 mb-6">{about.shortText}</p>
-                        <Link to="/about" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
-                            Read Our Story
-                        </Link>
-                    </motion.div>
-                </div>
-            </Section>
-
-            {/* Departments Section Preview */}
-            <Section title="Our Departments" subtitle="Explore the diverse creative wings of our club.">
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {departments.slice(0, 4).map((dept, i) => (
-                        <motion.div
-                            key={dept.id}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.5 }}
-                            transition={{ duration: 0.5, delay: i * 0.1 }}
-                        >
-                            <DepartmentCard department={dept} />
+            <div className="relative bg-white">
+                <SectionDivider className="text-white"/>
+                <Section title="About Us" subtitle={about.visionTagline} alternateBackground>
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+                            <img src={about.imageUrl} alt="About DCCC" className="rounded-lg shadow-xl" loading="lazy" decoding="async" />
                         </motion.div>
-                    ))}
-                </div>
-                 <div className="text-center mt-12">
-                    <Link to="/departments" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
-                        Explore All Departments
-                    </Link>
-                </div>
-            </Section>
+                        <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+                            <p className="text-lg text-gray-600 mb-6">{about.shortText}</p>
+                            <Link to="/about" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                                Read Our Story
+                            </Link>
+                        </motion.div>
+                    </div>
+                </Section>
+            </div>
+            
+            {/* Departments Section Preview */}
+             <div className="relative">
+                <SectionDivider flip className="text-gray-50" />
+                <Section title="Our Departments" subtitle="Explore the diverse creative wings of our club.">
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {departments.slice(0, 4).map((dept, i) => (
+                            <motion.div
+                                key={dept.id}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, amount: 0.5 }}
+                                transition={{ duration: 0.5, delay: i * 0.1 }}
+                            >
+                                <DepartmentCard department={dept} />
+                            </motion.div>
+                        ))}
+                    </div>
+                     <div className="text-center mt-12">
+                        <Link to="/departments" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                            Explore All Departments
+                        </Link>
+                    </div>
+                </Section>
+            </div>
 
              {/* Achievements Section Preview */}
-             <Section title="Our Achievements" subtitle="Celebrating milestones and accolades earned through dedication." alternateBackground>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {achievements.slice(0, 4).map((ach, i) => (
-                         <motion.div
-                            key={ach.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: i * 0.15 }}
-                         >
-                            <AchievementCard achievement={ach} />
-                        </motion.div>
-                    ))}
-                </div>
-                <div className="text-center mt-12">
-                    <Link to="/achievements" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
-                        View All Achievements
-                    </Link>
-                </div>
-            </Section>
-
+            <div className="relative bg-white">
+                <SectionDivider className="text-white"/>
+                 <Section title="Our Achievements" subtitle="Celebrating milestones and accolades earned through dedication." alternateBackground>
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {achievements.slice(0, 4).map((ach, i) => (
+                             <motion.div
+                                key={ach.id}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: i * 0.15 }}
+                             >
+                                <AchievementCard achievement={ach} />
+                            </motion.div>
+                        ))}
+                    </div>
+                    <div className="text-center mt-12">
+                        <Link to="/achievements" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                            View All Achievements
+                        </Link>
+                    </div>
+                </Section>
+            </div>
+            
             {/* Events Section Preview */}
-            <Section title="Upcoming Events" subtitle="Join us for our upcoming workshops, competitions, and celebrations.">
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {events.filter(e => e.isUpcoming).slice(0, 3).map((event, i) => (
-                        <EventCard key={event.id} event={event} index={i} />
-                    ))}
-                </div>
-                <div className="text-center mt-12">
-                    <Link to="/events" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
-                        View All Events
-                    </Link>
-                </div>
-            </Section>
-
+            <div className="relative">
+                <SectionDivider flip className="text-gray-50" />
+                <Section title="Upcoming Events" subtitle="Join us for our upcoming workshops, competitions, and celebrations.">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {events.filter(e => e.isUpcoming).slice(0, 3).map((event, i) => (
+                             <motion.div
+                                key={event.id}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, amount: 0.5 }}
+                                transition={{ duration: 0.5, delay: i * 0.1 }}
+                            >
+                                <EventCard event={event} />
+                             </motion.div>
+                        ))}
+                    </div>
+                    <div className="text-center mt-12">
+                        <Link to="/events" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                            View All Events
+                        </Link>
+                    </div>
+                </Section>
+            </div>
+            
             {/* Join Us Section */}
-            <div id="join" className="py-20 md:py-28">
+            <div ref={joinRef} id="join" className="py-20 md:py-28">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="relative rounded-2xl overflow-hidden text-center p-12 shadow-2xl">
-                         <img src="https://picsum.photos/1200/400?random=99" alt="Join Us" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
+                         <motion.img 
+                            src="https://picsum.photos/1200/400?random=99" 
+                            alt="Join Us" 
+                            className="absolute top-0 left-0 w-full h-[140%] object-cover" 
+                            style={{ y: parallaxY }}
+                            loading="lazy" 
+                            decoding="async" 
+                        />
                          <div className="absolute inset-0 bg-blue-800/70 backdrop-blur-sm"></div>
                          <div className="relative z-10">
                             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">{join.title}</h2>
