@@ -23,8 +23,8 @@ const Footer: React.FC = () => {
 
     if (!footerData) {
         return (
-            <footer className="bg-gray-100 border-t">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-gray-500">
+            <footer className="bg-gray-100 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                     <p>
                         &copy; {new Date().getFullYear()} Dhaka College Cultural Club. All Rights Reserved.
                         <Link to="/login" className="hover:text-indigo-500 transition-colors ml-2 pl-2 border-l border-gray-400">
@@ -37,39 +37,54 @@ const Footer: React.FC = () => {
     }
 
     return (
-        <footer className="bg-gray-100 border-t text-gray-700">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <div className="flex flex-col items-center text-center">
-                    {/* Logos */}
-                    <div className="flex items-center gap-4 mb-4">
-                        <img src={footerData.logo2Url} alt="Dhaka College Logo" className="h-12" />
-                    </div>
-                    <p className="max-w-md mb-4 text-sm">{footerData.aboutText}</p>
-
-                    {/* Contact Info */}
-                    <div className="mb-4 text-sm">
-                        <p>{footerData.address}</p>
-                        <a href={`mailto:${footerData.email}`} className="text-indigo-600 hover:underline">{footerData.email}</a>
-                        {' | '}
-                        <a href={`tel:${footerData.phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:underline">{footerData.phone}</a>
+        <footer className="bg-gray-100 dark:bg-black border-t border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* About Column */}
+                    <div className="md:col-span-1">
+                        <div className="flex items-center gap-4 mb-4">
+                            <img src={footerData.logo1Url} alt="DCCC Logo" className="h-12" />
+                            <img src={footerData.logo2Url} alt="Dhaka College Logo" className="h-12" />
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{footerData.aboutText}</p>
                     </div>
 
-                    {/* Social Links */}
-                    <div className="flex justify-center space-x-6 mb-4">
-                        {footerData.socialLinks.map(social => (
-                            <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-indigo-600 transition-colors" aria-label={social.name}>
-                                <SocialIcon icon={social.icon} />
-                            </a>
-                        ))}
+                    {/* Contact & Socials */}
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Get in Touch</h3>
+                        <div className="space-y-2 text-sm">
+                            <p className="text-gray-600 dark:text-gray-400">{footerData.address}</p>
+                            <a href={`mailto:${footerData.email}`} className="text-indigo-600 hover:underline">{footerData.email}</a>
+                            <br/>
+                            <a href={`tel:${footerData.phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:underline">{footerData.phone}</a>
+                        </div>
+                        <div className="flex space-x-4 mt-6">
+                            {footerData.socialLinks.map(social => (
+                                <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" aria-label={social.name}>
+                                    <SocialIcon icon={social.icon} />
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Quick Links */}
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h3>
+                        <ul className="space-y-2 text-sm">
+                           <li><Link to="/about" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About</Link></li>
+                           <li><Link to="/events" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Events</Link></li>
+                           <li><Link to="/departments" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Departments</Link></li>
+                           <li><Link to="/team" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Our Team</Link></li>
+                        </ul>
                     </div>
                 </div>
             </div>
             {/* Copyright and Admin Link */}
-            <div className="border-t border-gray-200">
-                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-gray-500">
+            <div className="border-t border-gray-200 dark:border-gray-800">
+                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                     <p>
                         &copy; {new Date().getFullYear()} {footerData.copyrightText}
-                        <Link to={footerData.adminPanelLink.url.replace('#', '')} className="hover:text-indigo-500 transition-colors ml-2 pl-2 border-l border-gray-400">
+                        <Link to={footerData.adminPanelLink.url.replace('#', '')} className="hover:text-indigo-500 transition-colors ml-2 pl-2 border-l border-gray-400 dark:border-gray-600">
                             {footerData.adminPanelLink.text}
                         </Link>
                     </p>

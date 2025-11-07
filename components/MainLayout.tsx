@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
@@ -6,11 +5,13 @@ import Footer from './Footer';
 
 const MainLayout: React.FC = () => {
     return (
-        <>
+        <div className="bg-white dark:bg-gray-900">
             <Header />
-            <Outlet />
+            <main>
+                <Outlet />
+            </main>
             <Footer />
-        </>
+        </div>
     );
 };
 
