@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -92,7 +91,7 @@ const DepartmentDetailPage: React.FC = () => {
                                         <p className="text-gray-800 font-semibold">{activity}</p>
                                     </div>
                                 ))}
-                            </ul>
+                            </div>
                         </motion.div>
                      )}
                     

@@ -22,13 +22,12 @@ const DepartmentCard: React.FC<{ department: Department }> = ({ department }) =>
 
 
 const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }) => (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden group relative shadow-lg">
-        <div className="overflow-hidden h-56">
-             <img src={achievement.imageUrl} alt={achievement.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-        </div>
-        <div className="p-5">
-            <p className="text-xs text-blue-600 font-semibold mb-1">{new Date(achievement.date).getFullYear()} | {achievement.category}</p>
-            <h4 className="font-bold text-lg text-gray-800 leading-tight">{achievement.title}</h4>
+    <div className="aspect-[4/5] bg-gray-900 rounded-xl overflow-hidden group relative shadow-lg">
+        <img src={achievement.imageUrl} alt={achievement.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-70 group-hover:opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+        <div className="relative h-full flex flex-col justify-end p-5 text-white z-10">
+            <p className="text-xs font-semibold uppercase text-blue-300 mb-1">{achievement.category}</p>
+            <h4 className="font-bold text-lg text-white leading-tight">{achievement.title}</h4>
         </div>
     </div>
 );
