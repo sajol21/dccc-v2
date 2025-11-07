@@ -5,6 +5,7 @@ export interface HeroData {
   headlineLine2: string;
   tagline: string;
   ctaButtons: { text: string; link: string }[];
+  backgroundImageUrl?: string;
 }
 
 export interface AboutData {

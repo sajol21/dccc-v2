@@ -1,4 +1,5 @@
 
+
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -96,7 +97,8 @@ const HomePage: React.FC = () => {
         target: heroRef, 
         offset: ["start start", "end start"] 
     });
-    const parallaxYHero = useTransform(scrollYProgressHero, [0, 1], ["0%", "50%"]);
+    const parallaxYMesh = useTransform(scrollYProgressHero, [0, 1], ["0%", "50%"]);
+    const parallaxYImage = useTransform(scrollYProgressHero, [0, 1], ["0%", "20%"]);
     
     const joinRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: joinRef, offset: ["start end", "end start"] });
@@ -106,7 +108,7 @@ const HomePage: React.FC = () => {
     if (error) return <div className="text-center py-20 text-red-500">Error loading page data.</div>;
     if (!appData) return null;
 
-    const { about, departments, events, join } = appData;
+    const { hero, about, departments, events, join } = appData;
     const upcomingEvents = events.filter(e => e.isUpcoming).slice(0, 3);
     const timelineEvents = [
         { year: "2021", title: "The Beginning", description: "DCCC was founded with a vision to create a vibrant platform for students to explore and showcase their artistic talents after the pandemic." },
@@ -118,10 +120,19 @@ const HomePage: React.FC = () => {
     return (
         <div className="bg-gray-50">
             {/* Hero Section */}
-            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center text-center bg-white pt-24 pb-12 overflow-hidden">
+            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center text-center pt-24 pb-12 overflow-hidden">
+                {hero.backgroundImageUrl && (
+                    <motion.div
+                        className="absolute inset-0 z-0"
+                        style={{ y: parallaxYImage }}
+                    >
+                        <img src={hero.backgroundImageUrl} alt="" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/40" />
+                    </motion.div>
+                )}
                 <motion.div
-                    className="absolute top-0 left-0 w-full h-full z-0"
-                    style={{ y: parallaxYHero }}
+                    className="absolute top-0 left-0 w-full h-full z-1"
+                    style={{ y: parallaxYMesh }}
                 >
                     <InteractiveMesh />
                 </motion.div>
@@ -131,11 +142,11 @@ const HomePage: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
-                        <h2 className="text-xl md:text-2xl font-semibold text-gray-500 tracking-wide uppercase">Dhaka College</h2>
-                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-gray-900 my-1 tracking-tighter leading-tight">
+                        <h2 className="text-xl md:text-2xl font-semibold text-gray-200 tracking-wide uppercase">Dhaka College</h2>
+                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-white my-1 tracking-tighter leading-tight">
                             Cultural Club
                         </h1>
-                        <p className="text-base md:text-lg text-gray-600 mt-4 max-w-xl mx-auto">
+                        <p className="text-base md:text-lg text-gray-300 mt-4 max-w-xl mx-auto">
                             Know Thyself, Show Thyself
                         </p>
                         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
@@ -149,7 +160,7 @@ const HomePage: React.FC = () => {
                                 href="https://dhakacollegeculturalclub.com/join"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-red-500 border-2 border-red-400 rounded-full hover:bg-red-50 hover:border-red-500 transition-all duration-300"
+                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-white border-2 border-white/80 rounded-full hover:bg-white/10 transition-all duration-300"
                             >
                                 Join DCCC
                             </a>

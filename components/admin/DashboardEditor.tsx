@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { HeroData, AboutData, JoinData } from '../../types';
 import RichTextEditor from './RichTextEditor';
@@ -67,6 +68,7 @@ const DashboardForm: React.FC<FormProps> = ({ data, onChange }) => {
                 <FormInput label="Headline Line 1" value={data.hero.headlineLine1} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('hero', 'headlineLine1', e.target.value)} />
                 <FormInput label="Headline Line 2" value={data.hero.headlineLine2} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('hero', 'headlineLine2', e.target.value)} />
                 <FormInput label="Tagline" value={data.hero.tagline} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('hero', 'tagline', e.target.value)} />
+                <ImageUploadInput label="Background Image URL" value={data.hero.backgroundImageUrl || ''} onChange={(val: string) => handleFieldChange('hero', 'backgroundImageUrl', val)} />
             </Section>
 
             <Section title="About Section">

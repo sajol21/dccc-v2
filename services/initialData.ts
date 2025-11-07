@@ -8,6 +8,7 @@ export const initialData: AppData = {
     ctaButtons: [
       { text: "Explore Departments", link: "#/departments" },
     ],
+    backgroundImageUrl: "https://images.unsplash.com/photo-1531306728370-e436762b87b0?q=80&w=2070&auto=format&fit=crop",
   },
   about: {
     shortText: "Founded in 1956, the Dhaka College Cultural Club is the heart of artistic and cultural expression at Dhaka College, nurturing talent and fostering a vibrant community of student artists.",
