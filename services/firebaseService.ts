@@ -165,12 +165,12 @@ const appDataDocRef = doc(db, "app-content", "main-data");
 let appDataCache: AppData | null = null;
 let appDataPromise: Promise<AppData> | null = null;
 
-export const getAppData = (): Promise<AppData> => {
-    if (appDataCache) {
+export const getAppData = (forceRefresh: boolean = false): Promise<AppData> => {
+    if (appDataCache && !forceRefresh) {
         return Promise.resolve(appDataCache);
     }
     
-    if (appDataPromise) {
+    if (appDataPromise && !forceRefresh) {
         return appDataPromise;
     }
 
@@ -180,7 +180,6 @@ export const getAppData = (): Promise<AppData> => {
 
             if (docSnap.exists()) {
                 console.log("Document data fetched from Firebase.");
-                // Merge fetched data with mock data to ensure new fields like 'theme' are present
                 const fetchedData = docSnap.data();
                 appDataCache = { ...MOCK_DATA, ...fetchedData } as AppData;
                 return appDataCache;
@@ -203,7 +202,6 @@ export const getAppData = (): Promise<AppData> => {
 
 export const saveAppData = async (data: AppData): Promise<void> => {
   try {
-    // A simple way to deep clone and remove any undefined values that Firestore doesn't support
     const cleanData = JSON.parse(JSON.stringify(data));
     await setDoc(appDataDocRef, cleanData);
     appDataCache = data; 
@@ -227,5 +225,4 @@ export const getLeaderById = (id: string): Promise<Person | undefined> => {
         return allLeaders.find(l => l.id === id);
     });
 }
-// Fix: Export User type to be available for other modules.
 export type { User };
