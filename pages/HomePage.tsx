@@ -1,4 +1,5 @@
 
+
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -107,6 +108,19 @@ const HomePage: React.FC = () => {
         { year: "Present", title: "A Legacy of Creativity", description: "Today, DCCC stands as a beacon of cultural excellence, nurturing hundreds of students and continuing its mission to inspire and innovate." },
     ];
 
+    const heroVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.3, delayChildren: 0.5 },
+        },
+    };
+
+    const heroItemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+    };
+
 
     return (
         <div className="bg-gray-50">
@@ -114,22 +128,33 @@ const HomePage: React.FC = () => {
             <section className="h-screen relative flex items-center justify-center text-center overflow-hidden">
                 <InteractiveMesh />
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.5 }}
+                    variants={heroVariants}
+                    initial="hidden"
+                    animate="visible"
                     className="relative z-10 p-4"
                 >
-                    <h1 className="font-black tracking-tight mb-4 text-gray-900">
+                    <motion.h1 variants={heroItemVariants} className="font-black tracking-tight mb-4 text-gray-900">
                         <span className="block text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
                             {hero.headlineLine1}
                         </span>
                         <span className="block text-5xl md:text-8xl mt-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
                             {hero.headlineLine2}
                         </span>
-                    </h1>
-                    <p className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-700">
+                    </motion.h1>
+                    <motion.p variants={heroItemVariants} className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-700">
                         {hero.tagline}
-                    </p>
+                    </motion.p>
+                    <motion.div variants={heroItemVariants} className="mt-10 flex flex-wrap justify-center gap-4">
+                        {hero.ctaButtons.map((button, index) => (
+                           <Link
+                                key={index}
+                                to={button.link}
+                                className="px-8 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
+                            >
+                                {button.text}
+                            </Link>
+                        ))}
+                    </motion.div>
                 </motion.div>
                 <div className="absolute bottom-10 z-10">
                     <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center items-start p-1">

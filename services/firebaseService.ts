@@ -201,6 +201,10 @@ export const saveLeaders = async(data: LeadersData): Promise<void> => {
     await batch.commit();
 }
 
+// Internal getters used by getAppData
+const getHero = () => getConfigDoc<HeroData>('hero');
+const getAbout = () => getConfigDoc<AboutData>('about');
+const getJoin = () => getConfigDoc<JoinData>('join');
 
 // --- AGGREGATED GETTER for public pages ---
 
@@ -237,9 +241,6 @@ export const getAppData = async (forceRefresh: boolean = false): Promise<AppData
 };
 
 // --- SINGLE GETTERS FOR DETAIL PAGES ---
-export const getHero = () => getConfigDoc<HeroData>('hero');
-export const getAbout = () => getConfigDoc<AboutData>('about');
-export const getJoin = () => getConfigDoc<JoinData>('join');
 export const getCurrentExecutives = async (): Promise<Executive[]> => {
     const docSnap = await getDoc(doc(db, LEADERS_COLLECTION, "currentExecutives"));
     return (docSnap.data() as CurrentExecutivesDoc)?.currentExecutives || [];

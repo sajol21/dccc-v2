@@ -1,6 +1,6 @@
 
 
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useData } from '../hooks/useData';
 import { getAppData } from '../services/firebaseService';
 
@@ -19,28 +19,7 @@ const InteractiveMesh: React.FC = () => {
     const theme = appData?.theme;
     
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const audioContextRef = useRef<AudioContext | null>(null);
     const ripplesRef = useRef<Ripple[]>([]);
-
-    const playTone = useCallback((x: number, y: number) => {
-        if (!audioContextRef.current) return;
-        const oscillator = audioContextRef.current.createOscillator();
-        const gainNode = audioContextRef.current.createGain();
-        
-        const freq = 200 + (x / window.innerWidth) * 300 + (y / window.innerHeight) * 100;
-        oscillator.frequency.setValueAtTime(freq, audioContextRef.current.currentTime);
-        oscillator.type = 'sine';
-        
-        const toneVolume = 0.05; // Not making this configurable as it can be jarring
-        gainNode.gain.setValueAtTime(toneVolume, audioContextRef.current.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContextRef.current.currentTime + 0.5);
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContextRef.current.destination);
-        
-        oscillator.start(audioContextRef.current.currentTime);
-        oscillator.stop(audioContextRef.current.currentTime + 0.5);
-    }, []);
 
     useEffect(() => {
         if (!theme) return;
@@ -50,19 +29,6 @@ const InteractiveMesh: React.FC = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
         
-        const initAudio = () => {
-             if (!audioContextRef.current) {
-                try {
-                    audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-                } catch (e) {
-                    console.error("Web Audio API is not supported in this browser.");
-                }
-            }
-        };
-        window.addEventListener('mousedown', initAudio, { once: true });
-        window.addEventListener('touchstart', initAudio, { once: true });
-
-
         let animationFrameId: number;
         let particles: any[] = [];
         const mouse = { x: null as number | null, y: null as number | null, radius: 150 };
@@ -145,10 +111,6 @@ const InteractiveMesh: React.FC = () => {
 
                         this.size = this.originalSize * 2;
                         this.color = theme.highlightColor;
-
-                        if(Math.random() < 0.01) {
-                            playTone(this.x, this.y);
-                        }
                     }
                 }
 
@@ -204,19 +166,29 @@ const InteractiveMesh: React.FC = () => {
                     
                     if (distanceSq < connectDistance) {
                         const opacityValue = 1 - (distanceSq / 20000);
-                        if (distanceSq < highlightDistance) {
-                             ctx!.strokeStyle = theme.lineHighlightColor;
-                             ctx!.lineWidth = 1.5;
-                        } else {
-                            ctx!.strokeStyle = theme.lineColor;
-                            ctx!.globalAlpha = Math.max(0, opacityValue);
-                            ctx!.lineWidth = 1;
-                        }
+                        const isHighlighted = distanceSq < highlightDistance;
+
+                        ctx!.strokeStyle = isHighlighted ? theme.lineHighlightColor : theme.lineColor;
+                        ctx!.lineWidth = isHighlighted ? 1.5 : 1;
+                        ctx!.globalAlpha = isHighlighted ? 1 : Math.max(0, opacityValue);
+
                         ctx!.beginPath();
                         ctx!.moveTo(particles[a].x, particles[a].y);
                         ctx!.lineTo(particles[b].x, particles[b].y);
                         ctx!.stroke();
                         ctx!.globalAlpha = 1;
+
+                        // If highlighted, draw a cultural icon on the line
+                        if (isHighlighted) {
+                            const midX = (particles[a].x + particles[b].x) / 2;
+                            const midY = (particles[a].y + particles[b].y) / 2;
+                            const icon = culturalIcons[Math.floor(Math.random() * culturalIcons.length)];
+                            ctx!.font = '16px sans-serif';
+                            ctx!.fillStyle = theme.highlightColor;
+                            ctx!.textAlign = 'center';
+                            ctx!.textBaseline = 'middle';
+                            ctx!.fillText(icon, midX, midY);
+                        }
                     }
                 }
             }
@@ -248,16 +220,11 @@ const InteractiveMesh: React.FC = () => {
             cancelAnimationFrame(animationFrameId);
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mousedown', initAudio);
-            window.removeEventListener('touchstart', initAudio);
             if(theme.clickEffectEnabled) {
                 window.removeEventListener('mousedown', handleMouseDown);
             }
-            if(audioContextRef.current && audioContextRef.current.state !== 'closed') {
-                audioContextRef.current.close();
-            }
         };
-    }, [theme, playTone]);
+    }, [theme]);
 
     if (!theme) return null;
 

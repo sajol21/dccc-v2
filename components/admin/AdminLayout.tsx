@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { User } from '../../services/firebaseService';
 
@@ -52,6 +53,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, set
                         ))}
                     </nav>
                      <div className="p-2 border-t border-gray-700 flex-shrink-0">
+                        <a 
+                            href="#/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 w-full text-left p-3 rounded-md font-medium transition-colors hover:bg-gray-700"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            <span className="hidden md:inline">View Site</span>
+                        </a>
                          <div className="p-3 text-xs text-gray-400 hidden md:block">
                             <p className="font-semibold">{user?.email}</p>
                             <p>Admin User</p>
