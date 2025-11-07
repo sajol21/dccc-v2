@@ -70,7 +70,7 @@ const MemberDetailModal: React.FC<{ person: Person, onClose: () => void }> = ({ 
 }
 
 const ModeratorCard: React.FC<{ person: Moderator, isMain?: boolean, onClick: () => void }> = ({ person, isMain = false, onClick }) => {
-    const cardSize = isMain ? 'w-64' : 'w-full';
+    const cardSize = isMain ? 'w-72' : 'w-full';
 
     return (
         <div onClick={onClick} className={`relative ${cardSize} aspect-[0.85] bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl overflow-hidden shadow-lg mx-auto cursor-pointer group`}>
@@ -159,7 +159,8 @@ const LeadersPage: React.FC = () => {
         sortedYears, 
         mainModerator, 
         otherModerators,
-        secretariatMembers,
+        topSecretariat,
+        otherSecretariat,
         executiveMembers,
     } = useMemo(() => {
         if (!leadersData) return { 
@@ -167,7 +168,8 @@ const LeadersPage: React.FC = () => {
             sortedYears: [], 
             mainModerator: null, 
             otherModerators: [],
-            secretariatMembers: [],
+            topSecretariat: [],
+            otherSecretariat: [],
             executiveMembers: [],
         };
         
@@ -181,24 +183,31 @@ const LeadersPage: React.FC = () => {
         
         const sorted = Object.keys(grouped).sort((a, b) => parseInt(b) - parseInt(a));
 
-        const secretariatPositionKeywords = [
-            "President", "Secretary", "Financial", "IT"
-        ];
+        const allCurrent = leadersData.currentExecutives;
+        
+        const topSecretariat = [
+            allCurrent.find(m => m.position.includes("President")),
+            allCurrent.find(m => m.position.includes("General Secretary")),
+            allCurrent.find(m => m.position.includes("Vice President")),
+        ].filter((m): m is Executive => !!m);
 
-        const secretariatMembers = leadersData.currentExecutives.filter(member =>
-            secretariatPositionKeywords.some(pos => member.position.includes(pos))
-        );
-
-        const executiveMembers = leadersData.currentExecutives.filter(member =>
-            !secretariatPositionKeywords.some(pos => member.position.includes(pos))
-        );
+        const otherSecretariat = [
+            allCurrent.find(m => m.position.includes("Operating Secretary")),
+            allCurrent.find(m => m.position.includes("Joint Secretary")),
+            allCurrent.find(m => m.position.includes("IT Secretary")),
+            allCurrent.find(m => m.position.includes("Financial Secretary")),
+        ].filter((m): m is Executive => !!m);
+        
+        const secretariatIds = new Set([...topSecretariat, ...otherSecretariat].map(m => m.id));
+        const executiveMembers = allCurrent.filter(m => !secretariatIds.has(m.id));
 
         return { 
             pastExecutivesByYear: grouped, 
             sortedYears: sorted, 
             mainModerator: leadersData.moderators[0] || null, 
             otherModerators: leadersData.moderators.slice(1),
-            secretariatMembers,
+            topSecretariat,
+            otherSecretariat,
             executiveMembers,
         };
     }, [leadersData]);
@@ -221,8 +230,8 @@ const LeadersPage: React.FC = () => {
                     </p>
                 </header>
 
-                <section className="mb-24">
-                    <h2 className="text-3xl font-bold text-blue-600 text-center mb-10">Moderator Panel</h2>
+                <section className="mb-28">
+                    <h2 className="text-3xl font-bold text-blue-600 text-center mb-10">Convenor & Moderator Panel</h2>
                     <div className="flex flex-col items-center gap-10">
                         {mainModerator && <ModeratorCard person={mainModerator} isMain onClick={() => setSelectedPerson(mainModerator)} />}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl">
@@ -231,17 +240,30 @@ const LeadersPage: React.FC = () => {
                     </div>
                 </section>
                 
-                <section className="mb-24 bg-gray-50 rounded-3xl py-16">
-                     <h2 className="text-3xl font-bold text-blue-600 text-center mb-12">Secretariat Panel (2025)</h2>
-                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
-                       {secretariatMembers.map(p => <MemberCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />)}
-                    </div>
-                </section>
-
                 <section className="mb-24">
-                     <h2 className="text-3xl font-bold text-blue-600 text-center mb-12">Executive Panel (2025)</h2>
-                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
-                       {executiveMembers.map(p => <MemberCard key={p.id} person={p} onClick={() => setSelectedPerson(p)} />)}
+                    <h2 className="text-4xl font-bold text-center mb-16">Current Panel (2025)</h2>
+                    
+                    <div className="bg-gray-50 rounded-3xl py-16 mb-16">
+                         <h3 className="text-3xl font-bold text-blue-600 text-center mb-12">Secretariat Panel</h3>
+                         <div className="flex flex-wrap justify-center gap-6 md:gap-8 mb-8 px-4">
+                           {topSecretariat.map(p => <div key={p.id} className="w-52"><MemberCard person={p} onClick={() => setSelectedPerson(p)} /></div>)}
+                        </div>
+                         <div className="flex flex-wrap justify-center gap-6 md:gap-8 px-4">
+                           {otherSecretariat.map(p => <div key={p.id} className="w-52"><MemberCard person={p} onClick={() => setSelectedPerson(p)} /></div>)}
+                        </div>
+                    </div>
+
+                    <div>
+                         <h3 className="text-3xl font-bold text-blue-600 text-center mb-12">Executive Panel</h3>
+                         <div className="max-w-5xl mx-auto">
+                            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+                                {executiveMembers.map(p => (
+                                    <div key={p.id} className="w-52">
+                                        <MemberCard person={p} onClick={() => setSelectedPerson(p)} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </section>
 
