@@ -1,11 +1,9 @@
 
-
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
-import InteractiveMesh from '../components/InteractiveMesh';
 import Section from '../components/Section';
 import Loader from '../components/Loader';
 import type { Department, Event, Executive } from '../types';
@@ -99,7 +97,7 @@ const HomePage: React.FC = () => {
     if (error) return <div className="text-center py-20 text-red-500">Error loading page data.</div>;
     if (!appData) return null;
 
-    const { hero, about, departments, events, join } = appData;
+    const { about, departments, events, join } = appData;
     const upcomingEvents = events.filter(e => e.isUpcoming).slice(0, 3);
     const timelineEvents = [
         { year: "2021", title: "The Beginning", description: "DCCC was founded with a vision to create a vibrant platform for students to explore and showcase their artistic talents after the pandemic." },
@@ -108,162 +106,119 @@ const HomePage: React.FC = () => {
         { year: "Present", title: "A Legacy of Creativity", description: "Today, DCCC stands as a beacon of cultural excellence, nurturing hundreds of students and continuing its mission to inspire and innovate." },
     ];
 
-    const heroVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.2, delayChildren: 0.4 },
-        },
-    };
-
-    const heroItemVariants = {
-        hidden: { opacity: 0, y: 20, filter: 'blur(5px)' },
-        visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.8, ease: 'easeOut' } },
-    };
-
-
     return (
         <div className="bg-gray-50">
             {/* Hero Section */}
-            <section className="h-screen relative flex items-center justify-center text-center overflow-hidden">
-                <InteractiveMesh />
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                    <motion.div 
-                        className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40"
-                        animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, -50, 0] }}
-                        transition={{ duration: 15, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-                    />
-                    <motion.div 
-                        className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40"
-                        animate={{ scale: [1, 1.2, 1], x: [0, -50, 0], y: [0, 50, 0] }}
-                        transition={{ duration: 12, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 2 }}
-                    />
-                </div>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section className="relative min-h-screen flex items-center justify-center text-center bg-white pt-24 pb-12">
+                <div className="relative z-10 px-4 w-full max-w-4xl">
                     <motion.div
-                        variants={heroVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="relative z-10 p-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
-                        <motion.h1 variants={heroItemVariants} className="font-black tracking-tight mb-4">
-                            <span className="block text-3xl md:text-4xl font-bold text-gray-800">
-                                {hero.headlineLine1}
-                            </span>
-                            <span className="block text-5xl md:text-8xl mt-1 text-gray-900">
-                                {hero.headlineLine2}
-                            </span>
-                        </motion.h1>
-                        <motion.p variants={heroItemVariants} className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-700">
-                            {hero.tagline}
-                        </motion.p>
-                        <motion.div variants={heroItemVariants} className="mt-10 flex flex-wrap justify-center gap-4">
-                            {hero.ctaButtons.map((button, index) => (
-                               <Link
-                                    key={index}
-                                    to={button.link}
-                                    className="px-8 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
-                                >
-                                    {button.text}
-                                </Link>
-                            ))}
-                        </motion.div>
+                        <h2 className="text-xl md:text-2xl font-semibold text-gray-500 tracking-wide uppercase">Dhaka College</h2>
+                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-gray-900 my-1 tracking-tighter leading-tight">
+                            Cultural Club
+                        </h1>
+                        <p className="text-base md:text-lg text-gray-600 mt-4 max-w-xl mx-auto">
+                            Know Thyself, Show Thyself
+                        </p>
+                        <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                            <Link
+                                to="/panel"
+                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-white bg-red-500 rounded-full shadow-lg shadow-red-500/30 hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
+                            >
+                                See Panel
+                            </Link>
+                            <a
+                                href="https://dhakacollegeculturalclub.com/join"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-red-500 border-2 border-red-400 rounded-full hover:bg-red-50 hover:border-red-500 transition-all duration-300"
+                            >
+                                Join DCCC
+                            </a>
+                        </div>
                     </motion.div>
-                </div>
-                <div className="absolute bottom-10 z-10">
-                    <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center items-start p-1">
-                        <motion.div
-                            className="w-1 h-2 bg-gray-400 rounded-full"
-                            animate={{ y: [0, 10, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                        />
-                    </div>
                 </div>
             </section>
 
-            {/* Mission & Stats Section */}
-            <Section title="Our Mission" subtitle={about.shortText}>
-                <div className="max-w-4xl mx-auto">
-                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {about.stats.map((stat, index) => (
-                           <StatCard key={stat.label} value={stat.value} label={stat.label} index={index} />
-                        ))}
-                    </div>
+            <Section id="about" title="About DCCC" subtitle={about.visionTagline} alternateBackground>
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                    <motion.div
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 0.7 }}
+                    >
+                        <img src={about.imageUrl} alt="About DCCC" className="rounded-2xl shadow-xl w-full h-auto object-cover aspect-[4/3]" loading="lazy" decoding="async" />
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 0.7 }}
+                    >
+                        <p className="text-lg text-gray-600 mb-6 leading-relaxed">{about.shortText}</p>
+                        <div className="grid grid-cols-2 gap-6 text-center my-8">
+                            {about.stats.slice(0, 2).map((stat, index) => <StatCard key={index} {...stat} index={index} />)}
+                        </div>
+                        <Link to="/about" className="px-6 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md">
+                            Learn Our Story
+                        </Link>
+                    </motion.div>
                 </div>
             </Section>
 
-            {/* Departments Section */}
-            <Section title="Our Departments" subtitle="Explore the diverse creative wings of our club." alternateBackground>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {departments.slice(0, 4).map((dept, i) => (
-                        <motion.div
-                            key={dept.id}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.2 }}
-                            transition={{ duration: 0.5, delay: i * 0.1 }}
-                        >
-                            <DepartmentCard department={dept} />
-                        </motion.div>
-                    ))}
+            <Section id="departments" title="Our Departments" subtitle="Explore the diverse creative wings of our club.">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {departments.slice(0, 3).map((dept) => <DepartmentCard key={dept.id} department={dept} />)}
                 </div>
                  <div className="text-center mt-12">
-                    <Link to="/departments" className="px-8 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
-                        Explore All Departments
+                    <Link to="/departments" className="px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300 shadow-lg">
+                        View All Departments
                     </Link>
                 </div>
             </Section>
 
-            {/* Journey Timeline Section */}
-            <Section title="Our Journey" subtitle="Tracing the footsteps of a cultural legacy.">
-                <div className="relative max-w-4xl mx-auto">
-                    <div className="absolute left-4 md:left-1/2 top-0 h-full w-0.5 bg-gray-200"></div>
-                    {timelineEvents.map((event, index) => (
-                        <TimelineEvent key={index} {...event} isLeft={index % 2 === 0} />
-                    ))}
+            <Section id="story" title="Our Story Timeline" subtitle="Tracing the footsteps of a cultural legacy." alternateBackground>
+                <div className="relative max-w-2xl mx-auto py-8">
+                    <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-0.5 bg-gray-200"></div>
+                    {timelineEvents.map((event, index) => <TimelineEvent key={index} {...event} isLeft={index % 2 === 0} />)}
                 </div>
             </Section>
 
-            {/* Upcoming Events Section */}
-            <Section title="Upcoming Events" subtitle="Join us for our upcoming workshops, competitions, and celebrations." alternateBackground>
-                <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-                    {upcomingEvents.length > 0 ? upcomingEvents.map(event => (
-                        <EventCard key={event.id} event={event} />
-                    )) : (
-                        <p className="text-center text-gray-600 md:col-span-2">No upcoming events scheduled. Check back soon!</p>
-                    )}
+             <Section id="events" title="Upcoming Events" subtitle="Join us for our upcoming workshops, competitions, and performances.">
+                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    {upcomingEvents.map(event => <EventCard key={event.id} event={event} />)}
                 </div>
-                <div className="text-center mt-12">
-                    <Link to="/events" className="px-8 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
-                        View All Events
+                 <div className="text-center mt-12">
+                    <Link to="/events" className="px-6 py-3 rounded-full font-semibold text-white bg-red-500 hover:bg-red-600 transition-all duration-300 transform hover:scale-105 shadow-md">
+                        See All Events
                     </Link>
                 </div>
             </Section>
 
-
-            {/* Join Us Section */}
-            <div ref={joinRef} id="join" className="py-20 md:py-28">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="relative rounded-2xl overflow-hidden text-center p-12 shadow-2xl">
-                         <motion.img 
-                            src={join.backgroundImageUrl}
-                            alt="Join Us" 
-                            className="absolute top-0 left-0 w-full h-[140%] object-cover" 
-                            style={{ y: parallaxY }}
-                            loading="lazy" 
-                            decoding="async" 
-                        />
-                         <div className="absolute inset-0 bg-blue-800/70 backdrop-blur-sm"></div>
-                         <div className="relative z-10">
-                            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">{join.title}</h2>
-                            <p className="mt-4 text-lg md:text-xl text-blue-100 max-w-3xl mx-auto">{join.description}</p>
-                            <a href={join.buttonLink} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block px-10 py-4 rounded-lg font-bold text-lg text-blue-700 bg-white hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                                {join.buttonText}
-                            </a>
-                        </div>
-                    </div>
+            <section ref={joinRef} className="relative py-28 overflow-hidden bg-gray-800 text-white">
+                <motion.div 
+                    style={{ y: parallaxY }}
+                    className="absolute inset-0 z-0"
+                >
+                    <img src={join.backgroundImageUrl} alt="Join us" className="w-full h-full object-cover opacity-30" />
+                </motion.div>
+                <div className="relative z-10 container mx-auto text-center px-4">
+                    <h2 className="text-4xl md:text-5xl font-extrabold mb-4">{join.title}</h2>
+                    <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">{join.description}</p>
+                    <a 
+                        href={join.buttonLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-block px-10 py-4 rounded-full font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-90 transition-all duration-300 transform hover:scale-110 shadow-2xl"
+                    >
+                        {join.buttonText}
+                    </a>
                 </div>
-            </div>
+            </section>
         </div>
     );
 };

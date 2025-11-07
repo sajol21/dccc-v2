@@ -71,7 +71,7 @@ const InteractiveMesh: React.FC = () => {
                 this.directionY = directionY;
                 this.originalSize = size;
                 this.size = size;
-                this.speed = Math.random() * 0.2 + 0.1;
+                this.speed = Math.random() * 0.05 + 0.02;
                 this.color = theme.nodeColor;
                 this.char = char;
             }

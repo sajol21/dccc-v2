@@ -2,7 +2,6 @@
 import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Loader from './components/Loader';
-import CursorTracker from './components/CursorTracker';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './components/Auth';
 import { ToastProvider } from './components/ToastProvider';
@@ -24,7 +23,6 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <HashRouter>
-          <CursorTracker />
           <div className="min-h-screen font-sans">
             <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader /></div>}>
               <Routes>
