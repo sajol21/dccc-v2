@@ -49,7 +49,7 @@ const SegmentAccordion: React.FC<{ segments: Event['segments'] }> = ({ segments 
                                     <ul className="space-y-3">
                                         {segment.items.map(item => (
                                             <li key={item.secondary}>
-                                                <p className="font-bold text-blue-600 text-sm">{item.primary}</p>
+                                                <p className="font-bold text-indigo-600 text-sm">{item.primary}</p>
                                                 <p className="font-semibold text-gray-800">{item.secondary}</p>
                                                 {item.tertiary && <p className="text-xs text-gray-500">{item.tertiary}</p>}
                                             </li>
@@ -181,8 +181,8 @@ const EventDetailPage: React.FC = () => {
                                 </li>
                             </ul>
                             <div className="mt-6 pt-6 border-t border-gray-100 space-y-3">
-                                {event.isUpcoming && event.registrationLink && <a href={event.registrationLink} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-opacity duration-300">Register Now</a>}
-                                {event.isUpcoming && event.startTime24 && <a href={generateCalendarLink()} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-3 rounded-md font-semibold text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors duration-300">Add to Calendar</a>}
+                                {event.isUpcoming && event.registrationLink && <a href={event.registrationLink} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 transition-opacity duration-300">Register Now</a>}
+                                {event.isUpcoming && event.startTime24 && <a href={generateCalendarLink()} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-3 rounded-md font-semibold text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition-colors duration-300">Add to Calendar</a>}
                                 {event.customButtons && event.customButtons.map(btn => (
                                      <a key={btn.text} href={btn.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full text-center px-4 py-3 rounded-md font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-300">
                                          <Icon name={btn.icon} />

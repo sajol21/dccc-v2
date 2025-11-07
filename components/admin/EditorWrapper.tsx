@@ -80,7 +80,7 @@ const EditorWrapper = <T,>({ title, description, fetcher, saver, children }: Edi
                         <button
                             onClick={handleSave}
                             disabled={!hasChanges || isSaving}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors w-36"
+                            className="px-4 py-2 bg-indigo-600 text-white rounded-md font-semibold hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-colors w-36"
                         >
                             {isSaving ? 'Saving...' : 'Save Changes'}
                         </button>

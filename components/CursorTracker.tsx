@@ -50,8 +50,8 @@ const CursorTracker: React.FC = () => {
     
     const pathVariants = {
          default: {
-            stroke: 'rgba(59, 130, 246, 0.8)',
-            fill: 'rgba(59, 130, 246, 0.1)',
+            stroke: 'rgba(79, 70, 229, 0.8)',
+            fill: 'rgba(79, 70, 229, 0.1)',
         },
         pointer: {
             stroke: 'rgba(239, 68, 68, 1)',

@@ -44,7 +44,7 @@ const MemberDetailModal: React.FC<{ person: Person, onClose: () => void }> = ({ 
                 </div>
                 <div className="p-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-900">{person.name}</h2>
-                    <p className="text-blue-600 font-semibold">{person.position}</p>
+                    <p className="text-indigo-600 font-semibold">{person.position}</p>
                     {person.bio && <p className="text-gray-600 mt-4 text-sm">{person.bio}</p>}
                 </div>
                 {'tenureYears' in person && (
@@ -58,7 +58,7 @@ const MemberDetailModal: React.FC<{ person: Person, onClose: () => void }> = ({ 
                  {person.socials && person.socials.length > 0 && (
                     <div className="px-6 py-4 border-t border-gray-200 flex justify-center gap-4">
                         {person.socials.map(social => (
-                            <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600 transition-colors">
+                            <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-indigo-600 transition-colors">
                                 <SocialIcon icon={social.icon} />
                             </a>
                         ))}
@@ -73,7 +73,7 @@ const ModeratorCard: React.FC<{ person: Moderator, isMain?: boolean, onClick: ()
     const cardSize = isMain ? 'md:w-72 w-full' : 'w-full';
 
     return (
-        <div onClick={onClick} className={`relative ${cardSize} aspect-[0.85] bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl overflow-hidden shadow-lg mx-auto cursor-pointer group`}>
+        <div onClick={onClick} className={`relative ${cardSize} aspect-[0.85] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl overflow-hidden shadow-lg mx-auto cursor-pointer group`}>
             <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain object-bottom group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 p-4 text-white w-full text-center">
@@ -231,7 +231,7 @@ const LeadersPage: React.FC = () => {
                 </header>
 
                 <section className="mb-28">
-                    <h2 className="text-3xl font-bold text-blue-600 text-center mb-10">Convenor & Moderator Panel</h2>
+                    <h2 className="text-3xl font-bold text-indigo-600 text-center mb-10">Convenor & Moderator Panel</h2>
                     <div className="flex flex-col items-center gap-10">
                         {mainModerator && <div className="max-w-xs"><ModeratorCard person={mainModerator} isMain onClick={() => setSelectedPerson(mainModerator)} /></div>}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl">
@@ -244,7 +244,7 @@ const LeadersPage: React.FC = () => {
                     <h2 className="text-4xl font-bold text-center mb-16">Current Panel (2025)</h2>
                     
                     <div className="bg-gray-50 rounded-3xl py-16 mb-16">
-                         <h3 className="text-3xl font-bold text-blue-600 text-center mb-12">Secretariat Panel</h3>
+                         <h3 className="text-3xl font-bold text-indigo-600 text-center mb-12">Secretariat Panel</h3>
                          <div className="flex flex-wrap justify-center gap-6 md:gap-8 mb-8 px-4">
                            {topSecretariat.map(p => <div key={p.id} className="w-44 sm:w-48 md:w-52"><MemberCard person={p} onClick={() => setSelectedPerson(p)} /></div>)}
                         </div>
@@ -254,7 +254,7 @@ const LeadersPage: React.FC = () => {
                     </div>
 
                     <div>
-                         <h3 className="text-3xl font-bold text-blue-600 text-center mb-12">Executive Panel</h3>
+                         <h3 className="text-3xl font-bold text-indigo-600 text-center mb-12">Executive Panel</h3>
                          <div className="max-w-6xl mx-auto">
                             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                                 {executiveMembers.map(p => (
@@ -266,7 +266,7 @@ const LeadersPage: React.FC = () => {
                 </section>
 
                 <section>
-                    <h2 className="text-3xl font-bold text-blue-600 text-center mb-10">Past Panels</h2>
+                    <h2 className="text-3xl font-bold text-indigo-600 text-center mb-10">Past Panels</h2>
                     <div className="max-w-2xl mx-auto space-y-4">
                         {sortedYears.map(year => (
                            <PastPanelAccordion

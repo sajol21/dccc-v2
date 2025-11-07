@@ -56,9 +56,10 @@ const LeadersEditor: React.FC = () => {
     return (
         <EditorWrapper
             title="Manage Panels"
-            description="Reorder, edit, or delete members from all panels. To add a new member, please use the 'Add Member' tab."
+            description="Reorder, edit, or delete members from all panels."
             fetcher={getLeaders}
             saver={saveLeaders}
+            // FIX: Pass children as an explicit prop to satisfy TypeScript.
             children={(data, setData) => <LeadersForm data={data} onChange={setData} />}
         />
     );

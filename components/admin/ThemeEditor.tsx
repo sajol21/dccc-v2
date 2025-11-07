@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { ThemeData } from '../../types';
 import EditorWrapper from './EditorWrapper';
@@ -16,14 +17,14 @@ const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...pr
             type={type} 
             value={value} 
             onChange={onChange} 
-            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition" 
+            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition h-10 px-3" 
             {...props} 
         />
     </div>
 );
 
 const ToggleSwitch: React.FC<{ checked: boolean; onChange: (checked: boolean) => void; }> = ({ checked, onChange }) => (
-    <button type="button" onClick={() => onChange(!checked)} className={`${checked ? 'bg-blue-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors flex-shrink-0`}>
+    <button type="button" onClick={() => onChange(!checked)} className={`${checked ? 'bg-indigo-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors flex-shrink-0`}>
         <span className={`${checked ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform`} />
     </button>
 );
@@ -60,7 +61,7 @@ const ThemeEditor: React.FC = () => {
             description="Customize the interactive mesh on the homepage."
             fetcher={getTheme}
             saver={saveTheme}
-// FIX: Pass children as an explicit prop to satisfy TypeScript
+            // FIX: Pass children as an explicit prop to satisfy TypeScript.
             children={(data, setData) => <ThemeForm data={data} onChange={setData} />}
         />
     );

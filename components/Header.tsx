@@ -24,7 +24,7 @@ const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const activeLinkStyle = {
-    color: '#2563eb', // blue-600
+    color: '#4f46e5', // indigo-600
   };
   
   const menuVariants = {
@@ -79,7 +79,7 @@ const Header: React.FC = () => {
                       key={link.name}
                       to={link.path}
                       style={({ isActive }) => (isActive ? activeLinkStyle : {})}
-                      className="text-gray-600 hover:text-blue-600 transition-colors font-medium"
+                      className="text-gray-600 hover:text-indigo-600 transition-colors font-medium"
                   >
                       {link.name}
                   </NavLink>
@@ -154,7 +154,7 @@ const Header: React.FC = () => {
                   to={link.path}
                   onClick={() => setIsOpen(false)}
                   style={({ isActive }) => (isActive ? activeLinkStyle : {})}
-                  className="text-gray-700 hover:text-blue-600 transition-colors font-semibold text-2xl"
+                  className="text-gray-700 hover:text-indigo-600 transition-colors font-semibold text-2xl"
                 >
                   {link.name}
                 </NavLink>

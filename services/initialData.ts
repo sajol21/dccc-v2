@@ -251,9 +251,9 @@ export const initialData: AppData = {
   theme: {
     backgroundColor: "#f9fafb",
     nodeColor: "#4b5563",
-    highlightColor: "#2563eb",
+    highlightColor: "#4f46e5",
     lineColor: "rgba(107, 114, 128, 0.2)",
-    lineHighlightColor: "rgba(59, 130, 246, 0.5)",
+    lineHighlightColor: "rgba(79, 70, 229, 0.5)",
     nodeDensity: 9000,
     nodeSize: 1.5,
     mouseRepelStrength: 2,

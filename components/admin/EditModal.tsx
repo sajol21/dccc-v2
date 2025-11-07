@@ -9,7 +9,8 @@ const getHumanLabel = (key: string) => {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
 };
 
-const inputStyles = "block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition";
+const inputStyles = "block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition h-10 px-3";
+const textAreaStyles = "block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition py-2 px-3";
 
 const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...props }) => (
     <div>
@@ -30,7 +31,7 @@ const TextAreaInput: React.FC<any> = ({ label, value, onChange, ...props }) => (
         <textarea 
             value={value} 
             onChange={onChange} 
-            className={inputStyles}
+            className={textAreaStyles}
             {...props} 
         />
     </div>
@@ -38,7 +39,7 @@ const TextAreaInput: React.FC<any> = ({ label, value, onChange, ...props }) => (
 
 
 const ToggleSwitch: React.FC<{ checked: boolean; onChange: (checked: boolean) => void; }> = ({ checked, onChange }) => (
-    <button type="button" onClick={() => onChange(!checked)} className={`${checked ? 'bg-blue-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors flex-shrink-0`}>
+    <button type="button" onClick={() => onChange(!checked)} className={`${checked ? 'bg-indigo-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors flex-shrink-0`}>
         <span className={`${checked ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform`} />
     </button>
 );
@@ -85,7 +86,7 @@ const EditModal: React.FC<EditModalProps> = ({ item, onSave, onClose }) => {
         }
         if (key === 'date') {
             const dateValue = value ? new Date(value).toISOString().split('T')[0] : '';
-            return <FormInput key={key} label={label} type="date" value={dateValue} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(key, e.target.value)} />;
+            return <FormInput key={key} label={label} type="date" value={dateValue} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(key, new Date(e.target.value).toISOString())} />;
         }
          if (key === 'time' || key.toLowerCase().includes('time24')) {
             return <FormInput key={key} label={label} type="time" value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(key, e.target.value)} />;
@@ -125,7 +126,7 @@ const EditModal: React.FC<EditModalProps> = ({ item, onSave, onClose }) => {
                 className="bg-white rounded-lg w-full max-w-2xl shadow-xl relative max-h-[90vh] flex flex-col"
             >
                  <header className="p-4 border-b flex justify-between items-center flex-shrink-0">
-                    <h3 className="text-xl font-bold">Edit {item.name || item.title}</h3>
+                    <h3 className="text-xl font-bold">Edit {item.name || item.title || 'Item'}</h3>
                     <button onClick={onClose} className="text-2xl text-gray-500 hover:text-gray-800">&times;</button>
                 </header>
                 <div className="p-6 space-y-4 overflow-y-auto">
@@ -133,7 +134,7 @@ const EditModal: React.FC<EditModalProps> = ({ item, onSave, onClose }) => {
                 </div>
                 <footer className="p-4 border-t flex justify-end gap-3 flex-shrink-0 bg-gray-50">
                     <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md font-semibold hover:bg-gray-300">Cancel</button>
-                    <button onClick={() => onSave(currentItem)} className="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700">Save</button>
+                    <button onClick={() => onSave(currentItem)} className="px-4 py-2 bg-indigo-600 text-white rounded-md font-semibold hover:bg-indigo-700">Save</button>
                 </footer>
             </motion.div>
         </motion.div>

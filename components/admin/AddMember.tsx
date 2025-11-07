@@ -6,7 +6,7 @@ import type { Department, Moderator, Executive, LeadersData } from '../../types'
 import ImageUploadInput from './ImageUploadInput';
 import Loader from '../Loader';
 
-const inputStyles = "w-full rounded-md border-gray-300 shadow-sm bg-gray-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition";
+const inputStyles = "w-full rounded-md border-gray-300 shadow-sm bg-gray-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition h-10 px-3";
 
 const FormWrapper: React.FC<{title: string, description: string, children: React.ReactNode}> = ({title, description, children}) => (
      <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg">
@@ -74,17 +74,18 @@ const AddMember: React.FC = () => {
         setIsSaving(true);
         try {
             const leadersData: LeadersData = await getLeaders();
+            const slugPart = formData.name.toLowerCase().replace(/[^a-z0-9\s]/gi, '').trim().replace(/\s+/g, '-');
             const newMember: Moderator | Executive = {
-                id: `member_${Date.now()}`,
+                id: `${slugPart}-${Date.now()}`,
                 name: formData.name,
                 position: formData.position,
                 imageUrl: formData.imageUrl,
-                bio: '',
+                bio: '', // Bio can be edited later
                 phone: formData.phone,
                 dcccId: formData.dcccId ? `DCCC-${formData.dcccId}` : '',
                 bloodGroup: formData.bloodGroup,
                 religion: formData.religion,
-                socials: [], // Default empty socials
+                socials: [], // Socials can be edited later
                 ...(formData.panelCategory !== 'moderators' && {
                     department: formData.department,
                     tenureYears: formData.tenureYears,
@@ -191,7 +192,7 @@ const AddMember: React.FC = () => {
                             <FormField label="DCCC ID">
                                 <div className="flex items-center">
                                     <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm h-10">DCCC-</span>
-                                    <input type="text" name="dcccId" value={formData.dcccId} onChange={handleChange} className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-gray-300 bg-gray-50" />
+                                    <input type="text" name="dcccId" value={formData.dcccId} onChange={handleChange} className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-gray-300 bg-gray-50 focus:border-indigo-500 focus:ring-indigo-500 h-10" />
                                 </div>
                             </FormField>
                             <FormField label="Blood Group (Optional)">
@@ -215,7 +216,7 @@ const AddMember: React.FC = () => {
                         <button type="button" onClick={() => setFormData(initialFormState)} className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                             Reset
                         </button>
-                        <button type="submit" disabled={isSaving} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 w-36">
+                        <button type="submit" disabled={isSaving} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 w-36">
                            {isSaving ? 'Saving...' : 'Add Member'}
                         </button>
                     </div>

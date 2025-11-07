@@ -78,7 +78,7 @@ const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ ite
             {items.length === 0 && (
                 <p className="text-gray-500 text-center py-8">
                     {/* FIX: Dynamically change empty state message based on props. */}
-                    No items yet. {title && template ? `Click 'Add New ${title}' to create one.` : "Add one from the 'Add Member' tab."}
+                    No items yet. {title && template ? `Click 'Add New ${title}' to create one.` : "Add one from the 'Members > Add Member' tab."}
                 </p>
             )}
 

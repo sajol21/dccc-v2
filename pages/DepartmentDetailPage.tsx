@@ -98,7 +98,7 @@ const DepartmentDetailPage: React.FC = () => {
                             <ul className="space-y-2">
                                 {department.keyActivities.map((activity, index) => (
                                     <li key={index} className="flex items-start">
-                                        <span className="text-blue-500 mr-2 mt-1">&#10003;</span>
+                                        <span className="text-indigo-500 mr-2 mt-1">&#10003;</span>
                                         <span className="text-gray-700">{activity}</span>
                                     </li>
                                 ))}
@@ -120,7 +120,7 @@ const DepartmentDetailPage: React.FC = () => {
                         })}
                     </div>
                      <div className="text-center mt-12">
-                        <Link to="/panel" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                        <Link to="/panel" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 transition-all duration-300">
                             See All Leaders
                         </Link>
                     </div>
@@ -128,7 +128,7 @@ const DepartmentDetailPage: React.FC = () => {
             )}
 
             <div className="text-center py-16">
-                 <Link to="/departments" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                 <Link to="/departments" className="font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
                     &larr; Back to All Departments
                 </Link>
             </div>

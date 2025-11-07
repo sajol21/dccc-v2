@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from 'react';
 
 interface RichTextEditorProps {
@@ -50,7 +51,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
                     ref={editorRef}
                     contentEditable
                     onInput={handleInput}
-                    className="prose max-w-none p-3 min-h-[150px] focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-b-md"
+                    className="prose max-w-none p-3 min-h-[200px] focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-b-md"
                     dangerouslySetInnerHTML={{ __html: value || '' }}
                 />
             </div>

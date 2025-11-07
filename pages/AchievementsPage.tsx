@@ -26,7 +26,7 @@ const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }
                 <img src={achievement.imageUrl} alt={achievement.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
             </div>
             <div className="p-6 flex flex-col flex-grow">
-                <span className="text-sm font-semibold text-blue-600 mb-2">{achievement.category}</span>
+                <span className="text-sm font-semibold text-indigo-600 mb-2">{achievement.category}</span>
                 <h3 className="font-bold text-xl text-gray-900 leading-tight mb-3 flex-grow">{achievement.title}</h3>
                 <p className="text-sm text-gray-600 mb-4">{achievement.description}</p>
                 <div className="mt-auto border-t border-gray-100 pt-3">
@@ -69,7 +69,7 @@ const AchievementsPage: React.FC = () => {
                     className="text-center mb-12"
                 >
                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
                            Celebrating Our Success
                         </span>
                     </h1>
@@ -90,7 +90,7 @@ const AchievementsPage: React.FC = () => {
                                     onClick={() => setSelectedCategory(category)}
                                     className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 border ${
                                         selectedCategory === category
-                                            ? 'bg-blue-600 text-white border-blue-600'
+                                            ? 'bg-indigo-600 text-white border-indigo-600'
                                             : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-300'
                                     }`}
                                 >

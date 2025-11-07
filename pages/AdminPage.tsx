@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../components/Auth';
@@ -10,6 +11,7 @@ import FooterEditor from '../components/admin/FooterEditor';
 import LeadersEditor from '../components/admin/LeadersEditor';
 import EditorWrapper from '../components/admin/EditorWrapper';
 import CrudEditor from '../components/admin/CrudEditor';
+import AddMember from '../components/admin/AddMember';
 import { Department, Event, Achievement } from '../types';
 import { getDepartments, saveDepartments, getEvents, saveEvents, getAchievements, saveAchievements } from '../services/firebaseService';
 
@@ -36,6 +38,7 @@ const AdminPage: React.FC = () => {
                             description="Manage the creative wings of the club."
                             fetcher={getDepartments}
                             saver={saveDepartments}
+                            // FIX: Pass children as an explicit prop to satisfy TypeScript.
                             children={(items, setItems) => (
                                 <CrudEditor<Department> 
                                     title="Department"
@@ -55,6 +58,7 @@ const AdminPage: React.FC = () => {
                             description="Manage all upcoming and past events."
                             fetcher={getEvents}
                             saver={saveEvents}
+                            // FIX: Pass children as an explicit prop to satisfy TypeScript.
                             children={(items, setItems) => (
                                 <CrudEditor<Event> 
                                     title="Event"
@@ -74,6 +78,7 @@ const AdminPage: React.FC = () => {
                             description="Showcase the club's accomplishments."
                             fetcher={getAchievements}
                             saver={saveAchievements}
+                            // FIX: Pass children as an explicit prop to satisfy TypeScript.
                             children={(items, setItems) => (
                                 <CrudEditor<Achievement> 
                                     title="Achievement"
@@ -86,6 +91,7 @@ const AdminPage: React.FC = () => {
                     } 
                 />
                 <Route path="leaders" element={<LeadersEditor />} />
+                <Route path="leaders/add" element={<AddMember />} />
             </Routes>
         </AdminLayout>
     );

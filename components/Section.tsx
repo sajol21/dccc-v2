@@ -23,7 +23,7 @@ const Section: React.FC<SectionProps> = ({ id, title, subtitle, children, classN
           className="text-center mb-12 md:mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">
-             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
                 {title}
              </span>
           </h2>

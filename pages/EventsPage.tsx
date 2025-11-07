@@ -26,18 +26,18 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
             <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-start gap-5 mb-4">
                     <div className="text-center flex-shrink-0 w-16">
-                        <p className="text-3xl font-bold text-blue-600">{day}</p>
+                        <p className="text-3xl font-bold text-indigo-600">{day}</p>
                         <p className="text-sm font-semibold text-gray-400">{month}</p>
                     </div>
                     <div className="pt-1">
                          <h3 className="font-bold text-lg text-gray-900 leading-tight">
-                            <Link to={`/events/${event.id}`} className="hover:text-blue-600 transition-colors duration-200">{event.title}</Link>
+                            <Link to={`/events/${event.id}`} className="hover:text-indigo-600 transition-colors duration-200">{event.title}</Link>
                         </h3>
                     </div>
                 </div>
                 <p className="text-sm text-gray-600 flex-grow mb-6">{event.shortDescription}</p>
                 <div className="mt-auto border-t border-gray-100 pt-4">
-                     <Link to={`/events/${event.id}`} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors group-hover:text-blue-800 flex items-center gap-2">
+                     <Link to={`/events/${event.id}`} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors group-hover:text-indigo-800 flex items-center gap-2">
                         View Details
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                     </Link>
@@ -72,7 +72,7 @@ const EventsPage: React.FC = () => {
                     className="text-center mb-12"
                 >
                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
                             Club Events
                         </span>
                     </h1>
@@ -84,17 +84,17 @@ const EventsPage: React.FC = () => {
                 <div className="flex justify-center border-b border-gray-200 mb-12">
                     <button
                         onClick={() => setView('upcoming')}
-                        className={`px-4 py-2 font-medium text-gray-500 relative transition-colors ${view === 'upcoming' ? 'text-blue-600' : 'hover:text-blue-600'}`}
+                        className={`px-4 py-2 font-medium text-gray-500 relative transition-colors ${view === 'upcoming' ? 'text-indigo-600' : 'hover:text-indigo-600'}`}
                     >
                         Upcoming
-                        {view === 'upcoming' && <motion.div className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-blue-600" layoutId="active-event-tab" />}
+                        {view === 'upcoming' && <motion.div className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-indigo-600" layoutId="active-event-tab" />}
                     </button>
                     <button
                         onClick={() => setView('past')}
-                        className={`px-4 py-2 font-medium text-gray-500 relative transition-colors ${view === 'past' ? 'text-blue-600' : 'hover:text-blue-600'}`}
+                        className={`px-4 py-2 font-medium text-gray-500 relative transition-colors ${view === 'past' ? 'text-indigo-600' : 'hover:text-indigo-600'}`}
                     >
                         Past
-                        {view === 'past' && <motion.div className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-blue-600" layoutId="active-event-tab" />}
+                        {view === 'past' && <motion.div className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-indigo-600" layoutId="active-event-tab" />}
                     </button>
                 </div>
 

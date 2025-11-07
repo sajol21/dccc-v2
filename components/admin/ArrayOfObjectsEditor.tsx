@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const getHumanLabel = (key: string) => {
@@ -11,7 +12,7 @@ const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...pr
             type={type} 
             value={value} 
             onChange={onChange} 
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 px-3" 
             {...props} 
         />
     </div>
@@ -48,7 +49,7 @@ const ArrayOfObjectsEditor: React.FC<ArrayOfObjectsEditorProps> = ({ label, valu
         return (
             <div>
                  <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-                <button type="button" onClick={handleAddItem} className="mt-2 px-3 py-1.5 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600">
+                <button type="button" onClick={handleAddItem} className="mt-2 px-3 py-1.5 bg-indigo-500 text-white text-sm rounded-md hover:bg-indigo-600">
                     Add Item
                 </button>
             </div>
@@ -74,7 +75,7 @@ const ArrayOfObjectsEditor: React.FC<ArrayOfObjectsEditorProps> = ({ label, valu
                         <button 
                             type="button" 
                             onClick={() => handleRemoveItem(index)} 
-                            className="flex-shrink-0 px-3 py-2 bg-red-500 text-white rounded-md h-9 hover:bg-red-600"
+                            className="flex-shrink-0 px-3 py-2 bg-red-500 text-white rounded-md h-10 hover:bg-red-600"
                             aria-label="Remove item"
                         >
                             &times;
@@ -82,7 +83,7 @@ const ArrayOfObjectsEditor: React.FC<ArrayOfObjectsEditorProps> = ({ label, valu
                     </div>
                 ))}
             </div>
-            <button type="button" onClick={handleAddItem} className="mt-3 px-3 py-1.5 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600">
+            <button type="button" onClick={handleAddItem} className="mt-3 px-3 py-1.5 bg-indigo-500 text-white text-sm rounded-md hover:bg-indigo-600">
                 Add Item
             </button>
         </div>

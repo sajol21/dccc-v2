@@ -23,7 +23,7 @@ const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...pr
             type={type} 
             value={value} 
             onChange={onChange} 
-            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition" 
+            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition h-10 px-3" 
             {...props} 
         />
     </div>
@@ -35,7 +35,7 @@ const TextAreaInput: React.FC<any> = ({ label, value, onChange, ...props }) => (
         <textarea 
             value={value} 
             onChange={onChange} 
-            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition" 
+            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition py-2 px-3" 
             {...props} 
         />
     </div>
@@ -97,7 +97,7 @@ const DashboardEditor: React.FC = () => {
             description="Manage the main content of your homepage and about page."
             fetcher={getDashboardData}
             saver={saveDashboardData}
-// FIX: Pass children as an explicit prop to satisfy TypeScript
+            // FIX: Pass children as an explicit prop to satisfy TypeScript.
             children={(data, setData) => <DashboardForm data={data} onChange={setData} />}
         />
     );

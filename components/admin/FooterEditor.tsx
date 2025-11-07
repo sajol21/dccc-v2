@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { FooterData } from '../../types';
 import ArrayOfObjectsEditor from './ArrayOfObjectsEditor';
@@ -18,7 +19,7 @@ const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...pr
             type={type} 
             value={value} 
             onChange={onChange} 
-            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition" 
+            className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition h-10 px-3" 
             {...props} 
         />
     </div>
@@ -57,7 +58,7 @@ const FooterEditor: React.FC = () => {
             description="Manage the content displayed in the website footer."
             fetcher={getFooter}
             saver={saveFooter}
-// FIX: Pass children as an explicit prop to satisfy TypeScript
+            // FIX: Pass children as an explicit prop to satisfy TypeScript.
             children={(data, setData) => <FooterForm data={data} onChange={setData} />}
         />
     );

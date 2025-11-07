@@ -15,7 +15,7 @@ const StatCard: React.FC<{ value: string; label: string; index: number }> = ({ v
         transition={{ duration: 0.6, delay: index * 0.15 }}
         className="text-center p-4"
     >
-        <p className="text-4xl md:text-5xl font-extrabold text-blue-600">{value}</p>
+        <p className="text-4xl md:text-5xl font-extrabold text-indigo-600">{value}</p>
         <p className="text-gray-500 mt-2 font-medium tracking-wide">{label}</p>
     </motion.div>
 );
@@ -49,11 +49,11 @@ const TimelineEvent: React.FC<{ year: string; title: string; desc: string; isLef
     >
         <div className="hidden md:block w-5/12"></div>
         <div className="hidden md:block w-2/12">
-            <div className="w-8 h-8 mx-auto bg-blue-600 rounded-full border-4 border-white shadow-md"></div>
+            <div className="w-8 h-8 mx-auto bg-indigo-600 rounded-full border-4 border-white shadow-md"></div>
         </div>
         <div className="w-full md:w-5/12">
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100 ml-8 md:ml-0">
-                <p className="text-blue-600 font-bold mb-1">{year}</p>
+                <p className="text-indigo-600 font-bold mb-1">{year}</p>
                 <h4 className="text-xl font-bold text-gray-900 mb-2">{title}</h4>
                 <p className="text-gray-600 text-sm">{desc}</p>
             </div>
@@ -73,7 +73,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
             </div>
             <div className="p-6 flex items-start gap-5">
                  <div className="text-center flex-shrink-0 w-16">
-                    <p className="text-3xl font-bold text-blue-600">{day}</p>
+                    <p className="text-3xl font-bold text-indigo-600">{day}</p>
                     <p className="text-sm font-semibold text-gray-400">{month}</p>
                 </div>
                 <div>
@@ -183,7 +183,7 @@ const HomePage: React.FC = () => {
                         <div className="grid grid-cols-2 gap-6 text-center my-8">
                             {about.stats.slice(0, 2).map((stat, index) => <StatCard key={index} {...stat} index={index} />)}
                         </div>
-                        <Link to="/about" className="px-6 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md">
+                        <Link to="/about" className="px-6 py-3 rounded-full font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-md">
                             Learn Our Story
                         </Link>
                     </motion.div>
@@ -195,7 +195,7 @@ const HomePage: React.FC = () => {
                     {departments.slice(0, 3).map((dept) => <DepartmentCard key={dept.id} department={dept} />)}
                 </div>
                  <div className="text-center mt-12">
-                    <Link to="/departments" className="px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300 shadow-lg">
+                    <Link to="/departments" className="px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 transition-all duration-300 shadow-lg">
                         View All Departments
                     </Link>
                 </div>
