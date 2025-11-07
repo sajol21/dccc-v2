@@ -6,9 +6,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './components/Auth';
 import { ToastProvider } from './components/ToastProvider';
 import MainLayout from './components/MainLayout';
+import CursorTracker from './components/CursorTracker';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const MotivePage = lazy(() => import('./pages/MotivePage'));
 const DepartmentsPage = lazy(() => import('./pages/DepartmentsPage'));
 const DepartmentDetailPage = lazy(() => import('./pages/DepartmentDetailPage'));
 const AchievementsPage = lazy(() => import('./pages/AchievementsPage'));
@@ -23,12 +25,14 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <HashRouter>
-          <div className="min-h-screen font-sans">
+          <div className="min-h-screen font-sans relative">
+            <CursorTracker />
             <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader /></div>}>
               <Routes>
                 <Route element={<MainLayout />}>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/about" element={<AboutPage />} />
+                  <Route path="/motive" element={<MotivePage />} />
                   <Route path="/departments" element={<DepartmentsPage />} />
                   <Route path="/departments/:id" element={<DepartmentDetailPage />} />
                   <Route path="/achievements" element={<AchievementsPage />} />
