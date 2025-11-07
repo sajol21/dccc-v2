@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -6,7 +7,7 @@ import Loader from './components/Loader';
 import CursorTracker from './components/CursorTracker';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './components/Auth';
-import { ToastProvider } from './hooks/useToast';
+import { ToastProvider } from './components/ToastProvider';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));

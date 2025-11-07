@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { 
     signIn as firebaseSignIn, 
@@ -15,6 +16,7 @@ interface AuthContextType {
     signOut: () => Promise<void>;
 }
 
+// FIX: Removed trailing comma from createContext generic.
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const ADMIN_UID = 'kZTv1lTYKUPN1qFb9L8XwKYkwdA2';
@@ -50,7 +52,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return (
         <AuthContext.Provider value={value}>
             {loading ? <div className="h-screen flex items-center justify-center"><Loader /></div> : children}
-        {/* FIX: Corrected typo in closing tag from 'Auth-Context.Provider' to 'AuthContext.Provider'. */}
         </AuthContext.Provider>
     );
 };
