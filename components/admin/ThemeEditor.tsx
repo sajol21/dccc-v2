@@ -1,6 +1,5 @@
 
 
-
 import React from 'react';
 import type { ThemeData } from '../../types';
 import EditorWrapper from './EditorWrapper';
@@ -62,6 +61,7 @@ const ThemeEditor: React.FC = () => {
             description="Customize the interactive mesh on the homepage."
             fetcher={getTheme}
             saver={saveTheme}
+            // FIX: Pass children as an explicit prop to satisfy TypeScript.
             children={(data, setData) => <ThemeForm data={data} onChange={setData} />}
         />
     );

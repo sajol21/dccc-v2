@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import { firebaseApp } from './firebaseConfig';
 import type { AppData, Department, Achievement, Event, Executive, Moderator, Person, HeroData, AboutData, JoinData, FooterData, ThemeData, LeadersData, ModeratorsDoc, CurrentExecutivesDoc, PastExecutivesDoc, GeneralSettingsData } from '../types';
-import { initialData } from './initialData';
+import { initialData } from "./initialData";
 
 
 // --- AUTHENTICATION ---
@@ -29,20 +29,56 @@ const ACHIEVEMENTS_COLLECTION = "achievements";
 const EVENTS_COLLECTION = "events";
 const LEADERS_COLLECTION = "leaders";
 
+// --- PRIVATE HELPERS ---
+
+const seedDatabaseWithInitialData = async (): Promise<void> => {
+    console.log("Seeding database with initial data...");
+    try {
+        const batch = writeBatch(db);
+        const data = initialData;
+
+        // Config
+        batch.set(doc(db, CONFIG_COLLECTION, "hero"), data.hero);
+        batch.set(doc(db, CONFIG_COLLECTION, "about"), data.about);
+        batch.set(doc(db, CONFIG_COLLECTION, "join"), data.join);
+        batch.set(doc(db, CONFIG_COLLECTION, "footer"), data.footer);
+        batch.set(doc(db, CONFIG_COLLECTION, "theme"), data.theme);
+        batch.set(doc(db, CONFIG_COLLECTION, "general"), data.general);
+        
+        // Leaders
+        batch.set(doc(db, LEADERS_COLLECTION, "moderators"), { moderators: data.leaders.moderators });
+        batch.set(doc(db, LEADERS_COLLECTION, "currentExecutives"), { currentExecutives: data.leaders.currentExecutives });
+        batch.set(doc(db, LEADERS_COLLECTION, "pastExecutives"), { pastExecutives: data.leaders.pastExecutives });
+
+        // Collections
+        data.departments.forEach((item: Department) => batch.set(doc(db, DEPARTMENTS_COLLECTION, item.id), item));
+        data.achievements.forEach((item: Achievement) => batch.set(doc(db, ACHIEVEMENTS_COLLECTION, item.id), item));
+        data.events.forEach((item: Event) => batch.set(doc(db, EVENTS_COLLECTION, item.id), item));
+        
+        await batch.commit();
+        console.log("Database seeded successfully.");
+    } catch (error) {
+        console.error("Error seeding database:", error);
+        throw new Error("Failed to seed database with initial data.");
+    }
+}
+
+const checkAndPrepareDatabase = async (): Promise<void> => {
+    const generalDocCheck = await getDoc(doc(db, CONFIG_COLLECTION, "general"));
+    if (!generalDocCheck.exists()) {
+        await seedDatabaseWithInitialData();
+    }
+};
+
+// Initialize DB on first load
+checkAndPrepareDatabase();
+
+
 // --- GENERIC GETTERS / SAVERS ---
 
 const getConfigDoc = async <T,>(docId: string): Promise<T> => {
     const docSnap = await getDoc(doc(db, CONFIG_COLLECTION, docId));
-    if (!docSnap.exists()) {
-        console.warn(`'${docId}' config not found in Firestore. Serving default initial data. Please save settings in the admin panel to create the document.`);
-        // A type assertion is needed here because docId is a string, but we know it corresponds to a key in AppData.
-        const key = docId as keyof AppData;
-        if (initialData[key]) {
-            return initialData[key] as T;
-        }
-        // Throw an error only if the key doesn't exist in initialData either, which shouldn't happen.
-        throw new Error(`'${docId}' config not found in Firestore and no default initial data available.`);
-    }
+    if (!docSnap.exists()) throw new Error(`${docId} config not found`);
     return docSnap.data() as T;
 }
 

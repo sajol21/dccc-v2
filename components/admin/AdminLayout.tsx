@@ -107,7 +107,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, children }) =>
                             <div key={group.name}>
                                 {group.isSingle ? (
                                      <NavLink 
-                                        to={`/admin/${group.path}`}
+                                        to={group.path}
                                         end
                                         className={({isActive}) => `flex items-center gap-3 w-full text-left p-3 rounded-md font-semibold transition-colors ${isActive ? 'bg-indigo-600 text-white shadow-lg' : 'hover:bg-gray-800/50 hover:text-white'}`}
                                     >
@@ -141,7 +141,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, children }) =>
                                                 {group.tabs.map(tab => (
                                                     <NavLink 
                                                         key={tab.name} 
-                                                        to={`/admin/${tab.path}`}
+                                                        to={tab.path}
                                                         end
                                                         className={({isActive}) => `flex items-center gap-3 w-full text-left p-2.5 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20' : 'hover:bg-gray-800/50 hover:text-white'}`}
                                                     >

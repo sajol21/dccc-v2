@@ -58,6 +58,7 @@ const FooterEditor: React.FC = () => {
             description="Manage the content displayed in the website footer."
             fetcher={getFooter}
             saver={saveFooter}
+            // FIX: Pass children as an explicit prop to satisfy TypeScript.
             children={(data, setData) => <FooterForm data={data} onChange={setData} />}
         />
     );

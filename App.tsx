@@ -6,6 +6,7 @@ import { AuthProvider } from './components/Auth';
 import { ToastProvider } from './components/ToastProvider';
 import { ThemeProvider } from './components/ThemeProvider';
 import MainLayout from './components/MainLayout';
+import CursorTracker from './components/CursorTracker';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
@@ -19,12 +20,15 @@ const AdminPage = lazy(() => import('./pages/AdminPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 
 function App() {
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
   return (
     <AuthProvider>
       <ThemeProvider>
         <ToastProvider>
           <HashRouter>
             <div className="min-h-screen font-sans">
+              {!isTouchDevice && <CursorTracker />}
               <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader /></div>}>
                 <Routes>
                   <Route element={<MainLayout />}>

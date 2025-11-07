@@ -1,13 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Section from '../components/Section';
 import Loader from '../components/Loader';
-import InteractiveMesh from '../components/InteractiveMesh';
 import type { Department, Event, Achievement } from '../types';
-import { useTheme } from '../components/ThemeProvider';
 
 const StatCard: React.FC<{ value: string; label: string; index: number }> = ({ value, label, index }) => (
     <motion.div
@@ -88,7 +86,6 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
 const HomePage: React.FC = () => {
     const { data: appData, loading, error } = useData(getAppData);
-    const { theme } = useTheme();
 
     const heroRef = useRef(null);
     const { scrollYProgress: scrollYProgressHero } = useScroll({
@@ -98,43 +95,12 @@ const HomePage: React.FC = () => {
 
     const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
     
-    const parallaxYImageTransform = useTransform(scrollYProgressHero, [0, 1], ["0%", "15%"]);
+    const parallaxYImageTransform = useTransform(scrollYProgressHero, [0, 1], ["0%", "20%"]);
     const parallaxYImage = useSpring(parallaxYImageTransform, springConfig);
     
     const joinRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: joinRef, offset: ["start end", "end start"] });
     const parallaxY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
-
-    // Mouse parallax logic
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    const springConfigMouse = { damping: 40, stiffness: 200, mass: 1 };
-    const springMouseX = useSpring(mouseX, springConfigMouse);
-    const springMouseY = useSpring(mouseY, springConfigMouse);
-
-    useEffect(() => {
-        const handleMouseMove = (event: MouseEvent) => {
-            const { clientX, clientY } = event;
-            const moveX = clientX - window.innerWidth / 2;
-            const moveY = clientY - window.innerHeight / 2;
-            mouseX.set(moveX);
-            mouseY.set(moveY);
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-        };
-    }, [mouseX, mouseY]);
-
-    const parallaxXMouse = useTransform(springMouseX, [-window.innerWidth / 2, window.innerWidth / 2], ["-15px", "15px"]);
-    const parallaxYMouse = useTransform(springMouseY, [-window.innerHeight / 2, window.innerHeight / 2], ["-15px", "15px"]);
-    const parallaxXMouseForeground = useTransform(springMouseX, [-window.innerWidth / 2, window.innerWidth / 2], ["8px", "-8px"]);
-    const parallaxYMouseForeground = useTransform(springMouseY, [-window.innerHeight / 2, window.innerHeight / 2], ["8px", "-8px"]);
-    
-    const meshColors = theme === 'dark' 
-        ? { particleColor: 'rgba(156, 163, 175, 0.7)', lineColorRGB: '156, 163, 175' } // Tailwind gray-400
-        : { particleColor: 'rgba(107, 114, 128, 0.8)', lineColorRGB: '107, 114, 128' }; // Tailwind gray-500
 
     if (loading) return <div className="h-screen flex items-center justify-center"><Loader /></div>;
     if (error) return <div className="text-center py-20 text-red-500">Error loading page data.</div>;
@@ -149,31 +115,36 @@ const HomePage: React.FC = () => {
     return (
         <div className="bg-white dark:bg-gray-900">
             {/* Hero Section */}
-            <section ref={heroRef} className="relative flex items-center justify-center text-center py-12 overflow-hidden bg-gray-50 dark:bg-black" style={{ minHeight: 'calc(100vh - 4rem)' }}>
-                 <motion.div
-                    className="absolute inset-0 z-0 opacity-40 dark:opacity-60"
-                    style={{ y: parallaxYImage }}
-                >
+            <section ref={heroRef} className="relative flex items-center justify-center text-center py-12 overflow-hidden" style={{ minHeight: 'calc(100vh - 4rem)' }}>
+                {about.videoUrl && (
                     <motion.div
-                        className="w-full h-full"
-                        style={{ x: parallaxXMouse, y: parallaxYMouse }}
+                        className="absolute inset-0 z-0"
+                        style={{ y: parallaxYImage }}
                     >
-                         <InteractiveMesh {...meshColors} />
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover"
+                            src={about.videoUrl}
+                        >
+                            Your browser does not support the video tag.
+                        </video>
+                        <div className="absolute inset-0 bg-black/50" />
                     </motion.div>
-                </motion.div>
-                <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white dark:from-black/0 dark:via-black/0 dark:to-black z-0"></div>
+                )}
                 <div className="relative z-10 px-4 w-full max-w-4xl">
                     <motion.div
-                        style={{ x: parallaxXMouseForeground, y: parallaxYMouseForeground }}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
-                        <h2 className="text-xl md:text-2xl font-semibold text-gray-600 dark:text-gray-300 tracking-wide uppercase">Dhaka College</h2>
-                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-gray-900 dark:text-white my-1 tracking-tighter leading-tight">
+                        <h2 className="text-xl md:text-2xl font-semibold text-gray-200 tracking-wide uppercase">Dhaka College</h2>
+                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-white my-1 tracking-tighter leading-tight">
                             Cultural Club
                         </h1>
-                        <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-4 max-w-xl mx-auto">
+                        <p className="text-base md:text-lg text-gray-300 mt-4 max-w-xl mx-auto">
                             Know Thyself, Show Thyself
                         </p>
                         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
@@ -187,7 +158,7 @@ const HomePage: React.FC = () => {
                                 href="https://dhakacollegeculturalclub.com/join"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-gray-800 dark:text-white border-2 border-gray-800 dark:border-white/80 rounded-full hover:bg-gray-800/10 dark:hover:bg-white/10 transition-all duration-300"
+                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-white border-2 border-white/80 rounded-full hover:bg-white/10 transition-all duration-300"
                             >
                                 Join DCCC
                             </a>

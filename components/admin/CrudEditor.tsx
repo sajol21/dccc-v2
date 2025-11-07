@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import EditModal from './EditModal';
 
+// FIX: Add optional title and template props to support adding new items.
 interface CrudEditorProps<T extends {id: string, name?: string, title?: string}> {
     items: T[];
     setItems: (items: T[]) => void;
@@ -20,6 +21,7 @@ const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ ite
     };
 
     const handleSaveItem = (itemToSave: T) => {
+        // FIX: Improved logic to differentiate between adding a new item and updating an existing one.
         const existingItem = items.find(i => i.id === itemToSave.id && i.id !== '');
 
         if (existingItem) {
@@ -47,6 +49,7 @@ const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ ite
 
     return (
         <div>
+            {/* FIX: Add a button to create new items if template and title are provided. */}
             {title && template && (
                 <div className="text-right mb-4">
                     <button 
@@ -74,6 +77,7 @@ const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ ite
             </Reorder.Group>
             {items.length === 0 && (
                 <p className="text-gray-500 text-center py-8">
+                    {/* FIX: Dynamically change empty state message based on props. */}
                     No items yet. {title && template ? `Click 'Add New ${title}' to create one.` : "Add one from the 'Members > Add Member' tab."}
                 </p>
             )}
