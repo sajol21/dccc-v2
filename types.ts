@@ -52,7 +52,6 @@ export interface Event {
   customButtons?: { text: string; link: string; icon: string }[];
 }
 
-// FIX: Export the Person interface to make it available for import in other modules.
 export interface Person {
   id: string;
   name: string;
@@ -100,6 +99,18 @@ export interface FooterData {
   adminPanelLink: { text: string; url: string };
 }
 
+export interface ThemeData {
+    backgroundColor: string;
+    nodeColor: string;
+    highlightColor: string;
+    lineColor: string;
+    lineHighlightColor: string;
+    nodeDensity: number;
+    nodeSize: number;
+    mouseRepelStrength: number;
+    clickEffectEnabled: boolean;
+}
+
 export interface AppData {
     hero: HeroData;
     about: AboutData;
@@ -109,4 +120,5 @@ export interface AppData {
     leaders: LeadersData;
     join: JoinData;
     footer: FooterData;
+    theme: ThemeData;
 }

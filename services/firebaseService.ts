@@ -1,3 +1,12 @@
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    signOut as firebaseSignOut, 
+    onAuthStateChanged as firebaseOnAuthStateChanged,
+    User
+} from "firebase/auth";
+import { firebaseApp } from './firebaseConfig';
 import type { AppData, Department, Achievement, Event, Executive, Moderator, Person } from '../types';
 
 const MOCK_DATA: AppData = {
@@ -40,7 +49,7 @@ const MOCK_DATA: AppData = {
     { id: "a4", title: "Annual Music Fest 'Rhapsody'", description: "Successfully organized our flagship music festival, featuring renowned artists.", date: "2021-12-01", imageUrl: "https://picsum.photos/600/400?random=23", category: "Music" },
   ],
    events: [
-    { id: "e1", title: "Annual Cultural Night 2024", shortDescription: "A grand celebration of music, dance, and drama showcasing the best talents of our club.", fullDescription: "Join us for an evening of spectacular performances as we celebrate a year of creativity and passion. The Annual Cultural Night is our flagship event, featuring stunning solo and group performances from all our departments, including Musica, Timbre, and Artstation. It's a night to remember, filled with art, culture, and community.", date: "2024-11-25", time: "6:00 PM", startTime24: "18:00", location: "Main Auditorium, Dhaka College", imageUrl: "https://picsum.photos/600/400?random=40", isUpcoming: true, registrationLink: "#", customButtons: [{ text: "View Program Schedule", link: "#", icon: "list" }, { text: "Get Directions", link: "#", icon: "map" }], segments: [
+    { id: "e1", title: "Annual Cultural Night 2024", shortDescription: "A grand celebration of music, dance, and drama showcasing the best talents of our club.", fullDescription: "Join us for an evening of spectacular performances as we celebrate a year of creativity and passion. The Annual Cultural Night is our flagship event, featuring stunning solo and group performances from all our departments, including Musica, Timbre, and Artstation. It's a night to remember, filled with art, culture, and community.", date: "2024-11-25", time: "18:00", startTime24: "18:00", location: "Main Auditorium, Dhaka College", imageUrl: "https://picsum.photos/600/400?random=40", isUpcoming: true, registrationLink: "#", customButtons: [{ text: "View Program Schedule", link: "#", icon: "list" }, { text: "Get Directions", link: "#", icon: "map" }], segments: [
         { title: "Opening Ceremony (6:00 PM - 6:30 PM)", items: [
             { primary: "Welcome Speech", secondary: "Sadikul Islam, President" },
             { primary: "Guest of Honor Address", secondary: "Prof. Monira Begum" }
@@ -51,10 +60,10 @@ const MOCK_DATA: AppData = {
             { primary: "Spoken Word Poetry", secondary: "WordSpace Department" }
         ]}
     ]},
-    { id: "e2", title: "Photography Workshop: The Art of Seeing", shortDescription: "Learn the fundamentals of composition and lighting from a professional.", fullDescription: "This intensive one-day workshop, led by award-winning photographer Anis Rahman, will cover the fundamentals of composition, lighting, and storytelling in photography. Participants will engage in hands-on sessions and a guided photo walk. Suitable for all skill levels, from beginners to advanced enthusiasts.", date: "2024-10-15", time: "10:00 AM - 4:00 PM", startTime24: "10:00", location: "Room 301, Arts Building", imageUrl: "https://picsum.photos/600/400?random=41", isUpcoming: true, registrationLink: "#" },
-    { id: "e3", title: "Poetry Slam Competition", shortDescription: "Unleash your inner poet and compete for the title of the best spoken word artist on campus.", fullDescription: "WordSpace presents its annual Poetry Slam! Come and perform your original work or simply enjoy the powerful performances from our talented poets. Compete for the title of the best spoken word artist on campus. Exciting prizes to be won!", date: "2024-09-30", time: "7:00 PM", startTime24: "19:00", location: "College Cafeteria", imageUrl: "https://picsum.photos/600/400?random=42", isUpcoming: true, registrationLink: "#" },
-    { id: "e4", title: "Theatre Production: 'The Last Stand'", shortDescription: "Our drama wing's ambitious production exploring themes of courage and sacrifice.", fullDescription: "'The Last Stand' is a historical drama that received standing ovations for its powerful script and breathtaking performances. The play, written and directed by our own students, explores themes of courage, sacrifice, and hope during a pivotal moment in history.", date: "2024-05-10", time: "7:30 PM", startTime24: "19:30", location: "Main Auditorium, Dhaka College", imageUrl: "https://picsum.photos/600/400?random=43", isUpcoming: false },
-    { id: "e5", title: "Folk Music Festival 'Bauliana'", shortDescription: "A day-long festival celebrating the rich heritage of Bengali folk music.", fullDescription: "A day-long festival celebrating the rich heritage of Bengali folk music, featuring performances by students and guest artists. The event showcased a variety of folk traditions and was a massive success, drawing a large audience from across the city.", date: "2024-02-21", time: "11:00 AM onwards", startTime24: "11:00", location: "College Field", imageUrl: "https://picsum.photos/600/400?random=44", isUpcoming: false, segments: [
+    { id: "e2", title: "Photography Workshop: The Art of Seeing", shortDescription: "Learn the fundamentals of composition and lighting from a professional.", fullDescription: "This intensive one-day workshop, led by award-winning photographer Anis Rahman, will cover the fundamentals of composition, lighting, and storytelling in photography. Participants will engage in hands-on sessions and a guided photo walk. Suitable for all skill levels, from beginners to advanced enthusiasts.", date: "2024-10-15", time: "10:00", startTime24: "10:00", location: "Room 301, Arts Building", imageUrl: "https://picsum.photos/600/400?random=41", isUpcoming: true, registrationLink: "#" },
+    { id: "e3", title: "Poetry Slam Competition", shortDescription: "Unleash your inner poet and compete for the title of the best spoken word artist on campus.", fullDescription: "WordSpace presents its annual Poetry Slam! Come and perform your original work or simply enjoy the powerful performances from our talented poets. Compete for the title of the best spoken word artist on campus. Exciting prizes to be won!", date: "2024-09-30", time: "19:00", startTime24: "19:00", location: "College Cafeteria", imageUrl: "https://picsum.photos/600/400?random=42", isUpcoming: true, registrationLink: "#" },
+    { id: "e4", title: "Theatre Production: 'The Last Stand'", shortDescription: "Our drama wing's ambitious production exploring themes of courage and sacrifice.", fullDescription: "'The Last Stand' is a historical drama that received standing ovations for its powerful script and breathtaking performances. The play, written and directed by our own students, explores themes of courage, sacrifice, and hope during a pivotal moment in history.", date: "2024-05-10", time: "19:30", startTime24: "19:30", location: "Main Auditorium, Dhaka College", imageUrl: "https://picsum.photos/600/400?random=43", isUpcoming: false },
+    { id: "e5", title: "Folk Music Festival 'Bauliana'", shortDescription: "A day-long festival celebrating the rich heritage of Bengali folk music.", fullDescription: "A day-long festival celebrating the rich heritage of Bengali folk music, featuring performances by students and guest artists. The event showcased a variety of folk traditions and was a massive success, drawing a large audience from across the city.", date: "2024-02-21", time: "11:00", startTime24: "11:00", location: "College Field", imageUrl: "https://picsum.photos/600/400?random=44", isUpcoming: false, segments: [
         { title: "Group Performance", items: [
             { primary: "1st Place", secondary: "Dhaka College Baul Sangha", tertiary: "For their soulful rendition of Lalon Geeti." },
             { primary: "2nd Place", secondary: "The Folk Fusion Project", tertiary: "For their innovative blend of traditional and contemporary folk music." }
@@ -129,40 +138,83 @@ const MOCK_DATA: AppData = {
     copyrightText: "Dhaka College Cultural Club. All Rights Reserved.",
     adminPanelLink: { text: "Administrative Panel", url: "#/login" }
   },
-};
-
-const DATA_KEY = 'dcccAppData';
-
-const getStoredData = (): AppData => {
-  try {
-    const storedData = localStorage.getItem(DATA_KEY);
-    if (storedData) {
-      return JSON.parse(storedData);
-    }
-  } catch (error) {
-    console.error("Error reading from localStorage", error);
+  theme: {
+    backgroundColor: '#f9fafb',
+    nodeColor: 'rgba(37, 99, 235, 0.7)',
+    highlightColor: 'rgba(96, 165, 250, 1)',
+    lineColor: 'rgba(37, 99, 235, 0.3)',
+    lineHighlightColor: 'rgba(59, 130, 246, 0.8)',
+    nodeDensity: 10000,
+    nodeSize: 2.5,
+    mouseRepelStrength: 3,
+    clickEffectEnabled: true,
   }
-  
-  localStorage.setItem(DATA_KEY, JSON.stringify(MOCK_DATA));
-  return MOCK_DATA;
 };
 
-export const saveAppData = (data: AppData): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    try {
-      localStorage.setItem(DATA_KEY, JSON.stringify(data));
-      resolve();
-    } catch (error) {
-      console.error("Error saving to localStorage", error);
-      reject(error);
+// --- AUTHENTICATION ---
+const auth = getAuth(firebaseApp);
+export const signIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
+export const signOut = () => firebaseSignOut(auth);
+export const onAuthStateChanged = (callback: (user: User | null) => void) => firebaseOnAuthStateChanged(auth, callback);
+
+
+// --- FIRESTORE DATABASE ---
+const db = getFirestore(firebaseApp);
+const appDataDocRef = doc(db, "app-content", "main-data");
+
+let appDataCache: AppData | null = null;
+let appDataPromise: Promise<AppData> | null = null;
+
+export const getAppData = (): Promise<AppData> => {
+    if (appDataCache) {
+        return Promise.resolve(appDataCache);
     }
-  });
+    
+    if (appDataPromise) {
+        return appDataPromise;
+    }
+
+    appDataPromise = (async () => {
+        try {
+            const docSnap = await getDoc(appDataDocRef);
+
+            if (docSnap.exists()) {
+                console.log("Document data fetched from Firebase.");
+                // Merge fetched data with mock data to ensure new fields like 'theme' are present
+                const fetchedData = docSnap.data();
+                appDataCache = { ...MOCK_DATA, ...fetchedData } as AppData;
+                return appDataCache;
+            } else {
+                console.log("No document found in Firebase! Initializing with mock data.");
+                await setDoc(appDataDocRef, MOCK_DATA);
+                appDataCache = MOCK_DATA;
+                return appDataCache;
+            }
+        } catch (error) {
+            console.error("Error getting document:", error);
+            return MOCK_DATA;
+        } finally {
+            appDataPromise = null;
+        }
+    })();
+    
+    return appDataPromise;
 };
 
-const simulateDelay = <T,>(data: T): Promise<T> =>
-  new Promise(resolve => setTimeout(() => resolve(data), 100));
+export const saveAppData = async (data: AppData): Promise<void> => {
+  try {
+    // A simple way to deep clone and remove any undefined values that Firestore doesn't support
+    const cleanData = JSON.parse(JSON.stringify(data));
+    await setDoc(appDataDocRef, cleanData);
+    appDataCache = data; 
+    console.log("Document successfully written to Firebase!");
+  } catch (error) {
+    console.error("Error writing document to Firebase: ", error);
+    throw error;
+  }
+};
 
-export const getAppData = (): Promise<AppData> => simulateDelay(getStoredData());
+
 export const getDepartments = (): Promise<Department[]> => getAppData().then(data => data.departments);
 export const getDepartmentById = (id: string): Promise<Department | undefined> => getAppData().then(data => data.departments.find(d => d.id === id));
 export const getAchievements = (): Promise<Achievement[]> => getAppData().then(data => data.achievements);
@@ -175,3 +227,5 @@ export const getLeaderById = (id: string): Promise<Person | undefined> => {
         return allLeaders.find(l => l.id === id);
     });
 }
+// Fix: Export User type to be available for other modules.
+export type { User };
