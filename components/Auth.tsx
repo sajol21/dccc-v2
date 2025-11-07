@@ -16,7 +16,7 @@ interface AuthContextType {
     signOut: () => Promise<void>;
 }
 
-// FIX: Removed trailing comma from createContext generic.
+// FIX: Removed trailing comma not allowed.
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const ADMIN_UID = 'kZTv1lTYKUPN1qFb9L8XwKYkwdA2';

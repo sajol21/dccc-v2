@@ -1,4 +1,5 @@
 
+
 export interface HeroData {
   headline: string;
   tagline: string;
@@ -70,8 +71,8 @@ export interface Person {
 export interface Moderator extends Person {}
 
 export interface Executive extends Person {
-  department?: string; // For current executives
-  tenureYears?: string; // For past executives
+  department?: string; 
+  tenureYears?: string;
 }
 
 export interface LeadersData {
@@ -79,6 +80,18 @@ export interface LeadersData {
   currentExecutives: Executive[];
   pastExecutives: Executive[];
 }
+
+// Document types for the new Firestore structure
+export interface ModeratorsDoc {
+  moderators: Moderator[];
+}
+export interface CurrentExecutivesDoc {
+  currentExecutives: Executive[];
+}
+export interface PastExecutivesDoc {
+  pastExecutives: Executive[];
+}
+
 
 export interface JoinData {
   title: string;

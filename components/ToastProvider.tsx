@@ -12,7 +12,7 @@ interface ToastContextType {
   addToast: (message: string, type?: 'success' | 'error') => void;
 }
 
-// FIX: Removed trailing comma from createContext generic.
+// FIX: Removed trailing comma not allowed.
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const useToast = () => {
