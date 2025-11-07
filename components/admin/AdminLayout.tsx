@@ -1,15 +1,12 @@
 
-
-
-import React, { useState, Fragment } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { NavLink, useLocation } from 'react-router-dom';
 import type { User } from '../../services/firebaseService';
 
 interface AdminLayoutProps {
     user: User | null;
     signOut: () => void;
-    activeTab: string;
-    setActiveTab: (tab: string) => void;
     children: React.ReactNode;
 }
 
@@ -30,9 +27,23 @@ const NavIcon: React.FC<{ name: string }> = ({ name }) => {
     )
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, setActiveTab, children }) => {
-    const tabs = ['Dashboard', 'Theme', 'Footer', 'Departments', 'Events', 'Achievements', 'Leaders'];
+const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, children }) => {
+    const tabs = [
+        { name: 'Dashboard', path: 'dashboard' },
+        { name: 'Theme', path: 'theme' },
+        { name: 'Footer', path: 'footer' },
+        { name: 'Departments', path: 'departments' },
+        { name: 'Events', path: 'events' },
+        { name: 'Achievements', path: 'achievements' },
+        { name: 'Leaders', path: 'leaders' },
+    ];
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const location = useLocation();
+
+    const activeTabName = useMemo(() => {
+        const currentPath = location.pathname.split('/admin/')[1]?.split('/')[0] || 'dashboard';
+        return tabs.find(tab => tab.path === currentPath)?.name || 'Dashboard';
+    }, [location.pathname, tabs]);
 
     return (
         <div className="min-h-screen">
@@ -45,14 +56,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, set
                     </div>
                     <nav className="flex-grow p-2 space-y-2 overflow-y-auto">
                         {tabs.map(tab => (
-                            <button 
-                                key={tab} 
-                                onClick={() => setActiveTab(tab)} 
-                                className={`flex items-center gap-3 w-full text-left p-3 rounded-md font-medium transition-colors ${activeTab === tab ? 'bg-blue-600 text-white shadow' : 'hover:bg-gray-800 hover:text-white'}`}
+                            <NavLink 
+                                key={tab.name} 
+                                to={tab.path}
+                                end
+                                className={({isActive}) => `flex items-center gap-3 w-full text-left p-3 rounded-md font-medium transition-colors ${isActive ? 'bg-blue-600 text-white shadow' : 'hover:bg-gray-800 hover:text-white'}`}
                             >
-                                <NavIcon name={tab} />
-                                <span className="hidden md:inline">{tab}</span>
-                            </button>
+                                <NavIcon name={tab.name} />
+                                <span className="hidden md:inline">{tab.name}</span>
+                            </NavLink>
                         ))}
                     </nav>
                      <div className="p-2 border-t border-gray-700/50 flex-shrink-0">
@@ -75,7 +87,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, set
                     {/* Top Header */}
                     <header className="sticky top-0 bg-white/80 backdrop-blur-sm z-30 shadow-sm">
                         <div className="h-16 flex items-center justify-between px-6 lg:px-8">
-                            <h1 className="text-xl font-bold text-gray-900">{activeTab}</h1>
+                            <h1 className="text-xl font-bold text-gray-900">{activeTabName}</h1>
                              <div className="relative">
                                 <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center gap-2">
                                     <span className="hidden sm:inline text-sm font-medium text-gray-700">{user?.email}</span>
@@ -107,8 +119,18 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ user, signOut, activeTab, set
                             </div>
                         </div>
                     </header>
-                    <main className="p-6 lg:p-8">
-                        {children}
+                    <main className="p-6 lg:p-10">
+                         <AnimatePresence mode="wait">
+                            <motion.div
+                                key={location.pathname}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                {children}
+                            </motion.div>
+                        </AnimatePresence>
                     </main>
                 </div>
             </div>

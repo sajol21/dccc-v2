@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import RichTextEditor from './RichTextEditor';
@@ -8,6 +9,8 @@ const getHumanLabel = (key: string) => {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
 };
 
+const inputStyles = "block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition";
+
 const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...props }) => (
     <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
@@ -15,7 +18,7 @@ const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...pr
             type={type} 
             value={value} 
             onChange={onChange} 
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+            className={inputStyles} 
             {...props} 
         />
     </div>
@@ -27,7 +30,7 @@ const TextAreaInput: React.FC<any> = ({ label, value, onChange, ...props }) => (
         <textarea 
             value={value} 
             onChange={onChange} 
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+            className={inputStyles}
             {...props} 
         />
     </div>
@@ -66,7 +69,7 @@ const EditModal: React.FC<EditModalProps> = ({ item, onSave, onClose }) => {
                     <select
                         value={value}
                         onChange={(e) => handleChange(key, e.target.value)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className={inputStyles}
                     >
                         <option value="">Select Type</option>
                         <option value="Presidency">Presidency</option>

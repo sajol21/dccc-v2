@@ -6,6 +6,7 @@ import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Section from '../components/Section';
 import Loader from '../components/Loader';
+import InteractiveMesh from '../components/InteractiveMesh';
 import type { Department, Event, Executive } from '../types';
 
 const StatCard: React.FC<{ value: string; label: string; index: number }> = ({ value, label, index }) => (
@@ -89,6 +90,14 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
 const HomePage: React.FC = () => {
     const { data: appData, loading, error } = useData(getAppData);
+
+    const heroRef = useRef(null);
+    const { scrollYProgress: scrollYProgressHero } = useScroll({ 
+        target: heroRef, 
+        offset: ["start start", "end start"] 
+    });
+    const parallaxYHero = useTransform(scrollYProgressHero, [0, 1], ["0%", "50%"]);
+    
     const joinRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: joinRef, offset: ["start end", "end start"] });
     const parallaxY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
@@ -109,7 +118,13 @@ const HomePage: React.FC = () => {
     return (
         <div className="bg-gray-50">
             {/* Hero Section */}
-            <section className="relative min-h-screen flex items-center justify-center text-center bg-white pt-24 pb-12">
+            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center text-center bg-white pt-24 pb-12 overflow-hidden">
+                <motion.div
+                    className="absolute top-0 left-0 w-full h-full z-0"
+                    style={{ y: parallaxYHero }}
+                >
+                    <InteractiveMesh />
+                </motion.div>
                 <div className="relative z-10 px-4 w-full max-w-4xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

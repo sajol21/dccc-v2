@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useToast } from '../ToastProvider';
 import Loader from '../Loader';
@@ -59,13 +60,6 @@ const EditorWrapper = <T,>({ title, description, fetcher, saver, children }: Edi
         }
     }, [draftData, saver, title, addToast]);
 
-    const handleReset = useCallback(() => {
-        if (originalData) {
-            setDraftData(deepClone(originalData));
-            addToast('🔄 Changes have been reset.');
-        }
-    }, [originalData, addToast]);
-
     if (loading) {
         return <div className="min-h-[400px] flex items-center justify-center"><Loader /></div>;
     }
@@ -84,16 +78,9 @@ const EditorWrapper = <T,>({ title, description, fetcher, saver, children }: Edi
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <button
-                            onClick={handleReset}
-                            disabled={!hasChanges || isSaving}
-                            className="px-4 py-2 bg-white text-gray-800 rounded-md font-semibold border border-gray-300 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
-                        >
-                            Reset
-                        </button>
-                        <button
                             onClick={handleSave}
                             disabled={!hasChanges || isSaving}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors w-32"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors w-36"
                         >
                             {isSaving ? 'Saving...' : 'Save Changes'}
                         </button>
@@ -101,7 +88,7 @@ const EditorWrapper = <T,>({ title, description, fetcher, saver, children }: Edi
                 </div>
             </header>
             
-            <main className="p-6">
+            <main className="p-6 md:p-8">
                 {children(draftData, setDraftData)}
             </main>
         </div>

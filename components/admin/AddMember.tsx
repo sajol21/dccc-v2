@@ -1,11 +1,12 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { useToast } from '../ToastProvider';
 import { getLeaders, saveLeaders, getDepartments } from '../../services/firebaseService';
 import type { Department, Moderator, Executive, LeadersData } from '../../types';
 import ImageUploadInput from './ImageUploadInput';
 import Loader from '../Loader';
+
+const inputStyles = "w-full rounded-md border-gray-300 shadow-sm bg-gray-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition";
 
 const FormWrapper: React.FC<{title: string, description: string, children: React.ReactNode}> = ({title, description, children}) => (
      <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg">
@@ -41,7 +42,6 @@ const AddMember: React.FC = () => {
         type: 'Executive', // 'Presidency', 'Secretariat', 'Executive'
         department: '',
         imageUrl: '',
-        bio: '',
         phone: '',
         dcccId: '',
         bloodGroup: '',
@@ -55,15 +55,6 @@ const AddMember: React.FC = () => {
             .catch(() => addToast('Failed to load departments', 'error'))
             .finally(() => setLoadingDepartments(false));
     }, [addToast]);
-    
-     useEffect(() => {
-        if (formData.panelCategory === 'pastExecutives' && formData.tenureYears === '2025') {
-            setFormData(prev => ({ ...prev, tenureYears: '2023-2024' }));
-        } else if (formData.panelCategory === 'currentExecutives' && formData.tenureYears !== '2025') {
-            setFormData(prev => ({ ...prev, tenureYears: '2025' }));
-        }
-    }, [formData.panelCategory]);
-
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -88,7 +79,7 @@ const AddMember: React.FC = () => {
                 name: formData.name,
                 position: formData.position,
                 imageUrl: formData.imageUrl,
-                bio: formData.bio,
+                bio: '',
                 phone: formData.phone,
                 dcccId: formData.dcccId ? `DCCC-${formData.dcccId}` : '',
                 bloodGroup: formData.bloodGroup,
@@ -125,6 +116,12 @@ const AddMember: React.FC = () => {
 
     const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
     const religions = ["Islam", "Hinduism", "Christianity", "Buddhism", "Other"];
+    const years = Array.from({ length: 10 }, (_, i) => (2030 - i).toString());
+    const positions = [
+        "President", "Vice President", "General Secretary", "Joint Secretary", 
+        "Operating Secretary", "IT Secretary", "Financial Secretary", "Executive Member",
+        "Convenor", "Moderator"
+    ];
 
     return (
         <FormWrapper title="Add New Panel Member" description="Fill in the details to add a new member to the club's panel.">
@@ -134,7 +131,7 @@ const AddMember: React.FC = () => {
                     <div className="lg:col-span-1 space-y-6">
                         <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Member Role</h3>
                         <FormField label="Panel Category">
-                             <select name="panelCategory" value={formData.panelCategory} onChange={handleChange} className="w-full rounded-md border-gray-300 shadow-sm">
+                             <select name="panelCategory" value={formData.panelCategory} onChange={handleChange} className={inputStyles}>
                                 <option value="currentExecutives">Current Executive</option>
                                 <option value="pastExecutives">Past Executive</option>
                                 <option value="moderators">Moderator</option>
@@ -142,13 +139,16 @@ const AddMember: React.FC = () => {
                         </FormField>
 
                         <FormField label="Position">
-                            <input type="text" name="position" value={formData.position} onChange={handleChange} required className="w-full rounded-md border-gray-300 shadow-sm" />
+                            <select name="position" value={formData.position} onChange={handleChange} required className={inputStyles}>
+                                <option value="">Select Position</option>
+                                {positions.map(pos => <option key={pos} value={pos}>{pos}</option>)}
+                            </select>
                         </FormField>
 
                         {formData.panelCategory !== 'moderators' && (
                              <>
                                 <FormField label="Type / Province">
-                                    <select name="type" value={formData.type} onChange={handleChange} className="w-full rounded-md border-gray-300 shadow-sm">
+                                    <select name="type" value={formData.type} onChange={handleChange} className={inputStyles}>
                                         <option value="Executive">Executive</option>
                                         <option value="Secretariat">Secretariat</option>
                                         <option value="Presidency">Presidency</option>
@@ -156,14 +156,18 @@ const AddMember: React.FC = () => {
                                 </FormField>
                                 <FormField label="Department (if applicable)">
                                     {loadingDepartments ? <Loader/> : (
-                                        <select name="department" value={formData.department} onChange={handleChange} className="w-full rounded-md border-gray-300 shadow-sm">
+                                        <select name="department" value={formData.department} onChange={handleChange} className={inputStyles}>
                                             <option value="">Select Department</option>
                                             {departments.map(dept => <option key={dept.id} value={dept.id}>{dept.name}</option>)}
                                         </select>
                                     )}
                                 </FormField>
                                 <FormField label="Year / Tenure">
-                                    <input type="text" name="tenureYears" value={formData.tenureYears} onChange={handleChange} className="w-full rounded-md border-gray-300 shadow-sm" />
+                                     <select name="tenureYears" value={formData.tenureYears} onChange={handleChange} className={inputStyles}>
+                                        {years.map(year => (
+                                            <option key={year} value={year}>{year}</option>
+                                        ))}
+                                    </select>
                                 </FormField>
                             </>
                          )}
@@ -175,34 +179,29 @@ const AddMember: React.FC = () => {
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                             <div className="sm:col-span-2">
                                 <FormField label="Full Name">
-                                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full rounded-md border-gray-300 shadow-sm" />
+                                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className={inputStyles} />
                                 </FormField>
                             </div>
                              <div className="sm:col-span-2">
                                 <ImageUploadInput label="Image URL" value={formData.imageUrl} onChange={handleImageUrlChange} />
                             </div>
-                            <div className="sm:col-span-2">
-                                <FormField label="Bio (Optional)">
-                                    <textarea name="bio" value={formData.bio} onChange={handleChange} rows={3} className="w-full rounded-md border-gray-300 shadow-sm"></textarea>
-                                </FormField>
-                            </div>
                              <FormField label="Phone (Optional)">
-                                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full rounded-md border-gray-300 shadow-sm" />
+                                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className={inputStyles} />
                             </FormField>
                             <FormField label="DCCC ID">
                                 <div className="flex items-center">
                                     <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm h-10">DCCC-</span>
-                                    <input type="text" name="dcccId" value={formData.dcccId} onChange={handleChange} className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-gray-300" />
+                                    <input type="text" name="dcccId" value={formData.dcccId} onChange={handleChange} className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-gray-300 bg-gray-50" />
                                 </div>
                             </FormField>
                             <FormField label="Blood Group (Optional)">
-                                <select name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} className="w-full rounded-md border-gray-300 shadow-sm">
+                                <select name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} className={inputStyles}>
                                     <option value="">Select Blood Group</option>
                                     {bloodGroups.map(bg => <option key={bg} value={bg}>{bg}</option>)}
                                 </select>
                             </FormField>
                             <FormField label="Religion (Optional)">
-                                <select name="religion" value={formData.religion} onChange={handleChange} className="w-full rounded-md border-gray-300 shadow-sm">
+                                <select name="religion" value={formData.religion} onChange={handleChange} className={inputStyles}>
                                     <option value="">Select Religion</option>
                                     {religions.map(r => <option key={r} value={r}>{r}</option>)}
                                 </select>
@@ -213,8 +212,8 @@ const AddMember: React.FC = () => {
 
                 <div className="pt-6 border-t mt-8">
                     <div className="flex justify-end gap-3">
-                        <button type="button" onClick={() => setFormData(initialFormState)} className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
-                            Reset Form
+                        <button type="button" onClick={() => setFormData(initialFormState)} className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Reset
                         </button>
                         <button type="submit" disabled={isSaving} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 w-36">
                            {isSaving ? 'Saving...' : 'Add Member'}

@@ -1,54 +1,61 @@
 
-
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import EditModal from './EditModal';
 
+// FIX: Add optional title and template props to support adding new items.
 interface CrudEditorProps<T extends {id: string, name?: string, title?: string}> {
-    title: string;
     items: T[];
     setItems: (items: T[]) => void;
+    title?: string;
     template?: T;
 }
 
-const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ title, items, setItems, template }: CrudEditorProps<T>) => {
+const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ items, setItems, title, template }: CrudEditorProps<T>) => {
     const [editingItem, setEditingItem] = useState<T | null>(null);
 
+    const handleAddItem = () => {
+        if (template) {
+            setEditingItem({ ...template });
+        }
+    };
+
     const handleSaveItem = (itemToSave: T) => {
-        const isNew = !items.find(i => i.id === itemToSave.id);
-        if (isNew) {
-            setItems([itemToSave, ...items]);
+        // FIX: Improved logic to differentiate between adding a new item and updating an existing one.
+        const existingItem = items.find(i => i.id === itemToSave.id && i.id !== '');
+
+        if (existingItem) {
+            // Update
+            setItems(items.map(i => (i.id === itemToSave.id ? itemToSave : i)));
         } else {
-            setItems(items.map(i => i.id === itemToSave.id ? itemToSave : i));
+            // Add new, and generate a unique ID
+            const finalItem = { ...itemToSave };
+            const slugPart = (finalItem.name || finalItem.title || 'item')
+                .toLowerCase()
+                .replace(/[^a-z0-9\s]/gi, '')
+                .trim()
+                .replace(/\s+/g, '-');
+            finalItem.id = `${slugPart}-${Date.now()}`;
+            setItems([finalItem, ...items]);
         }
         setEditingItem(null);
     };
 
     const handleDelete = (id: string) => {
-        if (window.confirm(`Are you sure you want to delete this ${title}?`)) {
+        if (window.confirm(`Are you sure you want to delete this item?`)) {
             setItems(items.filter(i => i.id !== id));
-        }
-    };
-    
-    const handleAddNew = () => {
-        if (template) {
-            const newItem: any = {
-                ...template,
-                id: `new_${Date.now()}`,
-            };
-            if ('name' in newItem) newItem.name = `New ${title}`;
-            if ('title' in newItem) newItem.title = `New ${title}`;
-            
-            setEditingItem(newItem as T);
         }
     };
 
     return (
         <div>
-            {template && (
-                <div className="mb-4 text-right">
-                    <button onClick={handleAddNew} className="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors">
+            {/* FIX: Add a button to create new items if template and title are provided. */}
+            {title && template && (
+                <div className="text-right mb-4">
+                    <button 
+                        onClick={handleAddItem} 
+                        className="px-4 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors"
+                    >
                         Add New {title}
                     </button>
                 </div>
@@ -70,10 +77,8 @@ const CrudEditor = <T extends {id: string, name?: string, title?: string}>({ tit
             </Reorder.Group>
             {items.length === 0 && (
                 <p className="text-gray-500 text-center py-8">
-                    {template 
-                        ? `No ${title}s yet. Click 'Add New ${title}' to create one.`
-                        : `No ${title}s yet. Add one from the 'Add Member' tab.`
-                    }
+                    {/* FIX: Dynamically change empty state message based on props. */}
+                    No items yet. {title && template ? `Click 'Add New ${title}' to create one.` : "Add one from the 'Add Member' tab."}
                 </p>
             )}
 
