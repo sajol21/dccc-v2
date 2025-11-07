@@ -45,6 +45,94 @@ export const initialData: AppData = {
       gallery: [],
       keyActivities: ["Classical Dance", "Folk Dance", "Choreography Workshops", "Annual Dance Show"],
       coordinatorId: ""
+    },
+    {
+      id: "dept_wordspace_3",
+      name: "WordSpace",
+      iconUrl: "✍️",
+      shortDesc: "Where words breathe, and voices find rhythm.",
+      fullDesc: "WordSpace is dedicated to the literary arts. We host poetry slams, creative writing workshops, and recitation sessions to help members hone their craft and find their voice.",
+      coverImage: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1973&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Poetry Slams", "Creative Writing", "Recitation Events", "Literary Magazine"],
+      coordinatorId: ""
+    },
+    {
+      id: "dept_musica_4",
+      name: "Musica",
+      iconUrl: "🎶",
+      shortDesc: "The rhythm that defines our spirit.",
+      fullDesc: "Musica is the heart of DCCC's musical endeavors. From vocal training to instrumental jams, we provide a platform for all music lovers to collaborate, create, and perform.",
+      coverImage: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Vocal Coaching", "Band Practice", "Songwriting Sessions", "Live Concerts"],
+      coordinatorId: ""
+    },
+    {
+      id: "dept_artstation_5",
+      name: "Artstation",
+      iconUrl: "🎨",
+      shortDesc: "Where imagination meets the canvas.",
+      fullDesc: "Artstation is a haven for visual artists. We organize painting workshops, art exhibitions, and collaborative projects to foster creativity and technical skill.",
+      coverImage: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2071&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Painting & Sketching", "Digital Art", "Exhibitions", "Art Fairs"],
+      coordinatorId: ""
+    },
+    {
+      id: "dept_timbre_6",
+      name: "Timbre",
+      iconUrl: "🎭",
+      shortDesc: "The pulse of performance and emotion.",
+      fullDesc: "Timbre is our drama and performing arts department. We stage plays, conduct acting workshops, and explore the depths of theatrical expression.",
+      coverImage: "https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=2070&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Theatre Production", "Acting Workshops", "Street Plays", "Improv Nights"],
+      coordinatorId: ""
+    },
+    {
+      id: "dept_film_photo_7",
+      name: "Film School and Photography",
+      iconUrl: "🎬",
+      shortDesc: "Stories in motion, moments immortalized.",
+      fullDesc: "This department is for storytellers who use cameras. We cover everything from scriptwriting and cinematography to photojournalism and post-production.",
+      coverImage: "https://images.unsplash.com/photo-1521714161819-15534968fc5f?q=80&w=2070&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Photography Walks", "Short Film Making", "Editing Workshops", "Film Screenings"],
+      coordinatorId: ""
+    },
+    {
+      id: "dept_it_8",
+      name: "Department of IT",
+      iconUrl: "💻",
+      shortDesc: "Powering creativity through innovation.",
+      fullDesc: "The IT department is the technical backbone of DCCC. We manage the club's digital presence, develop innovative solutions, and support all technical aspects of our events.",
+      coverImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Website Management", "Live Streaming", "Graphic Design Support", "Tech Workshops"],
+      coordinatorId: ""
+    },
+    {
+      id: "dept_finance_marketing_9",
+      name: "Finance & Marketing",
+      iconUrl: "📈",
+      shortDesc: "Strategy, sustainability, and storytelling that sells.",
+      fullDesc: "This department handles the financial health and public promotion of the club. We manage budgets, secure sponsorships, and run marketing campaigns to amplify our reach.",
+      coverImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Budgeting", "Sponsorship Outreach", "Social Media Marketing", "Event Promotion"],
+      coordinatorId: ""
+    },
+    {
+      id: "dept_hr_10",
+      name: "Human Resource Management",
+      iconUrl: "👥",
+      shortDesc: "Building teams that make culture possible.",
+      fullDesc: "The HRM department is responsible for member recruitment, engagement, and development. We ensure a positive and productive environment for everyone in the club.",
+      coverImage: "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2070&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Recruitment Drives", "Member Onboarding", "Team Building", "Conflict Resolution"],
+      coordinatorId: ""
     }
   ],
   achievements: [

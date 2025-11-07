@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { LeadersData, Moderator, Executive } from '../../types';
 import CrudEditor from './CrudEditor';
@@ -10,12 +11,9 @@ interface FormProps {
     onChange: (leaders: LeadersData) => void;
 }
 
-const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-    <div className="mb-8 p-4 border rounded-md bg-gray-50/50">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">{title}</h3>
-        {children}
-    </div>
-);
+const moderatorTemplate: Moderator = { id: '', name: '', position: '', imageUrl: '', bio: '', socials: [], phone: '', email: '', dcccId: '', bloodGroup: '', religion: '' };
+const executiveTemplate: Executive = { id: '', name: '', position: '', imageUrl: '', bio: '', dcccId: '', department: '', tenureYears: '', type: 'Executive', socials: [], phone: '', email: '', bloodGroup: '', religion: '' };
+
 
 const LeadersForm: React.FC<FormProps> = ({ data, onChange }) => {
 
@@ -27,30 +25,36 @@ const LeadersForm: React.FC<FormProps> = ({ data, onChange }) => {
     };
 
     return (
-        <div className="space-y-8">
-            <Section title="Moderator Panel">
+        <div className="space-y-12">
+            <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Moderator Panel</h3>
                 <CrudEditor<Moderator> 
                     title="Moderator" 
                     items={data.moderators} 
                     setItems={(newItems) => handleLeadersChange('moderators', newItems)}
+                    template={moderatorTemplate}
                 />
-            </Section>
+            </div>
             
-            <Section title="Current Executive Panel">
+            <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Current Executive Panel</h3>
                  <CrudEditor<Executive> 
                     title="Current Executive" 
                     items={data.currentExecutives} 
                     setItems={(newItems) => handleLeadersChange('currentExecutives', newItems)}
+                    template={executiveTemplate}
                 />
-            </Section>
+            </div>
             
-            <Section title="Past Executive Panel">
+            <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Past Executive Panel</h3>
                  <CrudEditor<Executive> 
                     title="Past Executive" 
                     items={data.pastExecutives}
                     setItems={(newItems) => handleLeadersChange('pastExecutives', newItems)}
+                    template={executiveTemplate}
                 />
-            </Section>
+            </div>
         </div>
     );
 };
@@ -59,11 +63,10 @@ const LeadersForm: React.FC<FormProps> = ({ data, onChange }) => {
 const LeadersEditor: React.FC = () => {
     return (
         <EditorWrapper
-            title="Leaders Panels"
-            description="Manage all moderator and executive panels from here."
+            title="Manage Panels"
+            description="Add, edit, reorder, or delete members from all panels."
             fetcher={getLeaders}
             saver={saveLeaders}
-// FIX: Pass children as an explicit prop to satisfy TypeScript
             children={(data, setData) => <LeadersForm data={data} onChange={setData} />}
         />
     );

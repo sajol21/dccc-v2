@@ -17,7 +17,7 @@ const DepartmentCard: React.FC<{ department: Department }> = ({ department }) =>
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" 
             loading="lazy" decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-all duration-300"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent group-hover:from-black/90 group-hover:via-black/70 transition-all duration-300"></div>
         <div className="relative h-full flex flex-col justify-end p-6 text-white z-10">
             <motion.div 
                 initial={{ y: 20, opacity: 0 }}
@@ -85,6 +85,7 @@ const DepartmentsPage: React.FC = () => {
                                         visible: { opacity: 1, y: 0 }
                                     }}
                                     transition={{ duration: 0.5 }}
+                                    whileHover={{ scale: 1.05 }}
                                 >
                                     <DepartmentCard department={dept} />
                                 </motion.div>

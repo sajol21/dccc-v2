@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../components/Auth';
@@ -12,6 +13,11 @@ import EditorWrapper from '../components/admin/EditorWrapper';
 import CrudEditor from '../components/admin/CrudEditor';
 import { Department, Event, Achievement } from '../types';
 import { getDepartments, saveDepartments, getEvents, saveEvents, getAchievements, saveAchievements } from '../services/firebaseService';
+
+const departmentTemplate: Department = { id: '', name: '', iconUrl: '✨', shortDesc: '', fullDesc: '', coverImage: '', gallery: [], keyActivities: [], coordinatorId: '' };
+const eventTemplate: Event = { id: '', title: '', shortDescription: '', fullDescription: '', date: new Date().toISOString(), time: '18:00', location: '', imageUrl: '', isUpcoming: true };
+const achievementTemplate: Achievement = { id: '', title: '', description: '', date: new Date().toISOString(), imageUrl: '', category: '' };
+
 
 const AdminPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState('Dashboard');
@@ -32,12 +38,12 @@ const AdminPage: React.FC = () => {
                         description="Manage the creative wings of the club."
                         fetcher={getDepartments}
                         saver={saveDepartments}
-// FIX: Pass children as an explicit prop to satisfy TypeScript
                         children={(items, setItems) => (
                             <CrudEditor<Department> 
                                 title="Department"
                                 items={items}
                                 setItems={setItems}
+                                template={departmentTemplate}
                             />
                         )}
                     />
@@ -49,12 +55,12 @@ const AdminPage: React.FC = () => {
                         description="Manage all upcoming and past events."
                         fetcher={getEvents}
                         saver={saveEvents}
-// FIX: Pass children as an explicit prop to satisfy TypeScript
                         children={(items, setItems) => (
                             <CrudEditor<Event> 
                                 title="Event"
                                 items={items}
                                 setItems={setItems}
+                                template={eventTemplate}
                             />
                         )}
                     />
@@ -66,12 +72,12 @@ const AdminPage: React.FC = () => {
                         description="Showcase the club's accomplishments."
                         fetcher={getAchievements}
                         saver={saveAchievements}
-// FIX: Pass children as an explicit prop to satisfy TypeScript
                         children={(items, setItems) => (
                             <CrudEditor<Achievement> 
                                 title="Achievement"
                                 items={items}
                                 setItems={setItems}
+                                template={achievementTemplate}
                             />
                         )}
                     />

@@ -1,4 +1,6 @@
 
+
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useToast } from '../ToastProvider';
 import Loader from '../Loader';
@@ -73,18 +75,18 @@ const EditorWrapper = <T,>({ title, description, fetcher, saver, children }: Edi
     }
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-            <header className="border-b pb-4 mb-6">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <header className="p-6 border-b border-gray-200 bg-gray-50/50">
+                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">{title} Settings</h1>
-                        <p className="text-sm text-gray-500">{description}</p>
+                        <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+                        <p className="text-sm text-gray-500 mt-1">{description}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <button
                             onClick={handleReset}
                             disabled={!hasChanges || isSaving}
-                            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md font-semibold hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                            className="px-4 py-2 bg-white text-gray-800 rounded-md font-semibold border border-gray-300 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
                         >
                             Reset
                         </button>
@@ -99,7 +101,7 @@ const EditorWrapper = <T,>({ title, description, fetcher, saver, children }: Edi
                 </div>
             </header>
             
-            <main>
+            <main className="p-6">
                 {children(draftData, setDraftData)}
             </main>
         </div>

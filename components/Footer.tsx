@@ -24,8 +24,13 @@ const Footer: React.FC = () => {
     if (!footerData) {
         return (
             <footer className="bg-gray-100 border-t">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-gray-500">
-                    &copy; {new Date().getFullYear()} Dhaka College Cultural Club. All Rights Reserved.
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-gray-500">
+                    <p>
+                        &copy; {new Date().getFullYear()} Dhaka College Cultural Club. All Rights Reserved.
+                        <Link to="/login" className="hover:text-blue-500 transition-colors ml-2 pl-2 border-l border-gray-400">
+                            Admin Panel
+                        </Link>
+                    </p>
                 </div>
             </footer>
         );
@@ -61,11 +66,13 @@ const Footer: React.FC = () => {
             </div>
             {/* Copyright and Admin Link */}
             <div className="border-t border-gray-200">
-                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
-                    <p className="text-center sm:text-left mb-2 sm:mb-0">
+                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-gray-500">
+                    <p>
                         &copy; {new Date().getFullYear()} {footerData.copyrightText}
+                        <Link to={footerData.adminPanelLink.url.replace('#', '')} className="hover:text-blue-500 transition-colors ml-2 pl-2 border-l border-gray-400">
+                            {footerData.adminPanelLink.text}
+                        </Link>
                     </p>
-                    <a href={footerData.adminPanelLink.url} className="hover:text-blue-500 transition-colors">{footerData.adminPanelLink.text}</a>
                 </div>
             </div>
         </footer>
