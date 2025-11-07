@@ -15,6 +15,7 @@ const DepartmentCard: React.FC<{ department: Department }> = ({ department }) =>
             src={department.coverImage} 
             alt={department.name} 
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" 
+            loading="lazy" decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-all duration-300"></div>
         <div className="relative h-full flex flex-col justify-end p-6 text-white z-10">

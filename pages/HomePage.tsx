@@ -10,7 +10,7 @@ import type { Department, Achievement, Event } from '../types';
 
 const DepartmentCard: React.FC<{ department: Department }> = ({ department }) => (
     <Link to={`/departments/${department.id}`} className="block aspect-[4/5] relative rounded-xl overflow-hidden group shadow-lg">
-        <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/90 transition-colors"></div>
         <div className="relative h-full flex flex-col justify-end p-6 text-white z-10">
             <div className="text-4xl mb-3">{department.iconUrl}</div>
@@ -23,7 +23,7 @@ const DepartmentCard: React.FC<{ department: Department }> = ({ department }) =>
 
 const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }) => (
     <div className="aspect-[4/5] bg-gray-900 rounded-xl overflow-hidden group relative shadow-lg">
-        <img src={achievement.imageUrl} alt={achievement.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-70 group-hover:opacity-90" />
+        <img src={achievement.imageUrl} alt={achievement.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-70 group-hover:opacity-90" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
         <div className="relative h-full flex flex-col justify-end p-5 text-white z-10">
             <p className="text-xs font-semibold uppercase text-blue-300 mb-1">{achievement.category}</p>
@@ -47,7 +47,7 @@ const EventCard: React.FC<{ event: Event; index: number }> = ({ event, index }) 
         >
             <Link to={`/events/${event.id}`} className="block">
                 <div className="relative">
-                    <img src={event.imageUrl} alt={event.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <img src={event.imageUrl} alt={event.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-blue-600 rounded-md p-2 text-center leading-none shadow-md">
                         <span className="text-2xl font-bold">{day}</span>
                         <span className="text-xs font-semibold block uppercase">{month}</span>
@@ -146,7 +146,7 @@ const HomePage: React.FC = () => {
             <Section title="About Us" subtitle={about.visionTagline} alternateBackground>
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-                        <img src={about.imageUrl} alt="About DCCC" className="rounded-lg shadow-xl" />
+                        <img src={about.imageUrl} alt="About DCCC" className="rounded-lg shadow-xl" loading="lazy" decoding="async" />
                     </motion.div>
                     <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
                         <p className="text-lg text-gray-600 mb-6">{about.shortText}</p>
@@ -219,7 +219,7 @@ const HomePage: React.FC = () => {
             <div id="join" className="py-20 md:py-28">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="relative rounded-2xl overflow-hidden text-center p-12 shadow-2xl">
-                         <img src="https://picsum.photos/1200/400?random=99" alt="Join Us" className="absolute inset-0 w-full h-full object-cover" />
+                         <img src="https://picsum.photos/1200/400?random=99" alt="Join Us" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                          <div className="absolute inset-0 bg-blue-800/70 backdrop-blur-sm"></div>
                          <div className="relative z-10">
                             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">{join.title}</h2>

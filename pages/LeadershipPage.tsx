@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAppData } from '../services/firebaseService';
@@ -41,7 +40,7 @@ const MemberDetailModal: React.FC<{ person: Person, onClose: () => void }> = ({ 
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
                 <div className="h-48 bg-gray-100 flex justify-center items-end p-4">
-                     <img src={person.imageUrl} alt={person.name} className="h-full w-auto object-contain" />
+                     <img src={person.imageUrl} alt={person.name} className="h-full w-auto object-contain" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-900">{person.name}</h2>
@@ -75,7 +74,7 @@ const ModeratorCard: React.FC<{ person: Moderator, isMain?: boolean, onClick: ()
 
     return (
         <div onClick={onClick} className={`relative ${cardSize} aspect-[0.85] bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl overflow-hidden shadow-lg mx-auto cursor-pointer group`}>
-            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain object-bottom group-hover:scale-105 transition-transform duration-300" />
+            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain object-bottom group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 p-4 text-white w-full text-center">
                 <h3 className="font-bold text-md leading-tight">{person.name}</h3>
@@ -89,7 +88,7 @@ const MemberCard: React.FC<{ person: Executive, onClick: () => void }> = ({ pers
     return (
         <div onClick={onClick} className="relative aspect-[0.85] bg-white rounded-2xl overflow-hidden shadow-sm group border border-gray-200 cursor-pointer">
             <div className="absolute inset-0 flex items-center justify-center p-4">
-                <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+                <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black/80 to-transparent" />
             <div className="absolute bottom-0 left-0 p-3 text-white w-full text-center">

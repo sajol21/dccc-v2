@@ -21,7 +21,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
             className="bg-white rounded-xl border border-gray-200/80 overflow-hidden group flex flex-col shadow-sm hover:shadow-xl transition-all duration-300"
         >
             <Link to={`/events/${event.id}`} className="block overflow-hidden aspect-[16/10]">
-                <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
             </Link>
             <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-start gap-5 mb-4">

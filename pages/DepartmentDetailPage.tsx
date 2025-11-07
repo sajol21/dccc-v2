@@ -9,7 +9,7 @@ import type { Department, Executive } from '../types';
 const LeaderCard: React.FC<{ person: Executive }> = ({ person }) => (
     <div className="relative aspect-[0.85] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
         <div className="absolute inset-0 flex items-center justify-center p-4">
-            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain" />
+            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-contain" loading="lazy" decoding="async" />
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black/80 to-transparent" />
         <div className="absolute bottom-0 left-0 p-3 text-white w-full text-center">

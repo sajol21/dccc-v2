@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { motion, useInView, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -41,7 +40,7 @@ const AnimatedStat: React.FC<{ value: string; label: string }> = ({ value, label
 const LeaderPreviewCard: React.FC<{ person: Person }> = ({ person }) => (
     <Link to="/panel" className="block group">
         <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" />
+            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
         </div>
         <h4 className="font-bold mt-3 text-gray-800">{person.name}</h4>
         <p className="text-sm text-blue-600">{person.position}</p>

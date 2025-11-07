@@ -48,7 +48,7 @@ const StorySection: React.FC<{ section: typeof storySections[0] }> = ({ section 
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8 }}
          >
-            <img src={section.imageUrl} alt={section.title} className="rounded-lg shadow-lg w-full h-auto object-cover aspect-[4/3]" />
+            <img src={section.imageUrl} alt={section.title} className="rounded-lg shadow-lg w-full h-auto object-cover aspect-[4/3]" loading="lazy" decoding="async" />
         </motion.div>
     );
 
