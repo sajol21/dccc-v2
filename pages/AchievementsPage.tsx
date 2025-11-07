@@ -1,6 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getAchievements } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Loader from '../components/Loader';
@@ -11,20 +10,21 @@ const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }
     return (
         <motion.div
             layout
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex flex-col md:flex-row items-center gap-8 bg-white p-6 rounded-lg border border-gray-200"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
         >
-            <img src={achievement.imageUrl} alt={achievement.title} className="w-full md:w-1/3 h-auto object-cover rounded-md shadow-md" />
-            <div className="flex-1">
-                <div className="flex justify-between items-baseline">
-                    <h3 className="text-2xl font-bold text-blue-600">{achievement.title}</h3>
-                    <p className="text-gray-500 font-mono">{date.getFullYear()}</p>
+            <div className="flex flex-col md:flex-row items-center gap-6">
+                 <div className="w-full md:w-64 flex-shrink-0">
+                    <img src={achievement.imageUrl} alt={achievement.title} className="w-full h-40 object-cover rounded-lg" />
+                 </div>
+                <div className="flex-1 text-center md:text-left">
+                     <p className="text-sm font-semibold text-blue-600 mb-1">{achievement.category} &bull; {date.getFullYear()}</p>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">{achievement.title}</h3>
+                    <p className="text-gray-600 text-sm">{achievement.description}</p>
                 </div>
-                <p className="text-sm text-gray-400 mb-4">{achievement.category} - {date.toLocaleDateString()}</p>
-                <p className="text-gray-600">{achievement.description}</p>
             </div>
         </motion.div>
     );
@@ -46,7 +46,7 @@ const AchievementsPage: React.FC = () => {
     }, [achievements, selectedCategory]);
 
     return (
-        <div className="pt-28 pb-20 min-h-screen">
+        <div className="pt-28 pb-20 min-h-screen bg-white">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -54,8 +54,10 @@ const AchievementsPage: React.FC = () => {
                     transition={{ duration: 0.7 }}
                     className="text-center mb-12"
                 >
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
-                        Our Achievements
+                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                            Our Achievements
+                        </span>
                     </h1>
                     <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
                         A journey of excellence, dedication, and countless moments of pride.
@@ -82,10 +84,14 @@ const AchievementsPage: React.FC = () => {
                 {error && <p className="text-center text-red-500">Failed to load achievements.</p>}
 
                 {filteredAchievements && (
-                    <div className="space-y-8 max-w-4xl mx-auto">
-                        {filteredAchievements.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(ach => (
-                            <AchievementCard key={ach.id} achievement={ach} />
-                        ))}
+                    <div className="space-y-6 max-w-4xl mx-auto">
+                         <AnimatePresence mode="wait">
+                            <motion.div key={selectedCategory}>
+                                {filteredAchievements.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(ach => (
+                                    <AchievementCard key={ach.id} achievement={ach} />
+                                ))}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 )}
             </div>

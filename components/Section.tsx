@@ -22,8 +22,10 @@ const Section: React.FC<SectionProps> = ({ id, title, subtitle, children, classN
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
-             {title}
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">
+             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                {title}
+             </span>
           </h2>
           {subtitle && <p className="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">{subtitle}</p>}
         </motion.div>

@@ -11,6 +11,7 @@ export interface AboutData {
   videoUrl?: string;
   foundedYear: number;
   visionTagline: string;
+  stats: { value: string; label: string }[];
 }
 
 export interface MotivePoint {
@@ -29,7 +30,19 @@ export interface Department {
   iconUrl: string;
   shortDesc: string;
   fullDesc: string;
+  coverImage: string;
   gallery: { type: 'image' | 'video'; url: string; thumbUrl: string }[];
+  keyActivities: string[];
+  coordinatorId: string; // ID of an Executive
+}
+
+// FIX: Add GalleryItem interface to resolve type error in pages/GalleryPage.tsx
+export interface GalleryItem {
+  id: string;
+  title: string;
+  imageUrl: string;
+  thumbnailUrl: string;
+  category: string;
 }
 
 export interface Achievement {
@@ -42,7 +55,7 @@ export interface Achievement {
 }
 
 export interface Event {
-  id: string;
+  id:string;
   title: string;
   shortDescription: string;
   fullDescription: string;
@@ -52,9 +65,9 @@ export interface Event {
   location: string;
   imageUrl: string;
   isUpcoming: boolean;
-  category: string;
   registrationLink?: string;
-  winners?: { position: string; name: string; details: string }[];
+  segments?: { title: string; items: { primary: string; secondary: string; tertiary?: string }[] }[];
+  customButtons?: { text: string; link: string; icon: string }[];
 }
 
 interface Person {
@@ -104,6 +117,13 @@ export interface FooterData {
   adminPanelLink: { text: string; url: string };
 }
 
+export interface ContactData {
+    email: string;
+    phone: string;
+    address: string;
+    mapEmbedUrl: string;
+}
+
 export interface AppData {
     hero: HeroData;
     about: AboutData;
@@ -114,4 +134,5 @@ export interface AppData {
     leaders: LeadersData;
     join: JoinData;
     footer: FooterData;
+    contact: ContactData;
 }

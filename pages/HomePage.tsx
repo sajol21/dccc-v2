@@ -8,28 +8,27 @@ import Section from '../components/Section';
 import Loader from '../components/Loader';
 import type { Department, Achievement, Event } from '../types';
 
-// Smaller components defined outside to avoid re-creation on render
-const DepartmentCard: React.FC<{ department: Department; index: number }> = ({ department, index }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-        className="bg-white rounded-lg p-6 text-center border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-    >
-        <div className="text-5xl mb-4">{department.iconUrl}</div>
-        <h3 className="text-xl font-bold mb-2 text-gray-900">{department.name}</h3>
-        <p className="text-gray-600 mb-4">{department.shortDesc}</p>
-        <Link to={`/departments/${department.id}`} className="text-blue-600 hover:text-blue-700 font-semibold">Learn More &rarr;</Link>
-    </motion.div>
+const DepartmentCard: React.FC<{ department: Department }> = ({ department }) => (
+    <Link to={`/departments/${department.id}`} className="block aspect-[4/5] relative rounded-xl overflow-hidden group shadow-lg">
+        <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/90 transition-colors"></div>
+        <div className="relative h-full flex flex-col justify-end p-6 text-white z-10">
+            <div className="text-4xl mb-3">{department.iconUrl}</div>
+            <h3 className="text-2xl font-bold mb-1">{department.name}</h3>
+            <p className="text-sm opacity-90">{department.shortDesc}</p>
+        </div>
+    </Link>
 );
 
+
 const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }) => (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-        <img src={achievement.imageUrl} alt={achievement.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-        <div className="p-4">
-            <p className="text-sm text-gray-500 mb-1">{new Date(achievement.date).getFullYear()} | {achievement.category}</p>
-            <h4 className="font-bold text-lg text-gray-800">{achievement.title}</h4>
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden group relative shadow-lg">
+        <div className="overflow-hidden h-56">
+             <img src={achievement.imageUrl} alt={achievement.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        </div>
+        <div className="p-5">
+            <p className="text-xs text-blue-600 font-semibold mb-1">{new Date(achievement.date).getFullYear()} | {achievement.category}</p>
+            <h4 className="font-bold text-lg text-gray-800 leading-tight">{achievement.title}</h4>
         </div>
     </div>
 );
@@ -66,7 +65,7 @@ const EventCard: React.FC<{ event: Event; index: number }> = ({ event, index }) 
                 <p className="text-gray-600 mb-6 text-sm flex-grow">{event.shortDescription}</p>
                 <Link 
                     to={`/events/${event.id}`}
-                    className="mt-auto block w-full text-center px-4 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
+                    className="mt-auto block w-full text-center px-4 py-2 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-opacity duration-300"
                 >
                     View Details
                 </Link>
@@ -96,8 +95,10 @@ const HomePage: React.FC = () => {
                     transition={{ duration: 1, delay: 0.5 }}
                     className="relative z-10 p-4"
                 >
-                    <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight mb-4 text-gray-900">
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-4 text-gray-900">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
                         {hero.headline}
+                        </span>
                     </h1>
                     <p className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-700">
                         {hero.tagline}
@@ -110,7 +111,7 @@ const HomePage: React.FC = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 1 + i * 0.2 }}
-                                className="px-8 py-3 rounded-md font-semibold text-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
+                                className="px-8 py-3 rounded-md font-semibold text-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
                             >
                                 {btn.text}
                             </motion.a>
@@ -122,6 +123,26 @@ const HomePage: React.FC = () => {
                 </div>
             </section>
 
+            {/* Stats Section */}
+            <section className="bg-white py-20">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        {about.stats.map((stat, i) => (
+                            <motion.div
+                                key={stat.label}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: i * 0.15 }}
+                            >
+                                <p className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">{stat.value}</p>
+                                <p className="text-gray-500 mt-2 font-medium">{stat.label}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* About Section Preview */}
             <Section title="About Us" subtitle={about.visionTagline} alternateBackground>
                 <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -130,7 +151,7 @@ const HomePage: React.FC = () => {
                     </motion.div>
                     <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
                         <p className="text-lg text-gray-600 mb-6">{about.shortText}</p>
-                        <Link to="/about" className="px-6 py-3 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300">
+                        <Link to="/about" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
                             Read Our Story
                         </Link>
                     </motion.div>
@@ -141,11 +162,19 @@ const HomePage: React.FC = () => {
             <Section title="Our Departments" subtitle="Explore the diverse creative wings of our club.">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {departments.slice(0, 4).map((dept, i) => (
-                        <DepartmentCard key={dept.id} department={dept} index={i} />
+                        <motion.div
+                            key={dept.id}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.5 }}
+                            transition={{ duration: 0.5, delay: i * 0.1 }}
+                        >
+                            <DepartmentCard department={dept} />
+                        </motion.div>
                     ))}
                 </div>
                  <div className="text-center mt-12">
-                    <Link to="/departments" className="px-6 py-3 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300">
+                    <Link to="/departments" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
                         Explore All Departments
                     </Link>
                 </div>
@@ -167,7 +196,7 @@ const HomePage: React.FC = () => {
                     ))}
                 </div>
                 <div className="text-center mt-12">
-                    <Link to="/achievements" className="px-6 py-3 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300">
+                    <Link to="/achievements" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
                         View All Achievements
                     </Link>
                 </div>
@@ -181,20 +210,28 @@ const HomePage: React.FC = () => {
                     ))}
                 </div>
                 <div className="text-center mt-12">
-                    <Link to="/events" className="px-6 py-3 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300">
+                    <Link to="/events" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
                         View All Events
                     </Link>
                 </div>
             </Section>
 
             {/* Join Us Section */}
-            <Section id="join" title={join.title} subtitle={join.description} alternateBackground>
-                <div className="text-center">
-                     <a href={join.buttonLink} target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-4 rounded-lg font-bold text-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30">
-                        {join.buttonText}
-                    </a>
+            <div id="join" className="py-20 md:py-28">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="relative rounded-2xl overflow-hidden text-center p-12 shadow-2xl">
+                         <img src="https://picsum.photos/1200/400?random=99" alt="Join Us" className="absolute inset-0 w-full h-full object-cover" />
+                         <div className="absolute inset-0 bg-blue-800/70 backdrop-blur-sm"></div>
+                         <div className="relative z-10">
+                            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">{join.title}</h2>
+                            <p className="mt-4 text-lg md:text-xl text-blue-100 max-w-3xl mx-auto">{join.description}</p>
+                            <a href={join.buttonLink} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block px-10 py-4 rounded-lg font-bold text-lg text-blue-700 bg-white hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                {join.buttonText}
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </Section>
+            </div>
         </div>
     );
 };

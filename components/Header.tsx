@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,11 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
-  { name: 'Motive', path: '/motive' },
   { name: 'Departments', path: '/departments' },
-  { name: 'Achievements', path: '/achievements' },
   { name: 'Events', path: '/events' },
   { name: 'Leaders', path: '/leaders' },
+  { name: 'Contact', path: '/contact' },
 ];
 
 const Header: React.FC = () => {

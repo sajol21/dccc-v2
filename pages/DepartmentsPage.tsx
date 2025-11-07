@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -7,27 +6,26 @@ import { useData } from '../hooks/useData';
 import Loader from '../components/Loader';
 import type { Department } from '../types';
 
-const DepartmentCard: React.FC<{ department: Department, index: number }> = ({ department, index }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-        className="bg-white rounded-lg p-8 text-center border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col"
-    >
-        <div className="text-6xl mb-6">{department.iconUrl}</div>
-        <h3 className="text-2xl font-bold mb-3 text-gray-900">{department.name}</h3>
-        <p className="text-gray-600 mb-6 flex-grow">{department.shortDesc}</p>
-        <Link to={`/departments/${department.id}`} className="mt-auto px-6 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300">
-            Explore
-        </Link>
-    </motion.div>
+const DepartmentCard: React.FC<{ department: Department }> = ({ department }) => (
+    <Link to={`/departments/${department.id}`} className="block aspect-[4/5] relative rounded-xl overflow-hidden group shadow-lg">
+        <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/90 transition-colors"></div>
+        <div className="relative h-full flex flex-col justify-between p-6 text-white z-10">
+            <div className="text-5xl self-start">{department.iconUrl}</div>
+            <div>
+                <h3 className="text-2xl font-bold mb-1">{department.name}</h3>
+                <p className="text-sm opacity-90">{department.shortDesc}</p>
+            </div>
+        </div>
+    </Link>
 );
+
 
 const DepartmentsPage: React.FC = () => {
     const { data: departments, loading, error } = useData(getDepartments);
 
     return (
-        <div className="pt-28 pb-20 min-h-screen">
+        <div className="pt-28 pb-20 min-h-screen bg-white">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -35,23 +33,41 @@ const DepartmentsPage: React.FC = () => {
                     transition={{ duration: 0.7 }}
                     className="text-center mb-16"
                 >
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">
-                        Our Departments
+                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                           Our Departments
+                        </span>
                     </h1>
                     <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
                         The creative pillars of our club, each with a unique identity and purpose.
                     </p>
                 </motion.div>
                 
-                {loading && <Loader />}
+                {loading && <div className="flex justify-center"><Loader /></div>}
                 {error && <p className="text-center text-red-500">Failed to load departments.</p>}
 
                 {departments && (
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {departments.map((dept, i) => (
-                            <DepartmentCard key={dept.id} department={dept} index={i} />
+                    <motion.div 
+                        className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            visible: { transition: { staggerChildren: 0.1 } }
+                        }}
+                    >
+                        {departments.map((dept) => (
+                            <motion.div
+                                key={dept.id}
+                                variants={{
+                                    hidden: { opacity: 0, y: 50 },
+                                    visible: { opacity: 1, y: 0 }
+                                }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <DepartmentCard department={dept} />
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </div>
