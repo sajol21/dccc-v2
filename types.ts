@@ -1,7 +1,8 @@
 
 
 export interface HeroData {
-  headline: string;
+  headlineLine1: string;
+  headlineLine2: string;
   tagline: string;
   ctaButtons: { text: string; link: string }[];
 }
@@ -73,6 +74,7 @@ export interface Moderator extends Person {}
 export interface Executive extends Person {
   department?: string; 
   tenureYears?: string;
+  type?: 'Presidency' | 'Secretariat' | 'Executive';
 }
 
 export interface LeadersData {

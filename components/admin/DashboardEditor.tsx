@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { HeroData, AboutData, JoinData } from '../../types';
 import RichTextEditor from './RichTextEditor';
@@ -78,7 +79,8 @@ const DashboardEditor: React.FC<EditorProps> = ({ data, stats, onChange }) => {
             </div>
 
             <Section title="Hero Section">
-                <FormInput label="Headline" value={data.hero.headline} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('hero', 'headline', e.target.value)} />
+                <FormInput label="Headline Line 1" value={data.hero.headlineLine1} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('hero', 'headlineLine1', e.target.value)} />
+                <FormInput label="Headline Line 2" value={data.hero.headlineLine2} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('hero', 'headlineLine2', e.target.value)} />
                 <FormInput label="Tagline" value={data.hero.tagline} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange('hero', 'tagline', e.target.value)} />
             </Section>
 

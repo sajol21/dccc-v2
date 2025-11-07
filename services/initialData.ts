@@ -2,7 +2,8 @@ import type { AppData } from "../types";
 
 export const initialData: AppData = {
   hero: {
-    headline: "Dhaka College Cultural Club",
+    headlineLine1: "Dhaka College",
+    headlineLine2: "Cultural Club",
     tagline: "Where Creativity Meets Tradition. Join us to explore your talents in music, dance, drama, and more.",
     ctaButtons: [
       { text: "Explore Departments", link: "#/departments" },
@@ -85,13 +86,56 @@ export const initialData: AppData = {
   ],
   leaders: {
     moderators: [
-      { id: "mod_1", name: "Prof. John Doe", position: "Convenor", imageUrl: "https://randomuser.me/api/portraits/men/1.jpg", bio: "Professor of Bengali Literature and a passionate patron of the arts." }
+      { 
+        id: "mod_1", 
+        name: "Prof. John Doe", 
+        position: "Convenor", 
+        imageUrl: "", // Left blank to test default image
+        bio: "Professor of Bengali Literature and a passionate patron of the arts." 
+      }
     ],
     currentExecutives: [
-      { id: "exec_1", name: "Jane Smith", position: "President", imageUrl: "https://randomuser.me/api/portraits/women/1.jpg", bio: "Leading the club with a vision for creativity and collaboration.", department: "dept_music_1" }
+      { 
+        id: "exec_1", 
+        name: "Jane Smith", 
+        position: "President", 
+        dcccId: "23-001",
+        type: "Presidency",
+        imageUrl: "https://randomuser.me/api/portraits/women/1.jpg", 
+        bio: "Leading the club with a vision for creativity and collaboration.", 
+        department: "dept_music_1",
+        phone: "01234567890",
+        bloodGroup: "B+",
+        socials: [ {name: 'Facebook', url: '#', icon: 'facebook'} ]
+      },
+      { 
+        id: "exec_2", 
+        name: "Peter Jones", 
+        position: "General Secretary", 
+        dcccId: "23-002",
+        type: "Secretariat",
+        imageUrl: "", // Left blank to test default image
+        bio: "Manages club operations and member coordination.", 
+        department: "dept_dance_2",
+        phone: "01234567891",
+        bloodGroup: "A+",
+        socials: []
+      }
     ],
     pastExecutives: [
-      { id: "past_exec_1", name: "Alex Johnson", position: "Former President", imageUrl: "https://randomuser.me/api/portraits/men/2.jpg", bio: "Led the club to new heights during his tenure.", tenureYears: "2022-2023" }
+      { 
+        id: "past_exec_1", 
+        name: "Alex Johnson", 
+        position: "Former President", 
+        dcccId: "22-001",
+        type: "Presidency",
+        imageUrl: "https://randomuser.me/api/portraits/men/2.jpg", 
+        bio: "Led the club to new heights during his tenure.", 
+        tenureYears: "2022-2023",
+        phone: "",
+        bloodGroup: "",
+        socials: []
+      }
     ]
   },
   join: {

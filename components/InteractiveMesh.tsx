@@ -1,8 +1,10 @@
 
+
 import React, { useRef, useEffect, useCallback } from 'react';
 import { useData } from '../hooks/useData';
 import { getAppData } from '../services/firebaseService';
 
+const culturalIcons = ['🎵', '🎭', '🎨', '📖'];
 
 interface Ripple {
     x: number;
@@ -94,8 +96,9 @@ const InteractiveMesh: React.FC = () => {
             originalSize: number;
             speed: number;
             color: string;
+            char: string | null;
 
-            constructor(x: number, y: number, directionX: number, directionY: number, size: number) {
+            constructor(x: number, y: number, directionX: number, directionY: number, size: number, char: string | null = null) {
                 this.x = x;
                 this.y = y;
                 this.directionX = directionX;
@@ -104,13 +107,22 @@ const InteractiveMesh: React.FC = () => {
                 this.size = size;
                 this.speed = Math.random() * 0.4 + 0.1;
                 this.color = theme.nodeColor;
+                this.char = char;
             }
 
             draw() {
-                ctx!.beginPath();
-                ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx!.fillStyle = this.color;
-                ctx!.fill();
+                if (this.char) {
+                    ctx!.font = `${this.size * 2.5}px sans-serif`;
+                    ctx!.fillStyle = this.color;
+                    ctx!.globalAlpha = 0.8;
+                    ctx!.fillText(this.char, this.x, this.y);
+                    ctx!.globalAlpha = 1;
+                } else {
+                    ctx!.beginPath();
+                    ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx!.fillStyle = this.color;
+                    ctx!.fill();
+                }
             }
 
             update() {
@@ -165,12 +177,19 @@ const InteractiveMesh: React.FC = () => {
             particles = [];
             const numberOfParticles = (canvas.width * canvas.height) / theme.nodeDensity;
             for (let i = 0; i < numberOfParticles; i++) {
-                const size = Math.random() * theme.nodeSize + 1;
+                let size = Math.random() * theme.nodeSize + 1;
                 const x = Math.random() * (canvas.width - size * 2) + size;
                 const y = Math.random() * (canvas.height - size * 2) + size;
                 const directionX = (Math.random() * 2) - 1;
                 const directionY = (Math.random() * 2) - 1;
-                particles.push(new Particle(x, y, directionX, directionY, size));
+                
+                let char: string | null = null;
+                if (Math.random() < 0.02) {
+                    char = culturalIcons[Math.floor(Math.random() * culturalIcons.length)];
+                    size *= 2; // Make icons slightly bigger for visibility
+                }
+
+                particles.push(new Particle(x, y, directionX, directionY, size, char));
             }
         };
 

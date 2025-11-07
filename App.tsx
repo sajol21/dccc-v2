@@ -1,13 +1,12 @@
 
 import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
 import Loader from './components/Loader';
 import CursorTracker from './components/CursorTracker';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './components/Auth';
 import { ToastProvider } from './components/ToastProvider';
+import MainLayout from './components/MainLayout';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
@@ -27,10 +26,9 @@ function App() {
         <HashRouter>
           <CursorTracker />
           <div className="min-h-screen font-sans">
-            <Header />
-            <main>
-              <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader /></div>}>
-                <Routes>
+            <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader /></div>}>
+              <Routes>
+                <Route element={<MainLayout />}>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/departments" element={<DepartmentsPage />} />
@@ -39,19 +37,19 @@ function App() {
                   <Route path="/events" element={<EventsPage />} />
                   <Route path="/events/:id" element={<EventDetailPage />} />
                   <Route path="/panel" element={<LeadersPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route 
-                    path="/admin" 
-                    element={
-                      <ProtectedRoute>
-                        <AdminPage />
-                      </ProtectedRoute>
-                    } 
-                  />
-                </Routes>
-              </Suspense>
-            </main>
-            <Footer />
+                </Route>
+                
+                <Route path="/login" element={<LoginPage />} />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute>
+                      <AdminPage />
+                    </ProtectedRoute>
+                  } 
+                />
+              </Routes>
+            </Suspense>
           </div>
         </HashRouter>
       </ToastProvider>

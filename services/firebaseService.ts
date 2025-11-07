@@ -1,4 +1,5 @@
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, writeBatch, query } from "firebase/firestore";
+
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, writeBatch, query, deleteDoc } from "firebase/firestore";
 import { 
     getAuth, 
     signInWithEmailAndPassword, 
@@ -37,6 +38,20 @@ export const saveAppData = async (data: AppData): Promise<void> => {
     const batch = writeBatch(db);
     // Use a deep clone to avoid any mutation issues with the source object
     const cleanData = JSON.parse(JSON.stringify(data));
+    
+    const defaultImageUrl = 'https://ik.imagekit.io/dccc/136881058_208a907c-e2ee-4386-ae78-0d15ed274338.svg';
+
+    // Apply default image URL to leaders if it's missing
+    const applyDefaultImage = (person: Executive | Moderator) => {
+        if (!person.imageUrl) {
+            person.imageUrl = defaultImageUrl;
+        }
+    };
+
+    cleanData.leaders.moderators.forEach(applyDefaultImage);
+    cleanData.leaders.currentExecutives.forEach(applyDefaultImage);
+    cleanData.leaders.pastExecutives.forEach(applyDefaultImage);
+
 
     // Config
     batch.set(doc(db, configCollection, "hero"), cleanData.hero);
@@ -84,6 +99,34 @@ const seedDatabase = async (): Promise<void> => {
     }
 }
 
+const checkAndPrepareDatabase = async (): Promise<void> => {
+    // 1. Check for old data structure and migrate if it exists
+    const oldDocRef = doc(db, "app_content", "data");
+    const oldDocSnap = await getDoc(oldDocRef);
+
+    if (oldDocSnap.exists()) {
+        console.log("Old 'app-content' document found. Migrating data...");
+        try {
+            const oldData = oldDocSnap.data() as AppData;
+            await saveAppData(oldData); // saveAppData writes to the new structure
+            await deleteDoc(oldDocRef); // Delete the old document
+            console.log("Migration complete. Old document removed.");
+            return; // Exit after successful migration
+        } catch (migrationError) {
+            console.error("Error migrating data:", migrationError);
+            throw new Error("Data migration failed.");
+        }
+    }
+
+    // 2. If no old data, check if new structure is populated. If not, seed it.
+    const heroDocCheck = await getDoc(doc(db, configCollection, "hero"));
+    if (!heroDocCheck.exists()) {
+        console.log("Database appears to be empty. Seeding with initial data...");
+        await seedDatabase();
+    }
+};
+
+
 // Fetches all data and assembles it into the AppData object
 export const getAppData = async (forceRefresh: boolean = false): Promise<AppData> => {
     if (appDataCache && !forceRefresh) {
@@ -91,11 +134,8 @@ export const getAppData = async (forceRefresh: boolean = false): Promise<AppData
     }
     
     try {
-        // Check if the database is empty by looking for one core config document
-        const heroDocCheck = await getDoc(doc(db, configCollection, "hero"));
-        if (!heroDocCheck.exists()) {
-            console.log("Core config not found. Seeding database with initial data...");
-            await seedDatabase();
+        if (forceRefresh || !appDataCache) {
+            await checkAndPrepareDatabase();
         }
 
         const [
@@ -116,6 +156,10 @@ export const getAppData = async (forceRefresh: boolean = false): Promise<AppData
             getDoc(doc(db, leadersCollection, "pastExecutives")),
         ]);
         
+        if (!heroDoc.exists()) {
+            throw new Error("Initial site configuration not found in the database. Please check Firestore permissions and data.");
+        }
+
         const data: AppData = {
             hero: heroDoc.data() as HeroData,
             about: aboutDoc.data() as AboutData,

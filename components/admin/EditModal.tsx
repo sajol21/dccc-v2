@@ -57,6 +57,25 @@ const EditModal: React.FC<EditModalProps> = ({ item, onSave, onClose }) => {
     const renderField = (key: string, value: any) => {
         if (key === 'id') return null;
         const label = getHumanLabel(key);
+
+        // Special handling for the 'type' field in Executive-like objects
+        if (key === 'type' && ('dcccId' in currentItem || 'tenureYears' in currentItem)) {
+            return (
+                <div key={key}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                    <select
+                        value={value}
+                        onChange={(e) => handleChange(key, e.target.value)}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    >
+                        <option value="">Select Type</option>
+                        <option value="Presidency">Presidency</option>
+                        <option value="Secretariat">Secretariat</option>
+                        <option value="Executive">Executive</option>
+                    </select>
+                </div>
+            );
+        }
         
         if (key.toLowerCase().includes('imageurl') || key.toLowerCase().includes('coverimage') || key.toLowerCase().includes('logo')) {
             return <ImageUploadInput key={key} label={label} value={value} onChange={(val: string) => handleChange(key, val)} />;

@@ -101,9 +101,12 @@ const HomePage: React.FC = () => {
                     transition={{ duration: 1, delay: 0.5 }}
                     className="relative z-10 p-4"
                 >
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-4 text-gray-900">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
-                        {hero.headline}
+                    <h1 className="font-black tracking-tight mb-4 text-gray-900">
+                        <span className="block text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
+                            {hero.headlineLine1}
+                        </span>
+                        <span className="block text-5xl md:text-8xl mt-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
+                            {hero.headlineLine2}
                         </span>
                     </h1>
                     <p className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-700">
