@@ -1,3 +1,4 @@
+
 export interface HeroData {
   headline: string;
   tagline: string;
@@ -14,16 +15,6 @@ export interface AboutData {
   stats: { value: string; label: string }[];
 }
 
-export interface MotivePoint {
-    iconUrl: string;
-    text: string;
-}
-
-export interface MotiveData {
-    title: string;
-    points: MotivePoint[];
-}
-
 export interface Department {
   id: string;
   name: string;
@@ -34,15 +25,6 @@ export interface Department {
   gallery: { type: 'image' | 'video'; url: string; thumbUrl: string }[];
   keyActivities: string[];
   coordinatorId: string; // ID of an Executive
-}
-
-// FIX: Add GalleryItem interface to resolve type error in pages/GalleryPage.tsx
-export interface GalleryItem {
-  id: string;
-  title: string;
-  imageUrl: string;
-  thumbnailUrl: string;
-  category: string;
 }
 
 export interface Achievement {
@@ -70,7 +52,8 @@ export interface Event {
   customButtons?: { text: string; link: string; icon: string }[];
 }
 
-interface Person {
+// FIX: Export the Person interface to make it available for import in other modules.
+export interface Person {
   id: string;
   name: string;
   position: string;
@@ -117,22 +100,13 @@ export interface FooterData {
   adminPanelLink: { text: string; url: string };
 }
 
-export interface ContactData {
-    email: string;
-    phone: string;
-    address: string;
-    mapEmbedUrl: string;
-}
-
 export interface AppData {
     hero: HeroData;
     about: AboutData;
-    motive: MotiveData;
     departments: Department[];
     achievements: Achievement[];
     events: Event[];
     leaders: LeadersData;
     join: JoinData;
     footer: FooterData;
-    contact: ContactData;
 }

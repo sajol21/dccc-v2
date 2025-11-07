@@ -1,6 +1,5 @@
 
-// FIX: Import GalleryItem type.
-import type { AppData, Department, Achievement, Event, ContactData, Executive, Moderator, GalleryItem } from '../types';
+import type { AppData, Department, Achievement, Event, Executive, Moderator } from '../types';
 
 const MOCK_DATA: AppData = {
   hero: {
@@ -13,7 +12,7 @@ const MOCK_DATA: AppData = {
   },
   about: {
     shortText: "Founded in 1956, we are the cultural heart of Dhaka College, fostering creativity and celebrating diversity through arts, music, dance, and literature.",
-    fullText: "The Dhaka College Cultural Club has a rich history of nurturing talent and promoting cultural exchange. For over six decades, we have been a vibrant platform for students to express themselves, learn new skills, and collaborate on exciting projects. Our mission is to preserve our cultural heritage while embracing contemporary art forms, creating a dynamic and inclusive community for all.",
+    fullText: "The Dhaka College Cultural Club has a rich history of nurturing talent and promoting cultural exchange. For over six decades, we have been a vibrant platform for students to express themselves, learn new skills, and collaborate on exciting projects. Our mission is to preserve our cultural heritage while embracing contemporary art forms, creating a dynamic and inclusive community for all. We are a family of creators, performers, and dreamers united by a shared passion for culture and the arts.",
     imageUrl: "https://picsum.photos/1200/800?random=1",
     videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
     foundedYear: 1956,
@@ -23,16 +22,6 @@ const MOCK_DATA: AppData = {
         { value: "8", label: "Creative Departments" },
         { value: "1000+", label: "Active Members" },
         { value: "50+", label: "Events Hosted Annually" }
-    ]
-  },
-  motive: {
-    title: "Our Motive & Vision",
-    points: [
-      { iconUrl: "🌟", text: "To be a beacon of cultural excellence, fostering creativity and artistic expression in every student." },
-      { iconUrl: "🤝", text: "To build an inclusive community where diverse talents converge, collaborate, and create." },
-      { iconUrl: "💡", text: "To preserve and promote our rich cultural heritage while embracing contemporary art forms and innovation." },
-      { iconUrl: "🌱", text: "To provide a platform for personal growth, leadership development, and lifelong friendships." },
-      { iconUrl: "🌍", text: "To make a positive impact on the community through culturally enriching events and outreach programs." },
     ]
   },
   departments: [
@@ -141,25 +130,7 @@ const MOCK_DATA: AppData = {
     copyrightText: "Dhaka College Cultural Club. All Rights Reserved.",
     adminPanelLink: { text: "Administrative Panel", url: "#" }
   },
-  contact: {
-      email: "pr@dhakacollegeculturalclub.com",
-      phone: "+880 1308 563408",
-      address: "Dhaka College, New Market, Dhaka-1205, Bangladesh",
-      mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.190981928491!2d90.38463861536486!3d23.74103139499256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b1e62f0f87%3A0x5e2b023f0447163c!2sDhaka%20College!5e0!3m2!1sen!2sbd!4v1628312345678"
-  }
 };
-
-// FIX: Add mock gallery data.
-const MOCK_GALLERY: GalleryItem[] = [
-    { id: 'g1', title: 'Cultural Night 2024', imageUrl: 'https://picsum.photos/800/600?random=50', thumbnailUrl: 'https://picsum.photos/400/400?random=50', category: 'Events' },
-    { id: 'g2', title: 'Photography Workshop', imageUrl: 'https://picsum.photos/800/600?random=51', thumbnailUrl: 'https://picsum.photos/400/400?random=51', category: 'Workshops' },
-    { id: 'g3', title: 'Drama Performance', imageUrl: 'https://picsum.photos/800/600?random=52', thumbnailUrl: 'https://picsum.photos/400/400?random=52', category: 'Performances' },
-    { id: 'g4', title: 'Folk Music Festival', imageUrl: 'https://picsum.photos/800/600?random=53', thumbnailUrl: 'https://picsum.photos/400/400?random=53', category: 'Events' },
-    { id: 'g5', title: 'Art Exhibition', imageUrl: 'https://picsum.photos/800/600?random=54', thumbnailUrl: 'https://picsum.photos/400/400?random=54', category: 'Exhibitions' },
-    { id: 'g6', title: 'Poetry Slam', imageUrl: 'https://picsum.photos/800/600?random=55', thumbnailUrl: 'https://picsum.photos/400/400?random=55', category: 'Performances' },
-    { id: 'g7', title: 'Creative Writing Session', imageUrl: 'https://picsum.photos/800/600?random=56', thumbnailUrl: 'https://picsum.photos/400/400?random=56', category: 'Workshops' },
-    { id: 'g8', title: 'Annual Concert "Rhapsody"', imageUrl: 'https://picsum.photos/800/600?random=57', thumbnailUrl: 'https://picsum.photos/400/400?random=57', category: 'Events' },
-];
 
 const simulateDelay = <T,>(data: T): Promise<T> =>
   new Promise(resolve => setTimeout(() => resolve(data), 500));
@@ -171,10 +142,7 @@ export const getDepartmentById = (id: string): Promise<Department | undefined> =
 export const getAchievements = (): Promise<Achievement[]> => simulateDelay(MOCK_DATA.achievements);
 export const getEvents = (): Promise<Event[]> => simulateDelay(MOCK_DATA.events);
 export const getEventById = (id: string): Promise<Event | undefined> => simulateDelay(MOCK_DATA.events.find(e => e.id === id));
-export const getContactData = (): Promise<ContactData> => simulateDelay(MOCK_DATA.contact);
 export const getCurrentExecutives = (): Promise<Executive[]> => simulateDelay(MOCK_DATA.leaders.currentExecutives);
-// FIX: Add getGalleryData function.
-export const getGalleryData = (): Promise<GalleryItem[]> => simulateDelay(MOCK_GALLERY);
 export const getLeaderById = (id: string): Promise<Executive | Moderator | undefined> => {
     const allLeaders = [...MOCK_DATA.leaders.currentExecutives, ...MOCK_DATA.leaders.pastExecutives, ...MOCK_DATA.leaders.moderators];
     return simulateDelay(allLeaders.find(l => l.id === id));

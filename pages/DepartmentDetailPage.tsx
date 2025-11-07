@@ -120,7 +120,7 @@ const DepartmentDetailPage: React.FC = () => {
                         })}
                     </div>
                      <div className="text-center mt-12">
-                        <Link to="/leaders" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                        <Link to="/panel" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
                             See All Leaders
                         </Link>
                     </div>

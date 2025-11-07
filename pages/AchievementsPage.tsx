@@ -1,108 +1,145 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getAchievements } from '../services/firebaseService';
+
+import React, { useEffect, useRef } from 'react';
+import { motion, useInView, useSpring } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Loader from '../components/Loader';
-import type { Achievement } from '../types';
+import Section from '../components/Section';
+import type { Person } from '../types';
 
-const AchievementDetailModal: React.FC<{ achievement: Achievement, onClose: () => void }> = ({ achievement, onClose }) => {
+const AnimatedStat: React.FC<{ value: string; label: string }> = ({ value, label }) => {
+    const ref = useRef<HTMLSpanElement>(null);
+    const isInView = useInView(ref, { once: true });
+    const numericValue = parseInt(value.replace('+', ''), 10);
+    const spring = useSpring(0, { stiffness: 50, damping: 20 });
+
+    useEffect(() => {
+        if (isInView) {
+            spring.set(numericValue);
+        }
+    }, [isInView, numericValue, spring]);
+
+    useEffect(() => {
+        spring.on("change", (latest) => {
+            if (ref.current) {
+                ref.current.textContent = Math.round(latest).toString();
+            }
+        });
+    }, [spring]);
+
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4"
-        >
-            <motion.div
-                initial={{ scale: 0.9, y: 30 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: -30 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative overflow-hidden"
-            >
-                <div className="h-64 md:h-80 bg-gray-200">
-                    <img src={achievement.imageUrl} alt={achievement.title} className="w-full h-full object-cover" />
-                </div>
-                <div className="p-6 md:p-8">
-                    <p className="text-sm font-semibold text-blue-600 mb-1">{achievement.category} &bull; {new Date(achievement.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{achievement.title}</h2>
-                    <p className="text-gray-700 leading-relaxed">{achievement.description}</p>
-                </div>
-                <button onClick={onClose} className="absolute top-4 right-4 text-white bg-black/30 rounded-full p-2 hover:bg-black/50 transition-colors z-10">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </motion.div>
-        </motion.div>
+        <div>
+            <p className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                <span ref={ref}>0</span>{value.includes('+') && '+'}
+            </p>
+            <p className="text-gray-500 mt-2 font-medium">{label}</p>
+        </div>
     );
 };
 
-const AchievementCard: React.FC<{ achievement: Achievement; onClick: () => void }> = ({ achievement, onClick }) => {
-    return (
-        <motion.div
-            layout
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            onClick={onClick}
-            className="aspect-[4/5] bg-gray-900 rounded-xl overflow-hidden group cursor-pointer relative shadow-lg"
-        >
-            <img src={achievement.imageUrl} alt={achievement.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-60 group-hover:opacity-80" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
-            <div className="relative h-full flex flex-col justify-end p-6 text-white z-10">
-                <h3 className="text-xl font-bold mb-1">{achievement.title}</h3>
-                <p className="text-xs font-semibold uppercase text-blue-300">{new Date(achievement.date).getFullYear()} &bull; {achievement.category}</p>
-            </div>
-        </motion.div>
-    );
-};
+const LeaderPreviewCard: React.FC<{ person: Person }> = ({ person }) => (
+    <Link to="/panel" className="block group">
+        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+            <img src={person.imageUrl} alt={person.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" />
+        </div>
+        <h4 className="font-bold mt-3 text-gray-800">{person.name}</h4>
+        <p className="text-sm text-blue-600">{person.position}</p>
+    </Link>
+);
+
 
 const AchievementsPage: React.FC = () => {
-    const { data: achievements, loading, error } = useData(getAchievements);
-    const [selectedAchievement, setSelectedAchievement] = useState<Achievement | null>(null);
+    const { data: appData, loading, error } = useData(getAppData);
+
+    if (loading) return <div className="h-screen flex items-center justify-center pt-20 bg-white"><Loader /></div>;
+    if (error || !appData) return <div className="text-center py-40 text-red-500">Could not load page data.</div>;
+
+    const { about, leaders } = appData;
+    
+    const timelineEvents = [
+        { year: "1956", title: "The Genesis", description: "Dhaka College Cultural Club was founded with a vision to create a vibrant platform for students to explore and showcase their artistic talents." },
+        { year: "1990s", title: "A Decade of Growth", description: "The club expanded its wings, introducing new departments and hosting its first inter-college cultural festival, setting a new benchmark for excellence." },
+        { year: "2010s", title: "Embracing Modernity", description: "DCCC stepped into the digital age, launching its first website and social media presence, connecting with a wider audience than ever before." },
+        { year: "Present", title: "A Legacy of Creativity", description: "Today, DCCC stands as a beacon of cultural excellence, nurturing thousands of students and continuing its mission to inspire and innovate." },
+    ];
 
     return (
-        <div className="pt-28 pb-20 min-h-screen bg-white">
-             <AnimatePresence>
-                {selectedAchievement && <AchievementDetailModal achievement={selectedAchievement} onClose={() => setSelectedAchievement(null)} />}
-            </AnimatePresence>
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white text-gray-800">
+            {/* Video Hero */}
+            <header className="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    src={about.videoUrl}
+                    className="absolute z-0 w-auto min-w-full min-h-full max-w-none"
+                />
+                <div className="absolute inset-0 bg-black/60 z-10"></div>
                 <motion.div
-                    initial={{ opacity: 0, y: -20 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7 }}
-                    className="text-center mb-12"
+                    transition={{ duration: 1, delay: 0.5 }}
+                    className="relative z-20 p-4"
                 >
-                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                            Our Achievements
-                        </span>
-                    </h1>
-                    <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-                        A journey of excellence, dedication, and countless moments of pride.
-                    </p>
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-4">Our Journey & Legacy</h1>
+                    <p className="text-lg md:text-2xl max-w-3xl mx-auto opacity-90">{about.visionTagline}</p>
                 </motion.div>
-                
-                {loading && <Loader />}
-                {error && <p className="text-center text-red-500">Failed to load achievements.</p>}
+            </header>
 
-                {achievements && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {achievements
-                            .sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                            .map(ach => (
-                                <AchievementCard 
-                                    key={ach.id} 
-                                    achievement={ach} 
-                                    onClick={() => setSelectedAchievement(ach)} 
-                                />
-                            ))
-                        }
+            {/* Stats Section */}
+            <section className="py-20 bg-gray-50">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        {about.stats.map((stat) => (
+                           <AnimatedStat key={stat.label} value={stat.value} label={stat.label} />
+                        ))}
                     </div>
-                )}
-            </div>
+                </div>
+            </section>
+            
+            {/* Our Journey Timeline */}
+            <Section title="Our Journey" subtitle="Tracing the footsteps of a cultural legacy.">
+                <div className="relative max-w-2xl mx-auto">
+                    <div className="absolute left-1/2 top-0 h-full w-0.5 bg-gray-200 -translate-x-1/2"></div>
+                    {timelineEvents.map((event, index) => (
+                         <motion.div 
+                            key={index}
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true, amount: 0.5 }}
+                            transition={{ duration: 0.8 }}
+                            className={`relative mb-12 flex items-center ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+                         >
+                            <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8'}`}>
+                                <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100">
+                                    <p className="text-blue-600 font-bold mb-1">{event.year}</p>
+                                    <h4 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h4>
+                                    <p className="text-gray-600">{event.description}</p>
+                                </div>
+                            </div>
+                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-blue-600 border-4 border-white"></div>
+                        </motion.div>
+                    ))}
+                </div>
+            </Section>
+
+            {/* Leaders Preview */}
+            <Section title="Meet the Leaders" subtitle="The passionate individuals guiding our creative journey." alternateBackground>
+                <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+                    <LeaderPreviewCard person={leaders.moderators[0]} />
+                    {leaders.currentExecutives.slice(0, 3).map(exec => (
+                        <LeaderPreviewCard key={exec.id} person={exec} />
+                    ))}
+                </div>
+                <div className="text-center mt-12">
+                    <Link to="/panel" className="px-6 py-3 rounded-md font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 transition-all duration-300">
+                        View Full Panel
+                    </Link>
+                </div>
+            </Section>
+
         </div>
     );
 };
