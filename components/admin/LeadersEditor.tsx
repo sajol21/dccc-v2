@@ -59,7 +59,6 @@ const LeadersEditor: React.FC = () => {
             description="Reorder, edit, or delete members from all panels."
             fetcher={getLeaders}
             saver={saveLeaders}
-            // FIX: Pass children as an explicit prop to satisfy TypeScript.
             children={(data, setData) => <LeadersForm data={data} onChange={setData} />}
         />
     );

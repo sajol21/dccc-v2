@@ -6,6 +6,7 @@ export interface HeroData {
   tagline: string;
   ctaButtons: { text: string; link: string }[];
   backgroundImageUrl?: string;
+  featuredEventIds?: string[];
 }
 
 export interface AboutData {
@@ -128,6 +129,12 @@ export interface ThemeData {
     clickEffectEnabled: boolean;
 }
 
+export interface GeneralSettingsData {
+  siteName: string;
+  siteLogoUrl: string;
+  faviconUrl: string;
+}
+
 export interface AppData {
     hero: HeroData;
     about: AboutData;
@@ -138,4 +145,5 @@ export interface AppData {
     join: JoinData;
     footer: FooterData;
     theme: ThemeData;
+    general: GeneralSettingsData;
 }

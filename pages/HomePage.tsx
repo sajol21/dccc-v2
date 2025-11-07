@@ -5,7 +5,8 @@ import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Section from '../components/Section';
 import Loader from '../components/Loader';
-import type { Department, Event } from '../types';
+import InteractiveMesh from '../components/InteractiveMesh';
+import type { Department, Event, Achievement } from '../types';
 
 const StatCard: React.FC<{ value: string; label: string; index: number }> = ({ value, label, index }) => (
     <motion.div
@@ -16,12 +17,12 @@ const StatCard: React.FC<{ value: string; label: string; index: number }> = ({ v
         className="text-center p-4"
     >
         <p className="text-4xl md:text-5xl font-extrabold text-indigo-600">{value}</p>
-        <p className="text-gray-500 mt-2 font-medium tracking-wide">{label}</p>
+        <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium tracking-wide">{label}</p>
     </motion.div>
 );
 
 const DepartmentCard: React.FC<{ department: Department }> = ({ department }) => (
-    <Link to={`/departments/${department.id}`} className="block relative rounded-2xl overflow-hidden group shadow-lg aspect-w-4 aspect-h-5 bg-gray-100">
+    <Link to={`/departments/${department.id}`} className="block relative rounded-2xl overflow-hidden group shadow-lg aspect-w-4 aspect-h-5 bg-gray-100 dark:bg-gray-800">
         <img src={department.coverImage} alt={department.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/90 transition-colors duration-300"></div>
         <div className="relative h-full flex flex-col justify-end p-6 text-white z-10">
@@ -39,7 +40,7 @@ const DepartmentCard: React.FC<{ department: Department }> = ({ department }) =>
     </Link>
 );
 
-const TimelineEvent: React.FC<{ year: string; title: string; desc: string; isLeft: boolean }> = ({ year, title, desc, isLeft }) => (
+const TimelineEvent: React.FC<{ achievement: Achievement; isLeft: boolean }> = ({ achievement, isLeft }) => (
     <motion.div
         initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -49,13 +50,13 @@ const TimelineEvent: React.FC<{ year: string; title: string; desc: string; isLef
     >
         <div className="hidden md:block w-5/12"></div>
         <div className="hidden md:block w-2/12">
-            <div className="w-8 h-8 mx-auto bg-indigo-600 rounded-full border-4 border-white shadow-md"></div>
+            <div className="w-8 h-8 mx-auto bg-indigo-600 rounded-full border-4 border-white dark:border-gray-800 shadow-md"></div>
         </div>
         <div className="w-full md:w-5/12">
-            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-100 ml-8 md:ml-0">
-                <p className="text-indigo-600 font-bold mb-1">{year}</p>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">{title}</h4>
-                <p className="text-gray-600 text-sm">{desc}</p>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-100 dark:border-gray-700 ml-8 md:ml-0">
+                <p className="text-indigo-500 font-bold mb-1">{new Date(achievement.date).getFullYear()}</p>
+                <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{achievement.title}</h4>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{achievement.description}</p>
             </div>
         </div>
     </motion.div>
@@ -67,19 +68,17 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
     const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
     
     return (
-        <Link to={`/events/${event.id}`} className="block bg-white rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-            <div className="h-48 overflow-hidden">
-                <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" />
-            </div>
-            <div className="p-6 flex items-start gap-5">
-                 <div className="text-center flex-shrink-0 w-16">
+        <Link to={`/events/${event.id}`} className="block bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl dark:hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+            <div className="h-48 overflow-hidden relative">
+                <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-center rounded-lg p-2 shadow-lg w-16">
                     <p className="text-3xl font-bold text-indigo-600">{day}</p>
-                    <p className="text-sm font-semibold text-gray-400">{month}</p>
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">{month}</p>
                 </div>
-                <div>
-                    <h3 className="font-bold text-lg text-gray-900 leading-tight mb-2">{event.title}</h3>
-                    <p className="text-sm text-gray-600">{event.shortDescription}</p>
-                </div>
+            </div>
+            <div className="p-6">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white leading-tight mb-2">{event.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{event.shortDescription}</p>
             </div>
         </Link>
     );
@@ -108,44 +107,39 @@ const HomePage: React.FC = () => {
     if (error) return <div className="text-center py-20 text-red-500">Error loading page data.</div>;
     if (!appData) return null;
 
-    const { hero, about, departments, events, join } = appData;
+    const { about, departments, events, achievements, join } = appData;
     const upcomingEvents = events.filter(e => e.isUpcoming).slice(0, 3);
-    const timelineEvents = [
-        { year: "2021", title: "The Beginning", description: "DCCC was founded with a vision to create a vibrant platform for students to explore and showcase their artistic talents after the pandemic." },
-        { year: "2022", title: "First Major Event", description: "Hosted its first inter-college cultural festival, 'Summer Art Camp 2022', setting a new benchmark for excellence and collaboration." },
-        { year: "2023", title: "Expanding Horizons", description: "The club expanded its wings, introducing new leadership and hosting a series of workshops that enriched the cultural scene in Dhaka." },
-        { year: "Present", title: "A Legacy of Creativity", description: "Today, DCCC stands as a beacon of cultural excellence, nurturing hundreds of students and continuing its mission to inspire and innovate." },
-    ];
+    const timelineAchievements = achievements
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 4);
 
     return (
-        <div className="bg-gray-50">
+        <div className="bg-white dark:bg-gray-900">
             {/* Hero Section */}
-            <section ref={heroRef} className="relative flex items-center justify-center text-center py-12 overflow-hidden" style={{ minHeight: 'calc(100vh - 4rem)' }}>
-                {hero.backgroundImageUrl && (
-                    <motion.div
-                        className="absolute inset-0 z-0"
-                        style={{ y: parallaxYImage }}
-                    >
-                        <img src={hero.backgroundImageUrl} alt="" className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black/40" />
-                    </motion.div>
-                )}
+            <section ref={heroRef} className="relative flex items-center justify-center text-center py-12 overflow-hidden bg-gray-50 dark:bg-black" style={{ minHeight: 'calc(100vh - 4rem)' }}>
+                 <motion.div
+                    className="absolute inset-0 z-0 opacity-50 dark:opacity-100"
+                    style={{ y: parallaxYImage }}
+                >
+                    <InteractiveMesh />
+                </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white dark:from-black/0 dark:via-black/0 dark:to-black z-0"></div>
                 <div className="relative z-10 px-4 w-full max-w-4xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
-                        <h2 className="text-xl md:text-2xl font-semibold text-gray-200 tracking-wide uppercase">Dhaka College</h2>
-                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-white my-1 tracking-tighter leading-tight">
+                        <h2 className="text-xl md:text-2xl font-semibold text-gray-600 dark:text-gray-300 tracking-wide uppercase">Dhaka College</h2>
+                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-gray-900 dark:text-white my-1 tracking-tighter leading-tight">
                             Cultural Club
                         </h1>
-                        <p className="text-base md:text-lg text-gray-300 mt-4 max-w-xl mx-auto">
+                        <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-4 max-w-xl mx-auto">
                             Know Thyself, Show Thyself
                         </p>
                         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
                             <Link
-                                to="/panel"
+                                to="/team"
                                 className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-white bg-red-500 rounded-full shadow-lg shadow-red-500/30 hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
                             >
                                 See Panel
@@ -154,7 +148,7 @@ const HomePage: React.FC = () => {
                                 href="https://dhakacollegeculturalclub.com/join"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-white border-2 border-white/80 rounded-full hover:bg-white/10 transition-all duration-300"
+                                className="w-full sm:w-auto px-8 py-4 text-base font-semibold text-gray-800 dark:text-white border-2 border-gray-800 dark:border-white/80 rounded-full hover:bg-gray-800/10 dark:hover:bg-white/10 transition-all duration-300"
                             >
                                 Join DCCC
                             </a>
@@ -179,7 +173,7 @@ const HomePage: React.FC = () => {
                         viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 0.7 }}
                     >
-                        <p className="text-lg text-gray-600 mb-6 leading-relaxed">{about.shortText}</p>
+                        <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">{about.shortText}</p>
                         <div className="grid grid-cols-2 gap-6 text-center my-8">
                             {about.stats.slice(0, 2).map((stat, index) => <StatCard key={index} {...stat} index={index} />)}
                         </div>
@@ -203,8 +197,8 @@ const HomePage: React.FC = () => {
 
             <Section id="story" title="Our Story Timeline" subtitle="Tracing the footsteps of a cultural legacy." alternateBackground>
                 <div className="relative max-w-2xl mx-auto py-8">
-                    <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-0.5 bg-gray-200"></div>
-                    {timelineEvents.map((event, index) => <TimelineEvent key={index} {...event} isLeft={index % 2 === 0} />)}
+                    <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                    {timelineAchievements.map((event, index) => <TimelineEvent key={event.id} achievement={event} isLeft={index % 2 === 0} />)}
                 </div>
             </Section>
 
@@ -219,12 +213,12 @@ const HomePage: React.FC = () => {
                 </div>
             </Section>
 
-            <section ref={joinRef} className="relative py-28 overflow-hidden bg-gray-800 text-white">
+            <section ref={joinRef} className="relative py-28 overflow-hidden bg-gray-800 dark:bg-black text-white">
                 <motion.div 
                     style={{ y: parallaxY }}
                     className="absolute inset-0 z-0"
                 >
-                    <img src={join.backgroundImageUrl} alt="Join us" className="w-full h-full object-cover opacity-30" />
+                    <img src={join.backgroundImageUrl} alt="Join us" className="w-full h-full object-cover opacity-20" />
                 </motion.div>
                 <div className="relative z-10 container mx-auto text-center px-4">
                     <h2 className="text-4xl md:text-5xl font-extrabold mb-4">{join.title}</h2>

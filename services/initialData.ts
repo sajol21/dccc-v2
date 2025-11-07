@@ -19,36 +19,14 @@ export const initialData: AppData = {
     visionTagline: "Nurturing the next generation of cultural leaders and artists.",
     stats: [
       { value: "65+", label: "Years of Legacy" },
-      { value: "10+", label: "Creative Departments" },
+      { value: "8", label: "Creative Departments" },
       { value: "500+", label: "Active Members" },
       { value: "100+", label: "Events Hosted" },
     ],
   },
   departments: [
     {
-      id: "dept_music_1",
-      name: "Music",
-      iconUrl: "🎵",
-      shortDesc: "Vocal and instrumental training and performances.",
-      fullDesc: "The Music Department is the soul of DCCC, offering training in various genres including classical, folk, and contemporary music. Members get opportunities to perform at college events and external competitions.",
-      coverImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop",
-      gallery: [],
-      keyActivities: ["Vocal Training", "Instrument Workshops", "Stage Performances", "Annual Concert"],
-      coordinatorId: ""
-    },
-    {
-      id: "dept_dance_2",
-      name: "Dance",
-      iconUrl: "💃",
-      shortDesc: "Exploring classical, folk, and modern dance forms.",
-      fullDesc: "From traditional to contemporary, the Dance Department celebrates movement and expression. We provide professional training and a stage for students to showcase their talent.",
-      coverImage: "https://images.unsplash.com/photo-1524594152303-9fdc56da042e?q=80&w=2070&auto=format&fit=crop",
-      gallery: [],
-      keyActivities: ["Classical Dance", "Folk Dance", "Choreography Workshops", "Annual Dance Show"],
-      coordinatorId: ""
-    },
-    {
-      id: "dept_wordspace_3",
+      id: "dept_wordspace_1",
       name: "WordSpace",
       iconUrl: "✍️",
       shortDesc: "Where words breathe, and voices find rhythm.",
@@ -56,10 +34,10 @@ export const initialData: AppData = {
       coverImage: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1973&auto=format&fit=crop",
       gallery: [],
       keyActivities: ["Poetry Slams", "Creative Writing", "Recitation Events", "Literary Magazine"],
-      coordinatorId: ""
+      coordinatorId: "exec_coord_ws"
     },
     {
-      id: "dept_musica_4",
+      id: "dept_musica_2",
       name: "Musica",
       iconUrl: "🎶",
       shortDesc: "The rhythm that defines our spirit.",
@@ -67,11 +45,22 @@ export const initialData: AppData = {
       coverImage: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop",
       gallery: [],
       keyActivities: ["Vocal Coaching", "Band Practice", "Songwriting Sessions", "Live Concerts"],
-      coordinatorId: ""
+      coordinatorId: "exec_coord_mu"
     },
     {
-      id: "dept_artstation_5",
-      name: "Artstation",
+      id: "dept_timbre_3",
+      name: "Timbre",
+      iconUrl: "🎭",
+      shortDesc: "The pulse of performance and emotion.",
+      fullDesc: "Timbre is our drama and performing arts department. We stage plays, conduct acting workshops, and explore the depths of theatrical expression.",
+      coverImage: "https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=2070&auto=format&fit=crop",
+      gallery: [],
+      keyActivities: ["Theatre Production", "Acting Workshops", "Street Plays", "Improv Nights"],
+      coordinatorId: "exec_coord_ti"
+    },
+    {
+      id: "dept_artstation_4",
+      name: "ArtStation",
       iconUrl: "🎨",
       shortDesc: "Where imagination meets the canvas.",
       fullDesc: "Artstation is a haven for visual artists. We organize painting workshops, art exhibitions, and collaborative projects to foster creativity and technical skill.",
@@ -81,18 +70,7 @@ export const initialData: AppData = {
       coordinatorId: ""
     },
     {
-      id: "dept_timbre_6",
-      name: "Timbre",
-      iconUrl: "🎭",
-      shortDesc: "The pulse of performance and emotion.",
-      fullDesc: "Timbre is our drama and performing arts department. We stage plays, conduct acting workshops, and explore the depths of theatrical expression.",
-      coverImage: "https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=2070&auto=format&fit=crop",
-      gallery: [],
-      keyActivities: ["Theatre Production", "Acting Workshops", "Street Plays", "Improv Nights"],
-      coordinatorId: ""
-    },
-    {
-      id: "dept_film_photo_7",
+      id: "dept_film_photo_5",
       name: "Film School and Photography",
       iconUrl: "🎬",
       shortDesc: "Stories in motion, moments immortalized.",
@@ -103,7 +81,7 @@ export const initialData: AppData = {
       coordinatorId: ""
     },
     {
-      id: "dept_it_8",
+      id: "dept_it_6",
       name: "Department of IT",
       iconUrl: "💻",
       shortDesc: "Powering creativity through innovation.",
@@ -114,7 +92,7 @@ export const initialData: AppData = {
       coordinatorId: ""
     },
     {
-      id: "dept_finance_marketing_9",
+      id: "dept_finance_marketing_7",
       name: "Finance & Marketing",
       iconUrl: "📈",
       shortDesc: "Strategy, sustainability, and storytelling that sells.",
@@ -125,7 +103,7 @@ export const initialData: AppData = {
       coordinatorId: ""
     },
     {
-      id: "dept_hr_10",
+      id: "dept_hr_8",
       name: "Human Resource Management",
       iconUrl: "👥",
       shortDesc: "Building teams that make culture possible.",
@@ -209,6 +187,45 @@ export const initialData: AppData = {
         phone: "01234567891",
         bloodGroup: "A+",
         socials: []
+      },
+      {
+        id: "exec_coord_ws",
+        name: "Samia Rahman",
+        position: "Coordinator - WordSpace",
+        dcccId: "23-010",
+        type: "Executive",
+        imageUrl: "https://randomuser.me/api/portraits/women/10.jpg",
+        bio: "Passionate about poetry and prose.",
+        department: "dept_wordspace_1",
+        phone: "",
+        bloodGroup: "",
+        socials: []
+      },
+      {
+        id: "exec_coord_mu",
+        name: "Kabir Ahmed",
+        position: "Coordinator - Musica",
+        dcccId: "23-011",
+        type: "Executive",
+        imageUrl: "https://randomuser.me/api/portraits/men/11.jpg",
+        bio: "A multi-instrumentalist and vocalist.",
+        department: "dept_musica_2",
+        phone: "",
+        bloodGroup: "",
+        socials: []
+      },
+      {
+        id: "exec_coord_ti",
+        name: "Farah Hossain",
+        position: "Coordinator - Timbre",
+        dcccId: "23-012",
+        type: "Executive",
+        imageUrl: "https://randomuser.me/api/portraits/women/12.jpg",
+        bio: "Bringing stories to life on stage.",
+        department: "dept_timbre_3",
+        phone: "",
+        bloodGroup: "",
+        socials: []
       }
     ],
     pastExecutives: [
@@ -258,5 +275,10 @@ export const initialData: AppData = {
     nodeSize: 1.5,
     mouseRepelStrength: 2,
     clickEffectEnabled: true,
+  },
+  general: {
+    siteName: "Dhaka College Cultural Club",
+    siteLogoUrl: "https://dhakacollegeculturalclub.com/logo.png",
+    faviconUrl: "https://dhakacollegeculturalclub.com/logo.png"
   }
 };

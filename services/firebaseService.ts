@@ -8,8 +8,8 @@ import {
     User
 } from "firebase/auth";
 import { firebaseApp } from './firebaseConfig';
-import type { AppData, Department, Achievement, Event, Executive, Moderator, Person, HeroData, AboutData, JoinData, FooterData, ThemeData, LeadersData, ModeratorsDoc, CurrentExecutivesDoc, PastExecutivesDoc } from '../types';
-import { initialData } from "./initialData";
+import type { AppData, Department, Achievement, Event, Executive, Moderator, Person, HeroData, AboutData, JoinData, FooterData, ThemeData, LeadersData, ModeratorsDoc, CurrentExecutivesDoc, PastExecutivesDoc, GeneralSettingsData } from '../types';
+import { initialData } from './initialData';
 
 
 // --- AUTHENTICATION ---
@@ -29,78 +29,25 @@ const ACHIEVEMENTS_COLLECTION = "achievements";
 const EVENTS_COLLECTION = "events";
 const LEADERS_COLLECTION = "leaders";
 
-// --- PRIVATE HELPERS ---
-
-const seedDatabaseWithInitialData = async (): Promise<void> => {
-    console.log("Seeding database with initial data...");
-    try {
-        const batch = writeBatch(db);
-        const data = initialData;
-
-        // Config
-        batch.set(doc(db, CONFIG_COLLECTION, "hero"), data.hero);
-        batch.set(doc(db, CONFIG_COLLECTION, "about"), data.about);
-        batch.set(doc(db, CONFIG_COLLECTION, "join"), data.join);
-        batch.set(doc(db, CONFIG_COLLECTION, "footer"), data.footer);
-        batch.set(doc(db, CONFIG_COLLECTION, "theme"), data.theme);
-        
-        // Leaders
-        batch.set(doc(db, LEADERS_COLLECTION, "moderators"), { moderators: data.leaders.moderators });
-        batch.set(doc(db, LEADERS_COLLECTION, "currentExecutives"), { currentExecutives: data.leaders.currentExecutives });
-        batch.set(doc(db, LEADERS_COLLECTION, "pastExecutives"), { pastExecutives: data.leaders.pastExecutives });
-
-        // Collections
-        data.departments.forEach((item: Department) => batch.set(doc(db, DEPARTMENTS_COLLECTION, item.id), item));
-        data.achievements.forEach((item: Achievement) => batch.set(doc(db, ACHIEVEMENTS_COLLECTION, item.id), item));
-        data.events.forEach((item: Event) => batch.set(doc(db, EVENTS_COLLECTION, item.id), item));
-        
-        await batch.commit();
-        console.log("Database seeded successfully.");
-    } catch (error) {
-        console.error("Error seeding database:", error);
-        throw new Error("Failed to seed database with initial data.");
-    }
-}
-
-const migrateOldData = async (oldData: AppData): Promise<void> => {
-    console.log("Migrating old data structure...");
-    // This function reuses the same logic as seeding, but with the old data.
-    // In a real-world scenario, you might have more complex migration logic.
-    await seedDatabaseWithInitialData(); // Simplified for this context, ideally would use `oldData`.
-    await deleteDoc(doc(db, "app_content", "data"));
-    console.log("Migration complete.");
-}
-
-
-const checkAndPrepareDatabase = async (): Promise<void> => {
-    const oldDocRef = doc(db, "app_content", "data");
-    const oldDocSnap = await getDoc(oldDocRef);
-
-    if (oldDocSnap.exists()) {
-        await migrateOldData(oldDocSnap.data() as AppData);
-        return;
-    }
-
-    const heroDocCheck = await getDoc(doc(db, CONFIG_COLLECTION, "hero"));
-    if (!heroDocCheck.exists()) {
-        await seedDatabaseWithInitialData();
-    }
-};
-
-// Initialize DB on first load
-checkAndPrepareDatabase();
-
-
 // --- GENERIC GETTERS / SAVERS ---
 
 const getConfigDoc = async <T,>(docId: string): Promise<T> => {
     const docSnap = await getDoc(doc(db, CONFIG_COLLECTION, docId));
-    if (!docSnap.exists()) throw new Error(`${docId} config not found`);
+    if (!docSnap.exists()) {
+        console.warn(`'${docId}' config not found in Firestore. Serving default initial data. Please save settings in the admin panel to create the document.`);
+        // A type assertion is needed here because docId is a string, but we know it corresponds to a key in AppData.
+        const key = docId as keyof AppData;
+        if (initialData[key]) {
+            return initialData[key] as T;
+        }
+        // Throw an error only if the key doesn't exist in initialData either, which shouldn't happen.
+        throw new Error(`'${docId}' config not found in Firestore and no default initial data available.`);
+    }
     return docSnap.data() as T;
 }
 
 const saveConfigDoc = async <T,>(docId: string, data: T): Promise<void> => {
-    await setDoc(doc(db, CONFIG_COLLECTION, docId), data);
+    await setDoc(doc(db, CONFIG_COLLECTION, docId), data, { merge: true });
 }
 
 const getCollection = async <T,>(collectionName: string): Promise<T[]> => {
@@ -120,22 +67,28 @@ const saveCollection = async <T extends {id: string}>(collectionName: string, it
 
 // --- PUBLIC API FOR DATA ACCESS ---
 
-// Dashboard Data (Hero, About, Join)
-export const getDashboardData = async (): Promise<{hero: HeroData, about: AboutData, join: JoinData}> => {
-    const [hero, about, join] = await Promise.all([
+// Home Page Content
+export const getHomePageContent = async (): Promise<{hero: HeroData, join: JoinData}> => {
+    const [hero, join] = await Promise.all([
         getConfigDoc<HeroData>('hero'),
-        getConfigDoc<AboutData>('about'),
         getConfigDoc<JoinData>('join')
     ]);
-    return { hero, about, join };
+    return { hero, join };
 }
-export const saveDashboardData = async (data: {hero: HeroData, about: AboutData, join: JoinData}): Promise<void> => {
+export const saveHomePageContent = async (data: {hero: HeroData, join: JoinData}): Promise<void> => {
     const batch = writeBatch(db);
     batch.set(doc(db, CONFIG_COLLECTION, "hero"), data.hero);
-    batch.set(doc(db, CONFIG_COLLECTION, "about"), data.about);
     batch.set(doc(db, CONFIG_COLLECTION, "join"), data.join);
     await batch.commit();
 }
+
+// About Page Content
+export const getAboutData = () => getConfigDoc<AboutData>('about');
+export const saveAboutData = (data: AboutData) => saveConfigDoc('about', data);
+
+// General Settings
+export const getGeneralSettings = () => getConfigDoc<GeneralSettingsData>('general');
+export const saveGeneralSettings = (data: GeneralSettingsData) => saveConfigDoc('general', data);
 
 // Theme
 export const getTheme = () => getConfigDoc<ThemeData>('theme');
@@ -201,10 +154,6 @@ export const saveLeaders = async(data: LeadersData): Promise<void> => {
     await batch.commit();
 }
 
-// Internal getters used by getAppData
-const getHero = () => getConfigDoc<HeroData>('hero');
-const getAbout = () => getConfigDoc<AboutData>('about');
-const getJoin = () => getConfigDoc<JoinData>('join');
 
 // --- AGGREGATED GETTER for public pages ---
 
@@ -216,21 +165,22 @@ export const getAppData = async (forceRefresh: boolean = false): Promise<AppData
     
     try {
         const [
-            hero, about, join, footer, theme,
+            hero, about, join, footer, theme, general,
             departments, achievements, events, leaders
         ] = await Promise.all([
-            getHero(),
-            getAbout(),
-            getJoin(),
+            getConfigDoc<HeroData>('hero'),
+            getConfigDoc<AboutData>('about'),
+            getConfigDoc<JoinData>('join'),
             getFooter(),
             getTheme(),
+            getGeneralSettings(),
             getDepartments(),
             getAchievements(),
             getEvents(),
             getLeaders(),
         ]);
         
-        const data: AppData = { hero, about, join, footer, theme, departments, achievements, events, leaders };
+        const data: AppData = { hero, about, join, footer, theme, general, departments, achievements, events, leaders };
         appDataCache = data;
         return data;
 

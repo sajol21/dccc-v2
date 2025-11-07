@@ -12,7 +12,6 @@ interface ToastContextType {
   addToast: (message: string, type?: 'success' | 'error') => void;
 }
 
-// FIX: Removed trailing comma in createContext generic type parameter which caused a parsing error.
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const useToast = () => {
