@@ -1,12 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import { getAppData } from '../services/firebaseService';
 import { useData } from '../hooks/useData';
 import Section from '../components/Section';
 import Loader from '../components/Loader';
 import InteractiveMesh from '../components/InteractiveMesh';
 import type { Department, Event, Achievement } from '../types';
+import { useTheme } from '../components/ThemeProvider';
 
 const StatCard: React.FC<{ value: string; label: string; index: number }> = ({ value, label, index }) => (
     <motion.div
@@ -87,6 +88,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
 const HomePage: React.FC = () => {
     const { data: appData, loading, error } = useData(getAppData);
+    const { theme } = useTheme();
 
     const heroRef = useRef(null);
     const { scrollYProgress: scrollYProgressHero } = useScroll({
@@ -96,12 +98,43 @@ const HomePage: React.FC = () => {
 
     const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
     
-    const parallaxYImageTransform = useTransform(scrollYProgressHero, [0, 1], ["0%", "20%"]);
+    const parallaxYImageTransform = useTransform(scrollYProgressHero, [0, 1], ["0%", "15%"]);
     const parallaxYImage = useSpring(parallaxYImageTransform, springConfig);
     
     const joinRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: joinRef, offset: ["start end", "end start"] });
     const parallaxY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
+
+    // Mouse parallax logic
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    const springConfigMouse = { damping: 40, stiffness: 200, mass: 1 };
+    const springMouseX = useSpring(mouseX, springConfigMouse);
+    const springMouseY = useSpring(mouseY, springConfigMouse);
+
+    useEffect(() => {
+        const handleMouseMove = (event: MouseEvent) => {
+            const { clientX, clientY } = event;
+            const moveX = clientX - window.innerWidth / 2;
+            const moveY = clientY - window.innerHeight / 2;
+            mouseX.set(moveX);
+            mouseY.set(moveY);
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [mouseX, mouseY]);
+
+    const parallaxXMouse = useTransform(springMouseX, [-window.innerWidth / 2, window.innerWidth / 2], ["-15px", "15px"]);
+    const parallaxYMouse = useTransform(springMouseY, [-window.innerHeight / 2, window.innerHeight / 2], ["-15px", "15px"]);
+    const parallaxXMouseForeground = useTransform(springMouseX, [-window.innerWidth / 2, window.innerWidth / 2], ["8px", "-8px"]);
+    const parallaxYMouseForeground = useTransform(springMouseY, [-window.innerHeight / 2, window.innerHeight / 2], ["8px", "-8px"]);
+    
+    const meshColors = theme === 'dark' 
+        ? { particleColor: 'rgba(156, 163, 175, 0.7)', lineColorRGB: '156, 163, 175' } // Tailwind gray-400
+        : { particleColor: 'rgba(107, 114, 128, 0.8)', lineColorRGB: '107, 114, 128' }; // Tailwind gray-500
 
     if (loading) return <div className="h-screen flex items-center justify-center"><Loader /></div>;
     if (error) return <div className="text-center py-20 text-red-500">Error loading page data.</div>;
@@ -118,14 +151,20 @@ const HomePage: React.FC = () => {
             {/* Hero Section */}
             <section ref={heroRef} className="relative flex items-center justify-center text-center py-12 overflow-hidden bg-gray-50 dark:bg-black" style={{ minHeight: 'calc(100vh - 4rem)' }}>
                  <motion.div
-                    className="absolute inset-0 z-0 opacity-50 dark:opacity-100"
+                    className="absolute inset-0 z-0 opacity-40 dark:opacity-60"
                     style={{ y: parallaxYImage }}
                 >
-                    <InteractiveMesh />
+                    <motion.div
+                        className="w-full h-full"
+                        style={{ x: parallaxXMouse, y: parallaxYMouse }}
+                    >
+                         <InteractiveMesh {...meshColors} />
+                    </motion.div>
                 </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white dark:from-black/0 dark:via-black/0 dark:to-black z-0"></div>
                 <div className="relative z-10 px-4 w-full max-w-4xl">
                     <motion.div
+                        style={{ x: parallaxXMouseForeground, y: parallaxYMouseForeground }}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}

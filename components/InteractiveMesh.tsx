@@ -17,7 +17,12 @@ interface Particle {
     forceY: number;
 }
 
-const InteractiveMesh: React.FC = () => {
+interface InteractiveMeshProps {
+  particleColor: string; // e.g., 'rgba(107, 114, 128, 0.8)'
+  lineColorRGB: string;  // e.g., '107, 114, 128'
+}
+
+const InteractiveMesh: React.FC<InteractiveMeshProps> = ({ particleColor, lineColorRGB }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -100,7 +105,7 @@ const InteractiveMesh: React.FC = () => {
 
                 // Draw particle
                 ctx.font = `${p.size}px sans-serif`;
-                ctx.fillStyle = 'rgba(107, 114, 128, 0.8)';
+                ctx.fillStyle = particleColor;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(p.char, p.x, p.y);
@@ -119,7 +124,7 @@ const InteractiveMesh: React.FC = () => {
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < connectDistance) {
-                        ctx.strokeStyle = `rgba(107, 114, 128, ${1 - distance / connectDistance})`;
+                        ctx.strokeStyle = `rgba(${lineColorRGB}, ${1 - distance / connectDistance})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(particles[a].x, particles[a].y);
@@ -142,7 +147,7 @@ const InteractiveMesh: React.FC = () => {
             canvas.removeEventListener('mousemove', handleMouseMove);
             canvas.removeEventListener('mouseleave', handleMouseLeave);
         };
-    }, []);
+    }, [particleColor, lineColorRGB]);
 
     return (
         <canvas
