@@ -112,13 +112,13 @@ const HomePage: React.FC = () => {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.3, delayChildren: 0.5 },
+            transition: { staggerChildren: 0.2, delayChildren: 0.4 },
         },
     };
 
     const heroItemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+        hidden: { opacity: 0, y: 20, filter: 'blur(5px)' },
+        visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.8, ease: 'easeOut' } },
     };
 
 
@@ -127,35 +127,49 @@ const HomePage: React.FC = () => {
             {/* Hero Section */}
             <section className="h-screen relative flex items-center justify-center text-center overflow-hidden">
                 <InteractiveMesh />
-                <motion.div
-                    variants={heroVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="relative z-10 p-4"
-                >
-                    <motion.h1 variants={heroItemVariants} className="font-black tracking-tight mb-4 text-gray-900">
-                        <span className="block text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
-                            {hero.headlineLine1}
-                        </span>
-                        <span className="block text-5xl md:text-8xl mt-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-700">
-                            {hero.headlineLine2}
-                        </span>
-                    </motion.h1>
-                    <motion.p variants={heroItemVariants} className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-700">
-                        {hero.tagline}
-                    </motion.p>
-                    <motion.div variants={heroItemVariants} className="mt-10 flex flex-wrap justify-center gap-4">
-                        {hero.ctaButtons.map((button, index) => (
-                           <Link
-                                key={index}
-                                to={button.link}
-                                className="px-8 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
-                            >
-                                {button.text}
-                            </Link>
-                        ))}
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                    <motion.div 
+                        className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40"
+                        animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, -50, 0] }}
+                        transition={{ duration: 15, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+                    />
+                    <motion.div 
+                        className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40"
+                        animate={{ scale: [1, 1.2, 1], x: [0, -50, 0], y: [0, 50, 0] }}
+                        transition={{ duration: 12, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 2 }}
+                    />
+                </div>
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        variants={heroVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="relative z-10 p-4"
+                    >
+                        <motion.h1 variants={heroItemVariants} className="font-black tracking-tight mb-4">
+                            <span className="block text-3xl md:text-4xl font-bold text-gray-800">
+                                {hero.headlineLine1}
+                            </span>
+                            <span className="block text-5xl md:text-8xl mt-1 text-gray-900">
+                                {hero.headlineLine2}
+                            </span>
+                        </motion.h1>
+                        <motion.p variants={heroItemVariants} className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-700">
+                            {hero.tagline}
+                        </motion.p>
+                        <motion.div variants={heroItemVariants} className="mt-10 flex flex-wrap justify-center gap-4">
+                            {hero.ctaButtons.map((button, index) => (
+                               <Link
+                                    key={index}
+                                    to={button.link}
+                                    className="px-8 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
+                                >
+                                    {button.text}
+                                </Link>
+                            ))}
+                        </motion.div>
                     </motion.div>
-                </motion.div>
+                </div>
                 <div className="absolute bottom-10 z-10">
                     <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center items-start p-1">
                         <motion.div
