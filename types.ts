@@ -25,6 +25,7 @@ export interface Department {
   gallery: { type: 'image' | 'video'; url: string; thumbUrl: string }[];
   keyActivities: string[];
   coordinatorId: string; // ID of an Executive
+  order?: number;
 }
 
 export interface Achievement {
@@ -34,6 +35,7 @@ export interface Achievement {
   date: string; // ISO format string
   imageUrl: string;
   category: string;
+  order?: number;
 }
 
 export interface Event {
@@ -50,6 +52,7 @@ export interface Event {
   registrationLink?: string;
   segments?: { title: string; items: { primary: string; secondary: string; tertiary?: string }[] }[];
   customButtons?: { text: string; link: string; icon: string }[];
+  order?: number;
 }
 
 export interface Person {
@@ -64,6 +67,7 @@ export interface Person {
   socials?: { name: string; url: string; icon: string }[];
   bloodGroup?: string;
   religion?: string;
+  order?: number;
 }
 
 

@@ -1,16 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import type { AppData } from '../../types';
 import RichTextEditor from './RichTextEditor';
 import ImageUploadInput from './ImageUploadInput';
+import { updateConfigDoc } from '../../services/firebaseService';
+import { useToast } from '../../hooks/useToast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface EditorProps {
-    originalData: AppData;
-    draftData: AppData;
-    setDraftData: (data: AppData) => void;
-    handleSave: () => Promise<void>;
-    isSaving: boolean;
-    saveMessage: string;
+    appData: AppData;
+    onDataChange: React.Dispatch<React.SetStateAction<AppData | null>>;
 }
+
+const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 const FormInput: React.FC<any> = ({ label, value, onChange, type = 'text', ...props }) => (
     <div>
@@ -46,34 +47,62 @@ const Section: React.FC<{ title: string; children: React.ReactNode; description?
 );
 
 
-const DashboardEditor: React.FC<EditorProps> = ({ originalData, draftData, setDraftData, handleSave, isSaving }) => {
+const DashboardEditor: React.FC<EditorProps> = ({ appData, onDataChange }) => {
+    const [originalData, setOriginalData] = useState(() => deepClone(appData));
+    const [draftData, setDraftData] = useState(() => deepClone(appData));
+    const [isSaving, setIsSaving] = useState(false);
+    const { addToast } = useToast();
     
+    useEffect(() => {
+        setOriginalData(deepClone(appData));
+        setDraftData(deepClone(appData));
+    }, [appData]);
+
     const hasChanges = useMemo(() => {
         const keys: (keyof AppData)[] = ['hero', 'about', 'join'];
         return keys.some(key => JSON.stringify(draftData[key]) !== JSON.stringify(originalData[key]));
     }, [draftData, originalData]);
 
     const handleReset = () => {
-        setDraftData({
-            ...draftData,
-            hero: JSON.parse(JSON.stringify(originalData.hero)),
-            about: JSON.parse(JSON.stringify(originalData.about)),
-            join: JSON.parse(JSON.stringify(originalData.join)),
-        });
+        setDraftData(deepClone(originalData));
+    };
+    
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            const promises = [];
+            if(JSON.stringify(draftData.hero) !== JSON.stringify(originalData.hero)) {
+                promises.push(updateConfigDoc('hero', draftData.hero));
+            }
+            if(JSON.stringify(draftData.about) !== JSON.stringify(originalData.about)) {
+                promises.push(updateConfigDoc('about', draftData.about));
+            }
+            if(JSON.stringify(draftData.join) !== JSON.stringify(originalData.join)) {
+                promises.push(updateConfigDoc('join', draftData.join));
+            }
+            await Promise.all(promises);
+            
+            const newOriginalData = deepClone(draftData);
+            setOriginalData(newOriginalData);
+            onDataChange(newOriginalData); // Update parent state
+            
+            addToast('Dashboard content saved!', 'success');
+        } catch (error) {
+            console.error(error);
+            addToast('Error saving dashboard content.', 'error');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleFieldChange = (section: 'hero' | 'about' | 'join', field: string, value: any) => {
-        setDraftData({ ...draftData, [section]: { ...draftData[section], [field]: value } });
+        setDraftData(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }));
     };
 
     return (
         <div>
-             <div className="flex justify-between items-center mb-6 pb-4 border-b">
+             <div className="mb-6 pb-4 border-b">
                 <h2 className="text-2xl font-bold">Dashboard</h2>
-                <div className="flex items-center gap-2">
-                    <button onClick={handleReset} disabled={!hasChanges || isSaving} className="px-4 py-2 bg-gray-200 rounded-md font-semibold hover:bg-gray-300 disabled:opacity-50">Reset</button>
-                    <button onClick={handleSave} disabled={!hasChanges || isSaving} className="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 disabled:opacity-50">{isSaving ? 'Saving...' : 'Save Changes'}</button>
-                </div>
             </div>
             
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -111,6 +140,22 @@ const DashboardEditor: React.FC<EditorProps> = ({ originalData, draftData, setDr
                 <FormInput label="Button Text" value={draftData.join.buttonText} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('join', 'buttonText', e.target.value)} />
                 <FormInput label="Button Link" value={draftData.join.buttonLink} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange('join', 'buttonLink', e.target.value)} />
             </Section>
+
+            <AnimatePresence>
+                {hasChanges && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="sticky bottom-4 z-20 flex justify-center"
+                    >
+                         <div className="bg-white/80 backdrop-blur-sm shadow-lg rounded-full flex items-center gap-2 p-2 border">
+                            <button onClick={handleReset} disabled={isSaving} className="px-4 py-2 bg-gray-200 rounded-full font-semibold">Reset</button>
+                            <button onClick={handleSave} disabled={isSaving} className="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold w-28">{isSaving ? 'Saving...' : 'Save'}</button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
