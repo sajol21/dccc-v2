@@ -8,43 +8,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
   <script type="importmap">
 {
   "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.5",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.5.0/",
     "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
-    "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
-    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js",
-    "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js",
-    "firebase/": "https://aistudiocdn.com/firebase@^12.5.0/"
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.2"
   }
 }
 </script>
-<style>
-  html {
-    scroll-behavior: smooth;
-  }
-  /* Apply smooth transitions to theme-aware properties */
-  body, .bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-900, .border-gray-200, .text-gray-800 {
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
-  }
-</style>
-<script>
-    tailwind.config = {
-      darkMode: 'class', // Enable dark mode via class
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Poppins', 'sans-serif'],
-          },
-        },
-      },
-    }
-  </script>
 </head>
   <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div id="root"></div>
