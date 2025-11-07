@@ -1,5 +1,4 @@
-
-import type { AppData, Department, Achievement, Event, Executive, Moderator } from '../types';
+import type { AppData, Department, Achievement, Event, Executive, Moderator, Person } from '../types';
 
 const MOCK_DATA: AppData = {
   hero: {
@@ -128,22 +127,51 @@ const MOCK_DATA: AppData = {
       { name: "Email", url: "mailto:pr@dhakacollegeculturalclub.com", icon: "email" },
     ],
     copyrightText: "Dhaka College Cultural Club. All Rights Reserved.",
-    adminPanelLink: { text: "Administrative Panel", url: "#" }
+    adminPanelLink: { text: "Administrative Panel", url: "#/login" }
   },
 };
 
+const DATA_KEY = 'dcccAppData';
+
+const getStoredData = (): AppData => {
+  try {
+    const storedData = localStorage.getItem(DATA_KEY);
+    if (storedData) {
+      return JSON.parse(storedData);
+    }
+  } catch (error) {
+    console.error("Error reading from localStorage", error);
+  }
+  
+  localStorage.setItem(DATA_KEY, JSON.stringify(MOCK_DATA));
+  return MOCK_DATA;
+};
+
+export const saveAppData = (data: AppData): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+      localStorage.setItem(DATA_KEY, JSON.stringify(data));
+      resolve();
+    } catch (error) {
+      console.error("Error saving to localStorage", error);
+      reject(error);
+    }
+  });
+};
+
 const simulateDelay = <T,>(data: T): Promise<T> =>
-  new Promise(resolve => setTimeout(() => resolve(data), 500));
+  new Promise(resolve => setTimeout(() => resolve(data), 100));
 
-
-export const getAppData = (): Promise<AppData> => simulateDelay(MOCK_DATA);
-export const getDepartments = (): Promise<Department[]> => simulateDelay(MOCK_DATA.departments);
-export const getDepartmentById = (id: string): Promise<Department | undefined> => simulateDelay(MOCK_DATA.departments.find(d => d.id === id));
-export const getAchievements = (): Promise<Achievement[]> => simulateDelay(MOCK_DATA.achievements);
-export const getEvents = (): Promise<Event[]> => simulateDelay(MOCK_DATA.events);
-export const getEventById = (id: string): Promise<Event | undefined> => simulateDelay(MOCK_DATA.events.find(e => e.id === id));
-export const getCurrentExecutives = (): Promise<Executive[]> => simulateDelay(MOCK_DATA.leaders.currentExecutives);
-export const getLeaderById = (id: string): Promise<Executive | Moderator | undefined> => {
-    const allLeaders = [...MOCK_DATA.leaders.currentExecutives, ...MOCK_DATA.leaders.pastExecutives, ...MOCK_DATA.leaders.moderators];
-    return simulateDelay(allLeaders.find(l => l.id === id));
+export const getAppData = (): Promise<AppData> => simulateDelay(getStoredData());
+export const getDepartments = (): Promise<Department[]> => getAppData().then(data => data.departments);
+export const getDepartmentById = (id: string): Promise<Department | undefined> => getAppData().then(data => data.departments.find(d => d.id === id));
+export const getAchievements = (): Promise<Achievement[]> => getAppData().then(data => data.achievements);
+export const getEvents = (): Promise<Event[]> => getAppData().then(data => data.events);
+export const getEventById = (id: string): Promise<Event | undefined> => getAppData().then(data => data.events.find(e => e.id === id));
+export const getCurrentExecutives = (): Promise<Executive[]> => getAppData().then(data => data.leaders.currentExecutives);
+export const getLeaderById = (id: string): Promise<Person | undefined> => {
+    return getAppData().then(data => {
+        const allLeaders = [...data.leaders.currentExecutives, ...data.leaders.pastExecutives, ...data.leaders.moderators];
+        return allLeaders.find(l => l.id === id);
+    });
 }

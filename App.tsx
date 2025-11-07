@@ -1,10 +1,10 @@
-
 import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Loader from './components/Loader';
 import CursorTracker from './components/CursorTracker';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
@@ -14,6 +14,8 @@ const AchievementsPage = lazy(() => import('./pages/AchievementsPage'));
 const EventsPage = lazy(() => import('./pages/EventsPage'));
 const EventDetailPage = lazy(() => import('./pages/EventDetailPage'));
 const LeadersPage = lazy(() => import('./pages/LeadershipPage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
 
 function App() {
   return (
@@ -32,6 +34,15 @@ function App() {
               <Route path="/events" element={<EventsPage />} />
               <Route path="/events/:id" element={<EventDetailPage />} />
               <Route path="/panel" element={<LeadersPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminPage />
+                  </ProtectedRoute>
+                } 
+              />
             </Routes>
           </Suspense>
         </main>
